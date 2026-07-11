@@ -1,0 +1,13 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/src/PHD2Insight.Parser/obj
+/src/PHD2Insight.Core/obj
+/src/PHD2Insight.Core/bin/Debug/net8.0
+/src/PHD2Insight.Parser/bin/Debug/net8.0
+/src/PHD2Insight.UI/bin/Debug/net8.0
+/src/PHD2Insight.UI/obj
+/tests/PHD2Insight.Tests/bin/Debug/net8.0
+/tests/PHD2Insight.Tests/obj

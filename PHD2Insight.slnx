@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/samples/">
+    <File Path="samples/PHD2_GuideLog_001.txt" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/PHD2Insight.Core/PHD2Insight.Core.csproj" />
+    <Project Path="src/PHD2Insight.Parser/PHD2Insight.Parser.csproj" />
+    <Project Path="src/PHD2Insight.UI/PHD2Insight.UI.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PHD2Insight.Tests/PHD2Insight.Tests.csproj" />
+  </Folder>
+</Solution>

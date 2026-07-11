@@ -1,0 +1,37 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="PHD2Insight.UI.MainWindow"
+        Width="900"
+        Height="600"
+        Title="PHD2Insight">
+
+  <Grid Margin="20">
+
+    <StackPanel Spacing="20">
+
+      <TextBlock
+       Text="PHD2Insight"
+       FontSize="32"/>
+
+
+      <Button
+       Content="Load PHD2 Log"
+       Command="{Binding LoadCommand}"/>
+
+
+      <TextBlock
+       Text="{Binding Status}"
+       FontSize="18"/>
+
+
+      <TextBlock
+       Text="{Binding Metrics}"
+       FontSize="16"/>
+
+
+    </StackPanel>
+
+
+  </Grid>
+
+</Window>
