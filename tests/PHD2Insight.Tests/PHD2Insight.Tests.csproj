@@ -25,4 +25,11 @@
     <ProjectReference Include="..\..\src\PHD2Insight.Parser\PHD2Insight.Parser.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\samples\PHD2_GuideLog_001.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Fixtures\PHD2_GuideLog_001</Link>
+    </None>
+  </ItemGroup>
+  
 </Project>

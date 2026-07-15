@@ -3,6 +3,7 @@
     <File Path="samples/PHD2_GuideLog_001.txt" />
   </Folder>
   <Folder Name="/src/">
+    <Project Path="src/PHD2Insight.Common/PHD2Insight.Common.csproj" />
     <Project Path="src/PHD2Insight.Core/PHD2Insight.Core.csproj" />
     <Project Path="src/PHD2Insight.Parser/PHD2Insight.Parser.csproj" />
     <Project Path="src/PHD2Insight.UI/PHD2Insight.UI.csproj" />

@@ -11,3 +11,11 @@
 /src/PHD2Insight.UI/obj
 /tests/PHD2Insight.Tests/bin/Debug/net8.0
 /tests/PHD2Insight.Tests/obj
+bin/
+obj/
+.vs/
+TestResults/
+*.xisf
+*.fit
+*.fits
+*.raw
