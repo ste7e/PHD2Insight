@@ -2,7 +2,7 @@
 
 namespace PHD2Insight.Tests;
 
-public class SampleLogTests {
+public class SampleDataTests {
     [Fact]
     public void SampleLogExists() {
         var path = Path.Combine(
