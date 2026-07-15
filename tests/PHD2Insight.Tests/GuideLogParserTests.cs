@@ -44,4 +44,23 @@ public sealed class GuideLogParserTests {
             "2.5",
             result.Value.Version.LogVersion);
     }
+
+    [Fact]
+    public void Parser_extracts_guiding_sessions() {
+        IGuideLogParser parser = new GuideLogParser();
+
+        using var stream = File.OpenRead(TestData.SampleGuideLog);
+
+        var result = parser.Parse(stream);
+
+        Assert.True(result.Success);
+        Assert.NotNull(result.Value);
+
+        Assert.Equal(4, result.Value.Sessions.Count);
+
+        Assert.Equal(
+            new DateTime(2026, 7, 9, 22, 54, 58),
+            result.Value.Sessions[0].StartTime);
+    }
+
 }
