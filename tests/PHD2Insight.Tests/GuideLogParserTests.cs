@@ -46,7 +46,7 @@ public sealed class GuideLogParserTests {
     }
 
     [Fact]
-    public void Parser_extracts_guiding_sessions() {
+    public void Parser_extracts_guiding_session_start_and_end_times() {
         IGuideLogParser parser = new GuideLogParser();
 
         using var stream = File.OpenRead(TestData.SampleGuideLog);
@@ -58,9 +58,14 @@ public sealed class GuideLogParserTests {
 
         Assert.Equal(4, result.Value.Sessions.Count);
 
+        var first = result.Value.Sessions[0];
+
         Assert.Equal(
             new DateTime(2026, 7, 9, 22, 54, 58),
-            result.Value.Sessions[0].StartTime);
-    }
+            first.StartTime);
 
+        Assert.Equal(
+            new DateTime(2026, 7, 9, 22, 58, 34),
+            first.EndTime);
+    }
 }

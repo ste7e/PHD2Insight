@@ -22,10 +22,26 @@ public sealed class GuideLogParser : IGuideLogParser {
             }
 
             if (SessionStartLineParser.TryParse(line, out var startTime)) {
-                context.Sessions.Add(
-                    new GuidingSession {
-                        StartTime = startTime
-                    });
+                if (context.CurrentSession is not null) {
+                    context.Sessions.Add(
+                        context.CurrentSession.Build());
+                }
+
+                context.CurrentSession =
+                    new GuidingSessionBuilder(startTime);
+
+                continue;
+            }
+
+            if (SessionEndLineParser.TryParse(line, out var endTime)) {
+                if (context.CurrentSession is not null) {
+                    context.CurrentSession.Close(endTime);
+
+                    context.Sessions.Add(
+                        context.CurrentSession.Build());
+
+                    context.CurrentSession = null;
+                }
 
                 continue;
             }

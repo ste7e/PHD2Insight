@@ -10,9 +10,15 @@ internal sealed class GuideLogParseContext {
     public GuidingSessionBuilder? CurrentSession { get; set; }
 
     public GuideLog Build() {
+        var sessions = new List<GuidingSession>(Sessions);
+
+        if (CurrentSession is not null) {
+            sessions.Add(CurrentSession.Build());
+        }
+
         return new GuideLog {
             Version = Version,
-            Sessions = Sessions
+            Sessions = sessions
         };
     }
 }
