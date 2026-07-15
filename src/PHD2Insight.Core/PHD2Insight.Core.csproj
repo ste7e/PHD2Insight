@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PHD2Insight.Common\PHD2Insight.Common.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,30 +1,35 @@
-﻿namespace PHD2Insight.Core.Models;
+﻿using PHD2Insight.Common.Enums;
 
-public sealed class GuideSample {
-    public DateTime Timestamp { get; init; }
+namespace PHD2Insight.Core.Models;
 
-    /// <summary>
-    /// RA error in arc-seconds.
-    /// Positive = east error.
-    /// </summary>
-    public double RaError { get; init; }
+public sealed record GuideSample {
+    public int FrameNumber { get; init; }
 
+    public double ElapsedSeconds { get; init; }
 
-    /// <summary>
-    /// Declination error in arc-seconds.
-    /// Positive = north error.
-    /// </summary>
-    public double DecError { get; init; }
+    public double Dx { get; init; }
 
+    public double Dy { get; init; }
 
-    /// <summary>
-    /// RA guide pulse duration in milliseconds.
-    /// </summary>
-    public int RaPulseMs { get; init; }
+    public double RaRawDistance { get; init; }
 
+    public double DecRawDistance { get; init; }
 
-    /// <summary>
-    /// DEC guide pulse duration in milliseconds.
-    /// </summary>
-    public int DecPulseMs { get; init; }
+    public double RaGuideDistance { get; init; }
+
+    public double DecGuideDistance { get; init; }
+
+    public int RaDuration { get; init; }
+
+    public GuideDirection RaDirection { get; init; }
+
+    public int DecDuration { get; init; }
+
+    public GuideDirection DecDirection { get; init; }
+
+    public double StarMass { get; init; }
+
+    public double Snr { get; init; }
+
+    public int ErrorCode { get; init; }
 }
