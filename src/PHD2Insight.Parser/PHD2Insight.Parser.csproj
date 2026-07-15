@@ -14,4 +14,8 @@
     <ProjectReference Include="..\PHD2Insight.Core\PHD2Insight.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="PHD2Insight.Tests" />
+  </ItemGroup>
+  
 </Project>
