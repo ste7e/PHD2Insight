@@ -70,4 +70,24 @@ public sealed class GuideLogParserTests {
 
         Assert.Equal(3000, first.ExposureMilliseconds);
     }
+
+    [Fact]
+    public void Parses_pixel_scale_line() {
+        const string line =
+            "Pixel scale = 1.05 arc-sec/px, Binning = 1, Focal length = 1018 mm";
+
+        var ok = PixelScaleLineParser.TryParse(
+            line,
+            out var result);
+
+        Assert.True(ok);
+
+        Assert.NotNull(result);
+
+        Assert.Equal(1.05, result!.PixelScale);
+
+        Assert.Equal(1, result.Binning);
+
+        Assert.Equal(1018, result.FocalLengthMm);
+    }
 }

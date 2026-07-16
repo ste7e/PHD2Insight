@@ -1,5 +1,6 @@
-﻿using System.Text.RegularExpressions;
-using PHD2Insight.Core.Models;
+﻿using PHD2Insight.Core.Models;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 
 namespace PHD2Insight.Parser.Parsers;
 
@@ -11,7 +12,7 @@ internal static partial class VersionLineParser {
 
     public static bool TryParse(
         string line,
-        out GuideLogVersion? version) {
+        [NotNullWhen(true)] out GuideLogVersion? version) {
         version = null;
 
         var match = VersionRegex().Match(line);

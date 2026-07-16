@@ -67,6 +67,16 @@ public sealed class GuideLogParser : IGuideLogParser {
 
                 continue;
             }
+
+            if (PixelScaleLineParser.TryParse(
+        line,
+        out var info)) {
+                context.CurrentSession!.PixelScale = info.PixelScale;
+                context.CurrentSession.Binning = info.Binning;
+                context.CurrentSession.FocalLengthMm = info.FocalLengthMm;
+
+                continue;
+            }
         }
 
         return new ParseResult<GuideLog> {

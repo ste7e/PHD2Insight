@@ -14,4 +14,10 @@ public sealed record GuidingSession {
         = Array.Empty<GuideSample>();
 
     public int ExposureMilliseconds { get; init; }
+
+    public double PixelScale { get; init; }
+
+    public int Binning { get; init; }
+
+    public int FocalLengthMm { get; init; }
 }

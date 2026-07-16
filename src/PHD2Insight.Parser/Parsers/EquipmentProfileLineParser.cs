@@ -1,9 +1,11 @@
-﻿namespace PHD2Insight.Parser.Parsers;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace PHD2Insight.Parser.Parsers;
 
 internal static class EquipmentProfileLineParser {
     public static bool TryParse(
         string line,
-        out string? profileName) {
+        [NotNullWhen(true)] out string? profileName) {
         profileName = null;
 
         if (!PropertyLineParser.TryParse(line, out var key, out var value)) {
