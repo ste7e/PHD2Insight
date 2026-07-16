@@ -56,6 +56,17 @@ public sealed class GuideLogParser : IGuideLogParser {
 
                 continue;
             }
+
+            if (ExposureLineParser.TryParse(
+                                        line,
+                                        out var exposureMs)) {
+                if (context.CurrentSession is not null) {
+                    context.CurrentSession.ExposureMilliseconds =
+                        exposureMs;
+                }
+
+                continue;
+            }
         }
 
         return new ParseResult<GuideLog> {

@@ -67,5 +67,7 @@ public sealed class GuideLogParserTests {
         Assert.Equal(
             new DateTime(2026, 7, 9, 22, 58, 34),
             first.EndTime);
+
+        Assert.Equal(3000, first.ExposureMilliseconds);
     }
 }

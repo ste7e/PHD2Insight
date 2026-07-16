@@ -1,19 +1,24 @@
 ﻿namespace PHD2Insight.Parser.Parsers;
 
 internal static class EquipmentProfileLineParser {
-    private const string Prefix = "Equipment Profile = ";
-
     public static bool TryParse(
         string line,
         out string? profileName) {
         profileName = null;
 
-        if (!line.StartsWith(Prefix, StringComparison.Ordinal)) {
+        if (!PropertyLineParser.TryParse(line, out var key, out var value)) {
             return false;
         }
 
-        profileName = line[Prefix.Length..].Trim();
+        if (!string.Equals(
+                key,
+                "Equipment Profile",
+                StringComparison.Ordinal)) {
+            return false;
+        }
 
-        return profileName.Length > 0;
+        profileName = value;
+
+        return true;
     }
 }

@@ -13,6 +13,8 @@ internal sealed class GuidingSessionBuilder {
 
     public EquipmentProfile? Equipment { get; set; }
 
+    public int ExposureMilliseconds { get; set; }
+
     public void Close(DateTime endTime) {
         EndTime = endTime;
     }
@@ -21,7 +23,8 @@ internal sealed class GuidingSessionBuilder {
         return new GuidingSession {
             StartTime = StartTime,
             EndTime = EndTime,
-            Equipment = Equipment
+            Equipment = Equipment,
+            ExposureMilliseconds = ExposureMilliseconds
         };
     }
 }

@@ -12,4 +12,6 @@ public sealed record GuidingSession {
 
     public IReadOnlyList<GuideSample> Samples { get; init; }
         = Array.Empty<GuideSample>();
+
+    public int ExposureMilliseconds { get; init; }
 }
