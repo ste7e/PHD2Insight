@@ -45,6 +45,17 @@ public sealed class GuideLogParser : IGuideLogParser {
 
                 continue;
             }
+
+            if (EquipmentProfileLineParser.TryParse(line, out var profileName)) {
+                if (context.CurrentSession is not null) {
+                    context.CurrentSession.Equipment =
+                        new EquipmentProfile {
+                            Name = profileName!
+                        };
+                }
+
+                continue;
+            }
         }
 
         return new ParseResult<GuideLog> {
