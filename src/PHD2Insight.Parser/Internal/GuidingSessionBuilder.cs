@@ -21,6 +21,7 @@ internal sealed class GuidingSessionBuilder {
 
     public int FocalLengthMm { get; set; }
 
+    public CameraInfo? Camera { get; set; }
     public void Close(DateTime endTime) {
         EndTime = endTime;
     }
@@ -33,7 +34,8 @@ internal sealed class GuidingSessionBuilder {
             ExposureMilliseconds = ExposureMilliseconds,
             Binning = Binning,
             FocalLengthMm = FocalLengthMm,
-            PixelScale = PixelScale
+            PixelScale = PixelScale,
+            Camera = Camera,
         };
     }
 }

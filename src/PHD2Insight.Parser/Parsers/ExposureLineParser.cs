@@ -24,7 +24,7 @@ internal static class ExposureLineParser {
 
         const string suffix = " ms";
 
-        if (!value!.EndsWith(
+        if (!value.EndsWith(
                 suffix,
                 StringComparison.Ordinal)) {
             return false;

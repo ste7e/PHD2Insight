@@ -1,10 +1,12 @@
-﻿namespace PHD2Insight.Parser.Parsers;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace PHD2Insight.Parser.Parsers;
 
 internal static class PropertyLineParser {
     public static bool TryParse(
         string line,
-        out string? key,
-        out string? value) {
+        [NotNullWhen(true)] out string? key,
+        [NotNullWhen(true)] out string? value) {
         key = null;
         value = null;
 

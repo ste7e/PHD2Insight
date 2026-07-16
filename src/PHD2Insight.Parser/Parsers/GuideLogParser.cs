@@ -77,6 +77,13 @@ public sealed class GuideLogParser : IGuideLogParser {
 
                 continue;
             }
+
+            if (CameraInfoLineParser.TryParse(line, out var cameraInfo)) {
+                if (context.CurrentSession is not null) {
+                    context.CurrentSession.Camera = cameraInfo;
+                }
+                continue;
+            }
         }
 
         return new ParseResult<GuideLog> {

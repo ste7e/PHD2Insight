@@ -43,6 +43,14 @@ public sealed class GuideLogParserTests {
         Assert.Equal(
             "2.5",
             result.Value.Version.LogVersion);
+
+        var first = result.Value!.Sessions[0];
+
+        Assert.NotNull(first.Camera);
+
+        Assert.Equal(
+            "QHY5II-M-10d7d910f33c7354",
+            first.Camera.Name);
     }
 
     [Fact]
@@ -89,5 +97,41 @@ public sealed class GuideLogParserTests {
         Assert.Equal(1, result.Binning);
 
         Assert.Equal(1018, result.FocalLengthMm);
+    }
+
+    [Fact]
+    public void Parses_camera_info_line() {
+        const string line =
+            "Camera = QHY5II-M-10d7d910f33c7354, gain = 90, full size = 1280 x 1024, have dark, dark dur = 3000, no defect map, pixel size = 5.2 um";
+        var ok = CameraInfoLineParser.TryParse(
+            line,
+            out var result);
+        Assert.True(ok);
+        Assert.NotNull(result);
+
+        Assert.Equal(
+            "QHY5II-M-10d7d910f33c7354",
+            result.Name);
+
+        Assert.Equal(90, result.Gain);
+
+        Assert.Equal(5.2, result.PixelSizeMicrons);
+    }
+
+    [Fact]
+    public void Parses_camera_line_with_leading_whitespace() {
+        const string line =
+            " Camera = QHY5II-M-10d7d910f33c7354, gain = 90, pixel size = 5.2 um";
+
+        var result = CameraInfoLineParser.TryParse(
+            line,
+            out var camera);
+
+        Assert.True(result);
+        Assert.NotNull(camera);
+
+        Assert.Equal(
+            "QHY5II-M-10d7d910f33c7354",
+            camera.Name);
     }
 }

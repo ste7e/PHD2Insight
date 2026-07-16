@@ -26,7 +26,7 @@ internal static class PixelScaleLineParser {
 
                         const string Suffix = " arc-sec/px";
 
-                        if (value!.EndsWith(Suffix, StringComparison.Ordinal)) {
+                        if (value.EndsWith(Suffix, StringComparison.Ordinal)) {
                             var text = value[..^Suffix.Length];
 
                             if (double.TryParse(
@@ -54,7 +54,7 @@ internal static class PixelScaleLineParser {
                 case "Focal length": {
                         const string Suffix = " mm";
 
-                        if (value!.EndsWith(Suffix, StringComparison.Ordinal)) {
+                        if (value.EndsWith(Suffix, StringComparison.Ordinal)) {
                             var text = value[..^Suffix.Length];
 
                             if (int.TryParse(

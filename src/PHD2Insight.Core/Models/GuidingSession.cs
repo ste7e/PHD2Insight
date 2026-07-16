@@ -20,4 +20,6 @@ public sealed record GuidingSession {
     public int Binning { get; init; }
 
     public int FocalLengthMm { get; init; }
+
+    public CameraInfo? Camera { get; init; }
 }

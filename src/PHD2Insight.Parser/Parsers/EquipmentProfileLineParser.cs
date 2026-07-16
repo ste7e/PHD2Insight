@@ -19,6 +19,10 @@ internal static class EquipmentProfileLineParser {
             return false;
         }
 
+        if (value is null) {
+            return false;
+        }
+
         profileName = value;
 
         return true;
