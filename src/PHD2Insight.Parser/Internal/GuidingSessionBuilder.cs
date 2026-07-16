@@ -25,6 +25,10 @@ internal sealed class GuidingSessionBuilder {
 
     public MountInfo? Mount { get; set; }
 
+    public GuideAlgorithmInfo? xGuideAlgorithm { get; set; }
+
+    public GuideAlgorithmInfo? yGuideAlgorithm { get; set; }
+
     public void Close(DateTime endTime) {
         EndTime = endTime;
     }
@@ -39,7 +43,9 @@ internal sealed class GuidingSessionBuilder {
             FocalLengthMm = FocalLengthMm,
             PixelScale = PixelScale,
             Camera = Camera,
-            Mount = Mount
+            Mount = Mount,
+            xGuideAlgorithm = xGuideAlgorithm,
+            yGuideAlgorithm = yGuideAlgorithm
         };
     }
 }

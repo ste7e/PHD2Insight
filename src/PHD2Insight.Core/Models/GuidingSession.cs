@@ -24,4 +24,9 @@ public sealed record GuidingSession {
     public CameraInfo? Camera { get; init; }
 
     public MountInfo? Mount { get; init; }
+
+    public GuideAlgorithmInfo? xGuideAlgorithm { get; init; }
+
+    public GuideAlgorithmInfo? yGuideAlgorithm { get; init; }
+
 }

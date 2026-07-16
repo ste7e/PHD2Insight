@@ -21,4 +21,8 @@ internal sealed class GuideLogParseContext {
             Sessions = sessions
         };
     }
+
+    public GuideAlgorithmInfo? CurrentXAlgorithm { get; set; }
+
+    public GuideAlgorithmInfo? CurrentYAlgorithm { get; set; }
 }

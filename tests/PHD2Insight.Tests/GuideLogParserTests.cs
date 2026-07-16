@@ -114,6 +114,13 @@ public sealed class GuideLogParserTests {
             -81.6,
             first.Mount.XAngleDegrees);
 
+        Assert.Equal(
+            "Predictive PEC",
+            first.xGuideAlgorithm!.Name);
+
+        Assert.Equal(
+            "Resist Switch",
+            first.yGuideAlgorithm!.Name);
     }
 
     [Fact]

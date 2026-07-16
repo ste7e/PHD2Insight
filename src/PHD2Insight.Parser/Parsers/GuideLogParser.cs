@@ -93,6 +93,21 @@ public sealed class GuideLogParser : IGuideLogParser {
                 continue;
             }
 
+            if (GuideAlgorithmLineParser.TryParse(
+                    line,
+                    out var axis,
+                    out var algorithm)) {
+                if (context.CurrentSession is not null) {
+                    if (axis == GuideAxis.X) {
+                        context.CurrentSession.xGuideAlgorithm = algorithm;
+                    } else {
+                        context.CurrentSession.yGuideAlgorithm = algorithm;
+                    }
+                }
+
+                continue;
+            }
+
         }
 
         return new ParseResult<GuideLog> {
