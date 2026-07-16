@@ -22,4 +22,6 @@ public sealed record GuidingSession {
     public int FocalLengthMm { get; init; }
 
     public CameraInfo? Camera { get; init; }
+
+    public MountInfo? Mount { get; init; }
 }

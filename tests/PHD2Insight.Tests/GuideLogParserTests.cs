@@ -80,6 +80,43 @@ public sealed class GuideLogParserTests {
     }
 
     [Fact]
+    public void Parser_of_full_sample() {
+        IGuideLogParser parser = new GuideLogParser();
+
+        using var stream = File.OpenRead(TestData.SampleGuideLog);
+
+        var result = parser.Parse(stream);
+
+        Assert.True(result.Success);
+        Assert.NotNull(result.Value);
+
+        Assert.Equal(4, result.Value.Sessions.Count);
+
+        var first = result.Value.Sessions[0];
+
+        Assert.Equal(
+            new DateTime(2026, 7, 9, 22, 54, 58),
+            first.StartTime);
+
+        Assert.Equal(
+            new DateTime(2026, 7, 9, 22, 58, 34),
+            first.EndTime);
+
+        Assert.Equal(3000, first.ExposureMilliseconds);
+
+        Assert.NotNull(first.Mount);
+
+        Assert.Equal(
+            "EQMOD HEQ5/6 (ASCOM)",
+            first.Mount!.Name);
+
+        Assert.Equal(
+            -81.6,
+            first.Mount.XAngleDegrees);
+
+    }
+
+    [Fact]
     public void Parses_pixel_scale_line() {
         const string line =
             "Pixel scale = 1.05 arc-sec/px, Binning = 1, Focal length = 1018 mm";
@@ -133,5 +170,39 @@ public sealed class GuideLogParserTests {
         Assert.Equal(
             "QHY5II-M-10d7d910f33c7354",
             camera.Name);
+    }
+
+    [Fact]
+    public void Parses_mount_metadata() {
+        const string line =
+            "Mount = EQMOD HEQ5/6 (ASCOM), connected, guiding enabled, xAngle = -81.6, xRate = 4.604, yAngle = 17.1, yRate = 6.929, parity = +/-";
+
+        var result = MountInfoLineParser.TryParse(
+            line,
+            out var mount);
+
+        Assert.True(result);
+
+        Assert.NotNull(mount);
+
+        Assert.Equal(
+            "EQMOD HEQ5/6 (ASCOM)",
+            mount.Name);
+
+        Assert.True(mount.Connected);
+
+        Assert.True(mount.GuidingEnabled);
+
+        Assert.Equal(-81.6, mount.XAngleDegrees);
+
+        Assert.Equal(4.604, mount.XRate);
+
+        Assert.Equal(17.1, mount.YAngleDegrees);
+
+        Assert.Equal(6.929, mount.YRate);
+
+        Assert.Equal(
+            "+/-",
+            mount.Parity);
     }
 }

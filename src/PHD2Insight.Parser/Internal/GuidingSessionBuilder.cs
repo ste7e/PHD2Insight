@@ -22,6 +22,9 @@ internal sealed class GuidingSessionBuilder {
     public int FocalLengthMm { get; set; }
 
     public CameraInfo? Camera { get; set; }
+
+    public MountInfo? Mount { get; set; }
+
     public void Close(DateTime endTime) {
         EndTime = endTime;
     }
@@ -36,6 +39,7 @@ internal sealed class GuidingSessionBuilder {
             FocalLengthMm = FocalLengthMm,
             PixelScale = PixelScale,
             Camera = Camera,
+            Mount = Mount
         };
     }
 }
