@@ -59,9 +59,7 @@ internal static class GuideAlgorithmLineParser {
                         if (InvariantNumberParser.TryParseDouble(
                                 propertyValue,
                                 out var controlGain)) {
-                            info = info with {
-                                ControlGain = controlGain
-                            };
+                            info.ControlGain = controlGain;
                         }
                         break;
 
@@ -69,9 +67,7 @@ internal static class GuideAlgorithmLineParser {
                         if (InvariantNumberParser.TryParseDouble(
                                 propertyValue,
                                 out var minimumMove)) {
-                            info = info with {
-                                MinimumMove = minimumMove
-                            };
+                            info.MinimumMove = minimumMove;
                         }
                         break;
 
@@ -85,31 +81,25 @@ internal static class GuideAlgorithmLineParser {
                             if (InvariantNumberParser.TryParseDouble(
                                     text,
                                     out var aggression)) {
-                                info = info with {
-                                    Aggression = aggression
-                                };
+                                info.Aggression = aggression;
                             }
 
                             break;
                         }
 
                     case "FastSwitch":
-                        info = info with {
-                            FastSwitch =
+                        info.FastSwitch =
                                 string.Equals(
                                     propertyValue,
                                     "enabled",
-                                    StringComparison.OrdinalIgnoreCase)
-                        };
+                                    StringComparison.OrdinalIgnoreCase);
                         break;
 
                     case "Prediction gain":
                         if (InvariantNumberParser.TryParseDouble(
                                 propertyValue,
                                 out var predictionGain)) {
-                            info = info with {
-                                PredictionGain = predictionGain
-                            };
+                            info.PredictionGain = predictionGain;
                         }
                         break;
                 }

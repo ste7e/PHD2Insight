@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Parsing\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\PHD2Insight.Core\PHD2Insight.Core.csproj" />
   </ItemGroup>
 

@@ -1,15 +1,13 @@
-﻿namespace PHD2Insight.Core.Models;
+﻿public sealed class GuideAlgorithmInfo {
+    public string Name { get; set; } = string.Empty;
 
-public sealed record GuideAlgorithmInfo {
-    public string Name { get; init; } = string.Empty;
+    public double? MinimumMove { get; set; }
 
-    public double? MinimumMove { get; init; }
+    public double? Aggression { get; set; }
 
-    public double? Aggression { get; init; }
+    public double? ControlGain { get; set; }
 
-    public double? ControlGain { get; init; }
+    public double? PredictionGain { get; set; }
 
-    public double? PredictionGain { get; init; }
-
-    public bool? FastSwitch { get; init; }
+    public bool? FastSwitch { get; set; }
 }

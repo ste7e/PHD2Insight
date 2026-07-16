@@ -22,6 +22,9 @@ public sealed class GuideLogParser : IGuideLogParser {
             }
 
             if (SessionStartLineParser.TryParse(line, out var startTime)) {
+
+                context.ClearContinuation();
+
                 if (context.CurrentSession is not null) {
                     context.Sessions.Add(
                         context.CurrentSession.Build());
@@ -34,6 +37,9 @@ public sealed class GuideLogParser : IGuideLogParser {
             }
 
             if (SessionEndLineParser.TryParse(line, out var endTime)) {
+
+                context.ClearContinuation();
+
                 if (context.CurrentSession is not null) {
                     context.CurrentSession.Close(endTime);
 
@@ -47,6 +53,9 @@ public sealed class GuideLogParser : IGuideLogParser {
             }
 
             if (EquipmentProfileLineParser.TryParse(line, out var profileName)) {
+
+                context.ClearContinuation();
+
                 if (context.CurrentSession is not null) {
                     context.CurrentSession.Equipment =
                         new EquipmentProfile {
@@ -60,6 +69,9 @@ public sealed class GuideLogParser : IGuideLogParser {
             if (ExposureLineParser.TryParse(
                                         line,
                                         out var exposureMs)) {
+
+                context.ClearContinuation();
+
                 if (context.CurrentSession is not null) {
                     context.CurrentSession.ExposureMilliseconds =
                         exposureMs;
@@ -71,6 +83,9 @@ public sealed class GuideLogParser : IGuideLogParser {
             if (PixelScaleLineParser.TryParse(
                                         line,
                                         out var info)) {
+
+                context.ClearContinuation();
+
                 context.CurrentSession!.PixelScale = info.PixelScale;
                 context.CurrentSession.Binning = info.Binning;
                 context.CurrentSession.FocalLengthMm = info.FocalLengthMm;
@@ -79,6 +94,9 @@ public sealed class GuideLogParser : IGuideLogParser {
             }
 
             if (CameraInfoLineParser.TryParse(line, out var cameraInfo)) {
+
+                context.ClearContinuation();
+
                 if (context.CurrentSession is not null) {
                     context.CurrentSession.Camera = cameraInfo;
                 }
@@ -88,6 +106,9 @@ public sealed class GuideLogParser : IGuideLogParser {
             if (MountInfoLineParser.TryParse(
                                         line,
                                         out var mount)) {
+
+                context.ClearContinuation();
+
                 context.CurrentSession!.Mount = mount;
 
                 continue;
@@ -97,17 +118,37 @@ public sealed class GuideLogParser : IGuideLogParser {
                     line,
                     out var axis,
                     out var algorithm)) {
+
                 if (context.CurrentSession is not null) {
                     if (axis == GuideAxis.X) {
                         context.CurrentSession.xGuideAlgorithm = algorithm;
+                        context.ContinuationMode = ContinuationMode.XGuideAlgorithm;
                     } else {
                         context.CurrentSession.yGuideAlgorithm = algorithm;
+                        context.ContinuationMode = ContinuationMode.YGuideAlgorithm;
                     }
                 }
 
                 continue;
             }
 
+            if (context.ContinuationMode == ContinuationMode.XGuideAlgorithm &&
+    context.CurrentSession?.xGuideAlgorithm is not null) {
+                if (GuideAlgorithmContinuationLineParser.TryApply(
+                        line,
+                        context.CurrentSession.xGuideAlgorithm)) {
+                    continue;
+                }
+            }
+
+            if (context.ContinuationMode == ContinuationMode.YGuideAlgorithm &&
+                context.CurrentSession?.yGuideAlgorithm is not null) {
+                if (GuideAlgorithmContinuationLineParser.TryApply(
+                        line,
+                        context.CurrentSession.yGuideAlgorithm)) {
+                    continue;
+                }
+            }
         }
 
         return new ParseResult<GuideLog> {

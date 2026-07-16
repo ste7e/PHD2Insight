@@ -121,6 +121,20 @@ public sealed class GuideLogParserTests {
         Assert.Equal(
             "Resist Switch",
             first.yGuideAlgorithm!.Name);
+
+        Assert.NotNull(first.xGuideAlgorithm);
+
+        Assert.Equal(
+            "Predictive PEC",
+            first.xGuideAlgorithm!.Name);
+
+        Assert.Equal(
+            0.600,
+            first.xGuideAlgorithm.ControlGain);
+
+        Assert.Equal(
+            0.350,
+            first.xGuideAlgorithm.PredictionGain);
     }
 
     [Fact]

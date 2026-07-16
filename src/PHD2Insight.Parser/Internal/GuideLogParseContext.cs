@@ -25,4 +25,10 @@ internal sealed class GuideLogParseContext {
     public GuideAlgorithmInfo? CurrentXAlgorithm { get; set; }
 
     public GuideAlgorithmInfo? CurrentYAlgorithm { get; set; }
+
+    internal ContinuationMode ContinuationMode { get; set; }
+
+    internal void ClearContinuation() {
+        ContinuationMode = ContinuationMode.None;
+    }
 }
