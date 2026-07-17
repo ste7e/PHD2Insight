@@ -133,7 +133,7 @@ public sealed class GuideLogParser : IGuideLogParser {
             }
 
             if (context.ContinuationMode == ContinuationMode.XGuideAlgorithm &&
-    context.CurrentSession?.xGuideAlgorithm is not null) {
+                context.CurrentSession?.xGuideAlgorithm is not null) {
                 if (GuideAlgorithmContinuationLineParser.TryApply(
                         line,
                         context.CurrentSession.xGuideAlgorithm)) {
@@ -148,6 +148,20 @@ public sealed class GuideLogParser : IGuideLogParser {
                         context.CurrentSession.yGuideAlgorithm)) {
                     continue;
                 }
+            }
+
+            if (GuideFrameSchemaLineParser.TryParse(
+                        line,
+                        out var schema)) {
+                if (context.CurrentSession is not null) {
+                    context.CurrentSession.GuideFrameSchema = schema;
+
+                    // We'll decide later how to report a mismatch.
+                    _ = GuideFrameSchemaLineParser
+                            .MatchesExpectedSchema(schema);
+                }
+
+                continue;
             }
         }
 

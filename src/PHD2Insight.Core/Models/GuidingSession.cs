@@ -29,4 +29,8 @@ public sealed record GuidingSession {
 
     public GuideAlgorithmInfo? yGuideAlgorithm { get; init; }
 
+    public GuideFrameSchema? GuideFrameSchema { get; set; }
+
+    public ICollection<GuideFrame> Frames { get; } = [];
+
 }

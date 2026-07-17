@@ -29,12 +29,16 @@ internal sealed class GuidingSessionBuilder {
 
     public GuideAlgorithmInfo? yGuideAlgorithm { get; set; }
 
+    public GuideFrameSchema? GuideFrameSchema { get; set; }
+
+    public ICollection<GuideFrame> Frames { get; } = [];
+
     public void Close(DateTime endTime) {
         EndTime = endTime;
     }
 
     public GuidingSession Build() {
-        return new GuidingSession {
+        var seesion = new GuidingSession {
             StartTime = StartTime,
             EndTime = EndTime,
             Equipment = Equipment,
@@ -45,7 +49,14 @@ internal sealed class GuidingSessionBuilder {
             Camera = Camera,
             Mount = Mount,
             xGuideAlgorithm = xGuideAlgorithm,
-            yGuideAlgorithm = yGuideAlgorithm
+            yGuideAlgorithm = yGuideAlgorithm,
+            GuideFrameSchema = GuideFrameSchema,
         };
+
+        foreach (var frame in Frames) {
+            seesion.Frames.Add(frame);
+        }
+
+        return seesion;
     }
 }

@@ -135,6 +135,16 @@ public sealed class GuideLogParserTests {
         Assert.Equal(
             0.350,
             first.xGuideAlgorithm.PredictionGain);
+
+        var schema = first.GuideFrameSchema;
+        Assert.NotNull(schema);
+
+        Assert.Equal(18, schema.Columns.Count);
+
+        Assert.Equal("Frame", schema.Columns.ElementAt(0));
+        Assert.Equal("Time", schema.Columns.ElementAt(1));
+        Assert.Equal("mount", schema.Columns.ElementAt(2));
+        Assert.Equal("ErrorCode", schema.Columns.Last());
     }
 
     [Fact]
