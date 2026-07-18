@@ -152,6 +152,10 @@ public sealed class GuideLogParserTests {
 
         Assert.Equal(1, firstFrame.FrameNumber);
         Assert.Equal(TimeSpan.FromSeconds(9.161), firstFrame.ElapsedTime);
+
+        Assert.Equal(9223.0, firstFrame.StarMass);
+        Assert.Equal(59.51, firstFrame.SignalToNoiseRatio);
+        Assert.Equal(0, firstFrame.ErrorCode);
     }
 
     [Fact]

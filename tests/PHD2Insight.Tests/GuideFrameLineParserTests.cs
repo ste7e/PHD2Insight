@@ -30,6 +30,10 @@ public sealed class GuideFrameLineParserTests {
 
         Assert.Equal(145.0, frame.RaPulseMilliseconds);
         Assert.Equal(0.0, frame.DecPulseMilliseconds);
+
+        Assert.Equal(9223.0, frame.StarMass);
+        Assert.Equal(59.51, frame.SignalToNoiseRatio);
+        Assert.Equal(0, frame.ErrorCode);
     }
 
     [Fact]

@@ -88,6 +88,27 @@ internal static class GuideFrameLineParser {
             return false;
         }
 
+        if (!FieldValueParser.TryGetDouble(
+        fields,
+        Columns.StarMass,
+        out var starMass)) {
+            return false;
+        }
+
+        if (!FieldValueParser.TryGetDouble(
+                fields,
+                Columns.SNR,
+                out var snr)) {
+            return false;
+        }
+
+        if (!FieldValueParser.TryGetInt32(
+                fields,
+                Columns.ErrorCode,
+                out var errorCode)) {
+            return false;
+        }
+
         frame = new GuideFrame {
             FrameNumber = frameNumber,
             ElapsedTime = TimeSpan.FromSeconds(elapsedSeconds),
@@ -96,9 +117,12 @@ internal static class GuideFrameLineParser {
             DecErrorPixels = dy,
 
             RaPulseMilliseconds = raDuration,
-            DecPulseMilliseconds = decDuration
-        };
+            DecPulseMilliseconds = decDuration,
 
+            StarMass = starMass,
+            SignalToNoiseRatio = snr,
+            ErrorCode = errorCode
+        };
         return true;
     }
 }

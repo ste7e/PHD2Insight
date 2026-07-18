@@ -18,4 +18,10 @@ public sealed class GuideFrame {
     public double? DecPulseMilliseconds { get; init; }
 
     public bool IsGuiding { get; init; }
+
+    public double StarMass { get; init; }
+
+    public double SignalToNoiseRatio { get; init; }
+
+    public int ErrorCode { get; init; }
 }
