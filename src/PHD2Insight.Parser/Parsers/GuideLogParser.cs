@@ -163,6 +163,16 @@ public sealed class GuideLogParser : IGuideLogParser {
 
                 continue;
             }
+
+            if (GuideFrameLineParser.TryParse(
+                        line,
+                        out var frame)) {
+                if (context.CurrentSession is not null) {
+                    context.CurrentSession.Frames.Add(frame);
+                }
+
+                continue;
+            }
         }
 
         return new ParseResult<GuideLog> {

@@ -145,6 +145,13 @@ public sealed class GuideLogParserTests {
         Assert.Equal("Time", schema.Columns.ElementAt(1));
         Assert.Equal("mount", schema.Columns.ElementAt(2));
         Assert.Equal("ErrorCode", schema.Columns.Last());
+
+        Assert.NotEmpty(first.Frames);
+
+        var firstFrame = first.Frames.First();
+
+        Assert.Equal(1, firstFrame.FrameNumber);
+        Assert.Equal(TimeSpan.FromSeconds(9.161), firstFrame.ElapsedTime);
     }
 
     [Fact]
