@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="PHD2Insight.Tests" />
+    <InternalsVisibleTo Include="PHD2Insight.Parser.Tests" />
   </ItemGroup>
   
 </Project>

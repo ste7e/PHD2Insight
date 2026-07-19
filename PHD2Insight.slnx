@@ -9,6 +9,6 @@
     <Project Path="src/PHD2Insight.UI/PHD2Insight.UI.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/PHD2Insight.Tests/PHD2Insight.Tests.csproj" />
+    <Project Path="tests/PHD2Insight.Parser.Tests/PHD2Insight.Parser.Tests.csproj" />
   </Folder>
 </Solution>
