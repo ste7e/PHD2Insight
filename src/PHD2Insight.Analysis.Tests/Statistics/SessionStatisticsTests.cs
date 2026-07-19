@@ -1,46 +1,70 @@
-﻿using PHD2Insight.Analysis.Statistics;
+﻿using PHD2Insight.Analysis.Models;
+using PHD2Insight.Analysis.Statistics;
 using PHD2Insight.Core.Models;
 
 namespace PHD2Insight.Analysis.Tests.Statistics;
 
-public class SessionStatisticsTests {
+public sealed class SessionStatisticsTests {
     [Fact]
-    public void FrameCount_Returns_NumberOfFrames() {
+    public void Calculate_Returns_SessionStatistics() {
+        // Arrange
         var session = CreateSession();
 
-        Assert.Equal(2, SessionStatistics.FrameCount(session));
-    }
+        // Act
+        SessionStatisticsResult statistics =
+            SessionStatistics.Calculate(session);
 
-    [Fact]
-    public void Duration_Returns_SessionDuration() {
-        var session = CreateSession();
+        // Assert
+        Assert.Equal(2, statistics.FrameCount);
 
         Assert.Equal(
             TimeSpan.FromMinutes(10),
-            SessionStatistics.Duration(session));
-    }
-
-    [Fact]
-    public void AverageSignalToNoiseRatio_Returns_MeanValue() {
-        var session = CreateSession();
+            statistics.Duration);
 
         Assert.Equal(
             55.0,
-            SessionStatistics.AverageSignalToNoiseRatio(session));
-    }
-
-    [Fact]
-    public void AverageStarMass_Returns_MeanValue() {
-        var session = CreateSession();
+            statistics.AverageSignalToNoiseRatio);
 
         Assert.Equal(
             9000.0,
-            SessionStatistics.AverageStarMass(session));
+            statistics.AverageStarMass);
+    }
+
+    [Fact]
+    public void Calculate_Returns_Zero_Averages_For_Empty_Session() {
+        // Arrange
+        var session = new GuidingSession {
+            StartTime = new DateTime(2026, 1, 1, 20, 0, 0),
+            EndTime = new DateTime(2026, 1, 1, 20, 10, 0)
+        };
+
+        // Act
+        var statistics = SessionStatistics.Calculate(session);
+
+        // Assert
+        Assert.Equal(0, statistics.FrameCount);
+        Assert.Equal(0.0, statistics.AverageSignalToNoiseRatio);
+        Assert.Equal(0.0, statistics.AverageStarMass);
+    }
+
+    [Fact]
+    public void Calculate_Returns_Null_Duration_For_Open_Session() {
+        // Arrange
+        var session = new GuidingSession {
+            StartTime = new DateTime(2026, 1, 1, 20, 0, 0)
+        };
+
+        // Act
+        var statistics = SessionStatistics.Calculate(session);
+
+        // Assert
+        Assert.Null(statistics.Duration);
     }
 
     private static GuidingSession CreateSession() {
         return new GuidingSession {
             StartTime = new DateTime(2026, 1, 1, 20, 0, 0),
+
             EndTime = new DateTime(2026, 1, 1, 20, 10, 0),
 
             Frames =

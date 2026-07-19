@@ -1,35 +1,29 @@
-﻿using PHD2Insight.Core.Models;
+﻿using PHD2Insight.Analysis.Models;
+using PHD2Insight.Core.Models;
 
 namespace PHD2Insight.Analysis.Statistics;
 
 public static class SessionStatistics {
-    public static int FrameCount(GuidingSession session) {
+    public static SessionStatisticsResult Calculate(
+        GuidingSession session) {
         ArgumentNullException.ThrowIfNull(session);
 
-        return session.Frames.Count;
-    }
+        return new SessionStatisticsResult {
+            FrameCount = session.Frames.Count,
 
-    public static TimeSpan? Duration(GuidingSession session) {
-        ArgumentNullException.ThrowIfNull(session);
+            Duration = session.EndTime is null
+                ? null
+                : session.EndTime.Value - session.StartTime,
 
-        return session.EndTime is null
-            ? null
-            : session.EndTime.Value - session.StartTime;
-    }
+            AverageSignalToNoiseRatio =
+                session.Frames.Count == 0
+                    ? 0
+                    : session.Frames.Average(f => f.SignalToNoiseRatio),
 
-    public static double AverageSignalToNoiseRatio(GuidingSession session) {
-        ArgumentNullException.ThrowIfNull(session);
-
-        return session.Frames.Count == 0
-            ? 0
-            : session.Frames.Average(f => f.SignalToNoiseRatio);
-    }
-
-    public static double AverageStarMass(GuidingSession session) {
-        ArgumentNullException.ThrowIfNull(session);
-
-        return session.Frames.Count == 0
-            ? 0
-            : session.Frames.Average(f => f.StarMass);
+            AverageStarMass =
+                session.Frames.Count == 0
+                    ? 0
+                    : session.Frames.Average(f => f.StarMass)
+        };
     }
 }
