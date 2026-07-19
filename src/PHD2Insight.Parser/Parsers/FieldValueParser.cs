@@ -52,4 +52,30 @@ internal static class FieldValueParser {
             TryGetString(fields, index, out var text) &&
             Enum.TryParse(text, true, out value);
     }
+
+    public static bool TryGetChar(
+        IReadOnlyList<string> fields,
+        int index,
+        out char value) {
+        value = default;
+
+        if (!TryGetString(fields, index, out var text)) {
+            return false;
+        }
+
+        if (text.Length != 1) {
+            return false;
+        }
+
+        value = text[0];
+        return true;
+    }
+
+    public static string GetStringOrEmpty(
+    IReadOnlyList<string> fields,
+    int index) {
+        return TryGetString(fields, index, out var value)
+            ? value
+            : string.Empty;
+    }
 }

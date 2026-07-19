@@ -17,6 +17,8 @@ public sealed class GuideFrame {
 
     public double? DecPulseMilliseconds { get; init; }
 
+    // TODO: Determine the semantics of IsGuiding once DROP records and
+    // other non-Mount frame types are supported.
     public bool IsGuiding { get; init; }
 
     public double StarMass { get; init; }
@@ -24,4 +26,12 @@ public sealed class GuideFrame {
     public double SignalToNoiseRatio { get; init; }
 
     public int ErrorCode { get; init; }
+
+    public double RaGuideDistance { get; init; }
+
+    public double DecGuideDistance { get; init; }
+
+    public GuideDirection RaDirection { get; init; }
+
+    public GuideDirection DecDirection { get; init; }
 }

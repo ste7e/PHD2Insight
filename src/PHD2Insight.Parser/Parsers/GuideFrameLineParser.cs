@@ -75,6 +75,34 @@ internal static class GuideFrameLineParser {
         }
 
         if (!FieldValueParser.TryGetDouble(
+        fields,
+        Columns.RARawDistance,
+        out var raErrorArcSeconds)) {
+            return false;
+        }
+
+        if (!FieldValueParser.TryGetDouble(
+                fields,
+                Columns.DECRawDistance,
+                out var decErrorArcSeconds)) {
+            return false;
+        }
+
+        if (!FieldValueParser.TryGetDouble(
+                fields,
+                Columns.RAGuideDistance,
+                out var raGuideDistance)) {
+            return false;
+        }
+
+        if (!FieldValueParser.TryGetDouble(
+                fields,
+                Columns.DECGuideDistance,
+                out var decGuideDistance)) {
+            return false;
+        }
+
+        if (!FieldValueParser.TryGetDouble(
                 fields,
                 Columns.RADuration,
                 out var raDuration)) {
@@ -109,6 +137,33 @@ internal static class GuideFrameLineParser {
             return false;
         }
 
+        var raDirection = GuideDirection.None;
+
+        if (FieldValueParser.TryGetString(
+                fields,
+                Columns.RADirection,
+                out var raDirectionText) &&
+            !string.IsNullOrEmpty(raDirectionText)) {
+            if (!GuideDirectionParser.TryParse(
+                    raDirectionText[0],
+                    out raDirection)) {
+                return false;
+            }
+        }
+
+        var decDirection = GuideDirection.None;
+
+        if (FieldValueParser.TryGetString(
+                fields,
+                Columns.DECDirection,
+                out var decDirectionText) &&
+            !string.IsNullOrEmpty(decDirectionText)) {
+            if (!GuideDirectionParser.TryParse(
+                    decDirectionText[0],
+                    out decDirection)) {
+                return false;
+            }
+        }
         frame = new GuideFrame {
             FrameNumber = frameNumber,
             ElapsedTime = TimeSpan.FromSeconds(elapsedSeconds),
@@ -116,13 +171,23 @@ internal static class GuideFrameLineParser {
             RaErrorPixels = dx,
             DecErrorPixels = dy,
 
+            RaErrorArcSeconds = raErrorArcSeconds,
+            DecErrorArcSeconds = decErrorArcSeconds,
+
+            RaGuideDistance = raGuideDistance,
+            DecGuideDistance = decGuideDistance,
+
             RaPulseMilliseconds = raDuration,
             DecPulseMilliseconds = decDuration,
 
+            RaDirection = raDirection,
+            DecDirection = decDirection,
+
             StarMass = starMass,
             SignalToNoiseRatio = snr,
-            ErrorCode = errorCode
+            ErrorCode = errorCode,
         };
         return true;
     }
+
 }
