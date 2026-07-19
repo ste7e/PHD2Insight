@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Analysis\" />
     <Folder Include="TestData\" />
   </ItemGroup>
 
