@@ -10,9 +10,6 @@ public sealed record GuidingSession {
 
     public EquipmentProfile? Equipment { get; init; }
 
-    public IReadOnlyList<GuideSample> Samples { get; init; }
-        = Array.Empty<GuideSample>();
-
     public int ExposureMilliseconds { get; init; }
 
     public double PixelScale { get; init; }
@@ -25,12 +22,12 @@ public sealed record GuidingSession {
 
     public MountInfo? Mount { get; init; }
 
-    public GuideAlgorithmInfo? xGuideAlgorithm { get; init; }
+    public GuideAlgorithmInfo? XGuideAlgorithm { get; init; }
 
-    public GuideAlgorithmInfo? yGuideAlgorithm { get; init; }
+    public GuideAlgorithmInfo? YGuideAlgorithm { get; init; }
 
-    public GuideFrameSchema? GuideFrameSchema { get; set; }
+    public GuideFrameSchema? GuideFrameSchema { get; init; }
 
-    public ICollection<GuideFrame> Frames { get; } = [];
+    public ICollection<GuideFrame> Frames { get; init; } = Array.Empty<GuideFrame>();
 
 }

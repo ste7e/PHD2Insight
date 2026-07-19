@@ -7,8 +7,10 @@
     <Project Path="src/PHD2Insight.Core/PHD2Insight.Core.csproj" />
     <Project Path="src/PHD2Insight.Parser/PHD2Insight.Parser.csproj" />
     <Project Path="src/PHD2Insight.UI/PHD2Insight.UI.csproj" />
+    <Project Path="src/PHD2Insight.Analysis/PHD2Insight.Analysis.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="src/PHD2Insight.Analysis.Tests/PHD2Insight.Analysis.Tests.csproj" />
     <Project Path="tests/PHD2Insight.Parser.Tests/PHD2Insight.Parser.Tests.csproj" />
   </Folder>
 </Solution>

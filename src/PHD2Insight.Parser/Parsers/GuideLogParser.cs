@@ -121,10 +121,10 @@ public sealed class GuideLogParser : IGuideLogParser {
 
                 if (context.CurrentSession is not null) {
                     if (axis == GuideAxis.X) {
-                        context.CurrentSession.xGuideAlgorithm = algorithm;
+                        context.CurrentSession.XGuideAlgorithm = algorithm;
                         context.ContinuationMode = ContinuationMode.XGuideAlgorithm;
                     } else {
-                        context.CurrentSession.yGuideAlgorithm = algorithm;
+                        context.CurrentSession.YGuideAlgorithm = algorithm;
                         context.ContinuationMode = ContinuationMode.YGuideAlgorithm;
                     }
                 }
@@ -133,19 +133,19 @@ public sealed class GuideLogParser : IGuideLogParser {
             }
 
             if (context.ContinuationMode == ContinuationMode.XGuideAlgorithm &&
-                context.CurrentSession?.xGuideAlgorithm is not null) {
+                context.CurrentSession?.XGuideAlgorithm is not null) {
                 if (GuideAlgorithmContinuationLineParser.TryApply(
                         line,
-                        context.CurrentSession.xGuideAlgorithm)) {
+                        context.CurrentSession.XGuideAlgorithm)) {
                     continue;
                 }
             }
 
             if (context.ContinuationMode == ContinuationMode.YGuideAlgorithm &&
-                context.CurrentSession?.yGuideAlgorithm is not null) {
+                context.CurrentSession?.YGuideAlgorithm is not null) {
                 if (GuideAlgorithmContinuationLineParser.TryApply(
                         line,
-                        context.CurrentSession.yGuideAlgorithm)) {
+                        context.CurrentSession.YGuideAlgorithm)) {
                     continue;
                 }
             }

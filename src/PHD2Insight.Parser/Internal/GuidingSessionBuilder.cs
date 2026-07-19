@@ -25,9 +25,9 @@ internal sealed class GuidingSessionBuilder {
 
     public MountInfo? Mount { get; set; }
 
-    public GuideAlgorithmInfo? xGuideAlgorithm { get; set; }
+    public GuideAlgorithmInfo? XGuideAlgorithm { get; set; }
 
-    public GuideAlgorithmInfo? yGuideAlgorithm { get; set; }
+    public GuideAlgorithmInfo? YGuideAlgorithm { get; set; }
 
     public GuideFrameSchema? GuideFrameSchema { get; set; }
 
@@ -38,7 +38,7 @@ internal sealed class GuidingSessionBuilder {
     }
 
     public GuidingSession Build() {
-        var seesion = new GuidingSession {
+        var session = new GuidingSession {
             StartTime = StartTime,
             EndTime = EndTime,
             Equipment = Equipment,
@@ -48,15 +48,14 @@ internal sealed class GuidingSessionBuilder {
             PixelScale = PixelScale,
             Camera = Camera,
             Mount = Mount,
-            xGuideAlgorithm = xGuideAlgorithm,
-            yGuideAlgorithm = yGuideAlgorithm,
+            XGuideAlgorithm = XGuideAlgorithm,
+            YGuideAlgorithm = YGuideAlgorithm,
             GuideFrameSchema = GuideFrameSchema,
+
+            Frames = Frames.ToList(),
         };
 
-        foreach (var frame in Frames) {
-            seesion.Frames.Add(frame);
-        }
 
-        return seesion;
+        return session;
     }
 }
