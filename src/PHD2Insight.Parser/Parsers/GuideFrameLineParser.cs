@@ -177,8 +177,8 @@ internal static class GuideFrameLineParser {
             RaGuideDistance = raGuideDistance,
             DecGuideDistance = decGuideDistance,
 
-            RaPulseMilliseconds = raDuration,
-            DecPulseMilliseconds = decDuration,
+            RaPulseMilliseconds = raDuration == 0 ? null : raDuration,
+            DecPulseMilliseconds = decDuration == 0 ? null : decDuration,
 
             RaDirection = raDirection,
             DecDirection = decDirection,

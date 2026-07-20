@@ -5,7 +5,7 @@ namespace PHD2Insight.Tests.Parsers;
 public sealed class GuideFrameLineParserTests {
     
     [Fact]
-    public void Parses_mount_frame() {
+    public void Parses_Pulse_Durations() {
         const string Line =
             "1,9.161,\"Mount\",1.189,-0.946,1.109,1.195,0.665,0.000,145,W,0,,,,9223,59.51,0";
 
@@ -31,7 +31,7 @@ public sealed class GuideFrameLineParserTests {
         Assert.Equal(0.000, frame.DecGuideDistance);
 
         Assert.Equal(145.0, frame.RaPulseMilliseconds);
-        Assert.Equal(0.0, frame.DecPulseMilliseconds);
+        Assert.Null(frame.DecPulseMilliseconds);
 
         Assert.Equal(GuideDirection.West, frame.RaDirection);
         Assert.Equal(GuideDirection.None, frame.DecDirection);
