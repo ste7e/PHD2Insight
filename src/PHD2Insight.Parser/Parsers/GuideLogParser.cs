@@ -168,7 +168,22 @@ public sealed class GuideLogParser : IGuideLogParser {
                         line,
                         out var frame)) {
                 if (context.CurrentSession is not null) {
-                    context.CurrentSession.Frames.Add(frame);
+                    context.CurrentSession.AddFrame(frame);
+                    context.CurrentElapsedTime = frame.ElapsedTime;
+                }
+
+                continue;
+            }
+
+            if (SettlingEventParser.TryParse(
+                    line,
+                    out var settlingEvent)) {
+                if (context.CurrentSession is not null) {
+                    context.CurrentSession.AddSettlingEvent(
+                    settlingEvent with 
+                    {
+                        ElapsedTime = context.CurrentElapsedTime
+                    });
                 }
 
                 continue;

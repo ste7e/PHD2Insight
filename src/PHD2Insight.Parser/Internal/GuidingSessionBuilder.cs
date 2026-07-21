@@ -33,9 +33,24 @@ internal sealed class GuidingSessionBuilder {
 
     public ICollection<GuideFrame> Frames { get; } = [];
 
-    public void Close(DateTime endTime) {
+    internal ICollection<SettlingEvent> SettlingEvents { get; } = [];
+
+    internal void Close(DateTime endTime) {
         EndTime = endTime;
     }
+
+    public void AddFrame(GuideFrame frame) {
+        ArgumentNullException.ThrowIfNull(frame);
+
+        Frames.Add(frame);
+    }
+
+    public void AddSettlingEvent(SettlingEvent settlingEvent) {
+        ArgumentNullException.ThrowIfNull(settlingEvent);
+
+        SettlingEvents.Add(settlingEvent);
+    }
+
 
     public GuidingSession Build() {
         var session = new GuidingSession {
@@ -53,6 +68,7 @@ internal sealed class GuidingSessionBuilder {
             GuideFrameSchema = GuideFrameSchema,
 
             Frames = Frames.ToList(),
+            SettlingEvents = SettlingEvents.ToList()
         };
 
 

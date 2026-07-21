@@ -30,4 +30,6 @@ public sealed record GuidingSession {
 
     public ICollection<GuideFrame> Frames { get; init; } = Array.Empty<GuideFrame>();
 
+    public ICollection<SettlingEvent> SettlingEvents { get; init; } = Array.Empty<SettlingEvent>();
+
 }

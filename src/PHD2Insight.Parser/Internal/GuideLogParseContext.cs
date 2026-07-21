@@ -9,6 +9,8 @@ internal sealed class GuideLogParseContext {
 
     public GuidingSessionBuilder? CurrentSession { get; set; }
 
+    internal TimeSpan CurrentElapsedTime { get; set; }
+
     public GuideLog Build() {
         var sessions = new List<GuidingSession>(Sessions);
 
