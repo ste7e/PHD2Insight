@@ -1,4 +1,6 @@
-﻿public sealed record SettlingResult {
+﻿namespace PHD2Insight.Analysis.Models;
+
+public sealed record SettlingResult {
     public int SettlingAttemptCount { get; init; }
 
     public int SuccessfulSettles { get; init; }
@@ -9,7 +11,7 @@
 
     public TimeSpan AverageSettlingTime { get; init; }
 
-    public TimeSpan LongestSettlingTime { get; init; }
-
     public TimeSpan ShortestSettlingTime { get; init; }
+
+    public TimeSpan LongestSettlingTime { get; init; }
 }

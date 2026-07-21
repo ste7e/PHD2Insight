@@ -12,4 +12,6 @@ public sealed record AnalysisResult {
     public PeakErrorResult PeakErrors { get; init; } = new();
 
     public LostStarResult LostStars { get; init; } = new();
+
+    public SettlingResult Settling { get; init; } = new();
 }

@@ -14,6 +14,7 @@ public static class AnalysisRunner {
             GuideCorrections = GuideCorrectionAnalysis.Calculate(session),
             PeakErrors = PeakErrorAnalysis.Calculate(session),
             LostStars = LostStarAnalysis.Calculate(session),
+            Settling = SettlingAnalysis.Calculate(session),
         };
 
         return result;
