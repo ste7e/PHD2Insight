@@ -1,9 +1,9 @@
-﻿using PHD2Insight.Analysis.Analysis;
-using PHD2Insight.Core.Models;
+﻿using PHD2Insight.Core.Models;
+using PHD2Insight.Analysis.Metrics;
 
-namespace PHD2Insight.Analysis.Tests.Analysis;
+namespace PHD2Insight.Analysis.Tests.Metrics;
 
-public sealed class AnalysisRunnerTests {
+public sealed class MetricsCalculatorTests {
     [Fact]
     public void Calculate_Returns_All_Analysis_Results() {
         // Arrange
@@ -36,7 +36,7 @@ public sealed class AnalysisRunnerTests {
         };
 
         // Act
-        var result = AnalysisRunner.Calculate(session);
+        var result = MetricsCalculator.Calculate(session);
 
         // Assert
         Assert.NotNull(result);
@@ -56,6 +56,6 @@ public sealed class AnalysisRunnerTests {
     [Fact]
     public void Calculate_Throws_For_Null_Session() {
         Assert.Throws<ArgumentNullException>(
-            () => AnalysisRunner.Calculate(null!));
+            () => MetricsCalculator.Calculate(null!));
     }
 }

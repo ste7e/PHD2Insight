@@ -1,7 +1,7 @@
 ﻿using PHD2Insight.Analysis.Models;
 using PHD2Insight.Core.Models;
 
-namespace PHD2Insight.Analysis.Analysis;
+namespace PHD2Insight.Analysis.Metrics;
 
 public static class LostStarAnalysis {
     public static LostStarResult Calculate(GuidingSession session) {

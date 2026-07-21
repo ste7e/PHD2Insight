@@ -2,9 +2,9 @@
 using PHD2Insight.Analysis.Statistics;
 using PHD2Insight.Core.Models;
 
-namespace PHD2Insight.Analysis.Analysis;
+namespace PHD2Insight.Analysis.Metrics;
 
-public static class AnalysisRunner {
+public static class MetricsCalculator {
     public static AnalysisResult Calculate(GuidingSession session) {
         ArgumentNullException.ThrowIfNull(session);
 
@@ -15,6 +15,7 @@ public static class AnalysisRunner {
             PeakErrors = PeakErrorAnalysis.Calculate(session),
             LostStars = LostStarAnalysis.Calculate(session),
             Settling = SettlingAnalysis.Calculate(session),
+            OscillationMetrics = OscillationMetricsAnalysis.Calculate(session),
         };
 
         return result;

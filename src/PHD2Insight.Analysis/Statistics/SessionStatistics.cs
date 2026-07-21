@@ -26,4 +26,6 @@ public static class SessionStatistics {
                     : session.Frames.Average(f => f.StarMass)
         };
     }
+
+
 }

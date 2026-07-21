@@ -1,7 +1,7 @@
-﻿using PHD2Insight.Analysis.Analysis;
+﻿using PHD2Insight.Analysis.Metrics;
 using PHD2Insight.Core.Models;
 
-namespace PHD2Insight.Analysis.Tests.Analysis;
+namespace PHD2Insight.Analysis.Tests.Metrics;
 
 public sealed class RmsAnalysisTests {
     [Fact]

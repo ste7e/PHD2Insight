@@ -83,4 +83,46 @@ public sealed class SessionStatisticsTests {
             ]
         };
     }
+
+    [Fact]
+    public void MeanAbsolute_Returns_Expected_Value() {
+        var result = StatisticalFunctions.MeanAbsolute(
+            [-2, -1, 1, 2]);
+
+        Assert.Equal(1.5, result);
+    }
+
+    [Fact]
+    public void StandardDeviation_Returns_Population_StandardDeviation() {
+        var result = StatisticalFunctions.StandardDeviation(
+            [2, 4, 4, 4, 5, 5, 7, 9]);
+
+        Assert.Equal(2.0, result, 10);
+    }
+
+    [Theory]
+    [InlineData(new[] { -1.0, 1.0 }, 1)]
+    [InlineData(new[] { 1.0, -1.0 }, 1)]
+    [InlineData(new[] { -1.0, -2.0, -3.0 }, 0)]
+    [InlineData(new[] { 1.0, -1.0, 1.0 }, 2)]
+    public void CountZeroCrossings_Returns_Expected_Value(
+        double[] values,
+        int expected) {
+        Assert.Equal(
+            expected,
+            StatisticalFunctions.CountZeroCrossings(values));
+    }
+
+    [Theory]
+    [InlineData(new[] { 1.0, 2.0, 3.0 }, 0)]
+    [InlineData(new[] { 3.0, 2.0, 1.0 }, 0)]
+    [InlineData(new[] { 1.0, 3.0, 2.0 }, 1)]
+    [InlineData(new[] { 1.0, 3.0, 2.0, 4.0 }, 2)]
+    public void CountDirectionReversals_Returns_Expected_Value(
+        double[] values,
+        int expected) {
+        Assert.Equal(
+            expected,
+            StatisticalFunctions.CountDirectionReversals(values));
+    }
 }

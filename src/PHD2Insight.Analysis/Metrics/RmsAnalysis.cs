@@ -2,7 +2,7 @@
 using PHD2Insight.Core.Models;
 using PHD2Insight.Analysis.Statistics;
 
-namespace PHD2Insight.Analysis.Analysis;
+namespace PHD2Insight.Analysis.Metrics;
 
 public static class RmsAnalysis {
     public static RmsResult Calculate(

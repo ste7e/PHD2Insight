@@ -14,4 +14,6 @@ public sealed record AnalysisResult {
     public LostStarResult LostStars { get; init; } = new();
 
     public SettlingResult Settling { get; init; } = new();
+
+    public OscillationMetricsResult OscillationMetrics { get; init; } = new();
 }
