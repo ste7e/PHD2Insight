@@ -2,6 +2,7 @@
 using PHD2Insight.Parser.Abstractions;
 using PHD2Insight.Parser.Infrastructure;
 using PHD2Insight.Parser.Internal;
+using PHD2Insight.Parser.Parsing;
 
 namespace PHD2Insight.Parser.Parsers;
 
@@ -165,6 +166,7 @@ public sealed class GuideLogParser : IGuideLogParser {
             }
 
             if (GuideFrameLineParser.TryParse(
+                        context,
                         line,
                         out var frame)) {
                 if (context.CurrentSession is not null) {

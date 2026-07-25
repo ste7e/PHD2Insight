@@ -1,6 +1,6 @@
 ﻿using PHD2Insight.Parser.Parsers;
 
-namespace PHD2Insight.Tests;
+namespace PHD2Insight.Parser.Tests;
 
 public sealed class InvariantNumberParserTests {
     [Fact]

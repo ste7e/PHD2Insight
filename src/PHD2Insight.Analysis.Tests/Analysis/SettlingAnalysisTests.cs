@@ -1,7 +1,7 @@
 ﻿using PHD2Insight.Analysis.Metrics;
 using PHD2Insight.Core.Models;
 
-namespace PHD2Insight.Analysis.Tests.Metrics;
+namespace PHD2Insight.Analysis.Tests.Analysis;
 
 public sealed class SettlingAnalysisTests {
     [Fact]

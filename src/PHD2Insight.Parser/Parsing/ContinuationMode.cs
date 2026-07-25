@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PHD2Insight.Parser {
+namespace PHD2Insight.Parser.Parsing {
     internal enum ContinuationMode {
         None,
         XGuideAlgorithm,

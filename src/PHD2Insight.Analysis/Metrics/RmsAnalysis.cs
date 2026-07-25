@@ -13,21 +13,18 @@ public static class RmsAnalysis {
             return new RmsResult();
         }
 
-        double raPixels =
-            StatisticalFunctions.RootMeanSquare(
-                session.Frames.Select(f => f.RaErrorPixels));
+        double raPixels = StatisticalFunctions.GuideRms(session.Frames.Select(f => f.RaErrorPixels));
 
-        double decPixels =
-            StatisticalFunctions.RootMeanSquare(
-                session.Frames.Select(f => f.DecErrorPixels));
+        double decPixels = StatisticalFunctions.GuideRms(session.Frames.Select(f => f.DecErrorPixels));
 
-        double raArcSeconds =
-            StatisticalFunctions.RootMeanSquare(
-                session.Frames.Select(f => f.RaErrorArcSeconds));
+        double raArcSeconds = StatisticalFunctions.GuideRms(session.Frames.Select(f =>f.RaErrorArcSeconds));
 
-        double decArcSeconds =
-            StatisticalFunctions.RootMeanSquare(
-                session.Frames.Select(f => f.DecErrorArcSeconds));
+        double decArcSeconds = StatisticalFunctions.GuideRms(session.Frames.Select(f =>f.DecErrorArcSeconds));
+
+        var raToDecRatio =
+            decArcSeconds == 0
+                ? double.PositiveInfinity
+                : raArcSeconds / decArcSeconds;
 
         return new RmsResult {
             RaPixels = raPixels,
@@ -38,6 +35,7 @@ public static class RmsAnalysis {
 
             RaArcSeconds = raArcSeconds,
             DecArcSeconds = decArcSeconds,
+            RaToDecRatio = raToDecRatio,
             TotalArcSeconds = Math.Sqrt(
                 raArcSeconds * raArcSeconds +
                 decArcSeconds * decArcSeconds)

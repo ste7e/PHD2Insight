@@ -1,4 +1,4 @@
-﻿namespace PHD2Insight.Tests;
+﻿namespace PHD2Insight.Parser.Tests;
 
 internal static class TestData {
     public static string SampleGuideLog =>

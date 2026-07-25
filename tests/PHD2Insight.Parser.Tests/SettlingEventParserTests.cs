@@ -1,7 +1,7 @@
 ﻿using PHD2Insight.Core.Models;
 using PHD2Insight.Parser.Parsers;
 
-namespace PHD2Insight.Parser.Tests.Parser;
+namespace PHD2Insight.Parser.Tests;
 
 public sealed class SettlingEventParserTests {
     [Fact]

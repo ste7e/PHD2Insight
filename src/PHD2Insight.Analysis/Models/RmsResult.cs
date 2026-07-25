@@ -11,5 +11,8 @@ public sealed record RmsResult {
 
     public double DecArcSeconds { get; init; }
 
+    public double RaToDecRatio { get; init; }
+
     public double TotalArcSeconds { get; init; }
+
 }

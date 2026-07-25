@@ -1,7 +1,7 @@
 ﻿using PHD2Insight.Analysis.Diagnostics;
 using PHD2Insight.Analysis.Models;
 
-namespace PHD2Insight.Analysis.Tests.Diagnostics;
+namespace PHD2Insight.Analysis.Tests.Analysis;
 
 public sealed class DiagnosticEngineTests {
     [Fact]

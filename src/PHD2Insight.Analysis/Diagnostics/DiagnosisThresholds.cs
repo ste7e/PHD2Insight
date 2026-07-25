@@ -1,7 +1,7 @@
-﻿namespace PHD2Insight.Analysis.Diagnostics;
-
-internal static class DiagnosisThresholds {
+﻿internal static class DiagnosisThresholds {
     public const double HighRaRmsArcSeconds = 1.2;
+
+    public const double HighRaToDecRatio = 2.0;
 
     public const int HighRaZeroCrossings = 150;
 

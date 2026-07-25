@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PHD2Insight.Analysis\PHD2Insight.Analysis.csproj" />
+    <ProjectReference Include="..\PHD2Insight.Parser\PHD2Insight.Parser.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,7 +2,7 @@
 using PHD2Insight.Parser.Infrastructure;
 using Xunit;
 
-namespace PHD2Insight.Tests;
+namespace PHD2Insight.Parser.Tests;
 
 public sealed class LineReaderTests {
     [Fact]

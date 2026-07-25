@@ -2,7 +2,7 @@
 using PHD2Insight.Parser.Parsers;
 using Xunit;
 
-namespace PHD2Insight.Tests;
+namespace PHD2Insight.Parser.Tests;
 
 public sealed class GuideLogParserTests {
     [Fact]

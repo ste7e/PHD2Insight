@@ -1,16 +1,18 @@
 ﻿using PHD2Insight.Parser.Parsers;
 
-namespace PHD2Insight.Tests.Parsers;
+namespace PHD2Insight.Parser.Tests;
 
 public sealed class GuideFrameLineParserTests {
     
     [Fact]
     public void Parses_Pulse_Durations() {
+        // Frame,Time,mount,dx,dy,RARawDistance,DECRawDistance,RAGuideDistance,DECGuideDistance,RADuration,RADirection,DECDuration,DECDirection,XStep,YStep,StarMass,SNR,ErrorCode
         const string Line =
             "1,9.161,\"Mount\",1.189,-0.946,1.109,1.195,0.665,0.000,145,W,0,,,,9223,59.51,0";
 
         var result =
             GuideFrameLineParser.TryParse(
+                1.05,
                 Line,
                 out var frame);
 
@@ -24,8 +26,8 @@ public sealed class GuideFrameLineParserTests {
             TimeSpan.FromSeconds(9.161),
             frame.ElapsedTime);
 
-        Assert.Equal(1.189, frame.RaErrorPixels);
-        Assert.Equal(-0.946, frame.DecErrorPixels);
+        Assert.Equal(1.109, frame.RaErrorPixels);
+        Assert.Equal(1.195, frame.DecErrorPixels);
 
         Assert.Equal(0.665, frame.RaGuideDistance);
         Assert.Equal(0.000, frame.DecGuideDistance);
@@ -48,6 +50,7 @@ public sealed class GuideFrameLineParserTests {
 
         Assert.False(
             GuideFrameLineParser.TryParse(
+                1.05,
                 Line,
                 out _));
     }
@@ -56,6 +59,7 @@ public sealed class GuideFrameLineParserTests {
     public void Rejects_header() {
         Assert.False(
             GuideFrameLineParser.TryParse(
+                1.05,
                 "Frame,Time,mount,dx,dy,RARawDistance,DECRawDistance,RAGuideDistance,DECGuideDistance,RADuration,RADirection,DECDuration,DECDirection,XStep,YStep,StarMass,SNR,ErrorCode",
                 out _));
     }

@@ -1,9 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using PHD2Insight.Core.Models;
+using PHD2Insight.Parser.Internal;
 
 namespace PHD2Insight.Parser.Parsers;
 
 internal static class GuideFrameLineParser {
+    // Frame,Time,mount,dx,dy,RARawDistance,DECRawDistance,RAGuideDistance,DECGuideDistance,RADuration,RADirection,DECDuration,DECDirection,XStep,YStep,StarMass,SNR,ErrorCode
+
     private static class Columns {
         public const int Frame = 0;
         public const int Time = 1;
@@ -26,8 +29,27 @@ internal static class GuideFrameLineParser {
     }
 
     public static bool TryParse(
+        GuideLogParseContext? context,
         string line,
         [NotNullWhen(true)] out GuideFrame? frame) {
+
+        var session = context?.CurrentSession;
+
+        if (session == null) {
+            frame = null;
+            return false;
+        }
+
+        var pixelScale = session.PixelScale;
+
+        return TryParse(pixelScale, line, out frame);
+    }
+
+    public static bool TryParse(
+        double pixelScale,
+        string line,
+        [NotNullWhen(true)] out GuideFrame? frame) {
+
         frame = null;
 
         var fields = CsvLineParser.Parse(line);
@@ -75,16 +97,16 @@ internal static class GuideFrameLineParser {
         }
 
         if (!FieldValueParser.TryGetDouble(
-        fields,
-        Columns.RARawDistance,
-        out var raErrorArcSeconds)) {
+                fields,
+                Columns.RARawDistance,
+                out var raErrorPixels)) {
             return false;
         }
 
         if (!FieldValueParser.TryGetDouble(
                 fields,
                 Columns.DECRawDistance,
-                out var decErrorArcSeconds)) {
+                out var decErrorPixels)) {
             return false;
         }
 
@@ -164,15 +186,16 @@ internal static class GuideFrameLineParser {
                 return false;
             }
         }
+
         frame = new GuideFrame {
             FrameNumber = frameNumber,
             ElapsedTime = TimeSpan.FromSeconds(elapsedSeconds),
 
-            RaErrorPixels = dx,
-            DecErrorPixels = dy,
+            RaErrorPixels = raErrorPixels,
+            DecErrorPixels = decErrorPixels,
 
-            RaErrorArcSeconds = raErrorArcSeconds,
-            DecErrorArcSeconds = decErrorArcSeconds,
+            RaErrorArcSeconds = raErrorPixels * pixelScale,
+            DecErrorArcSeconds = decErrorPixels * pixelScale,
 
             RaGuideDistance = raGuideDistance,
             DecGuideDistance = decGuideDistance,

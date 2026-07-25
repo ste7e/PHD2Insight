@@ -25,6 +25,15 @@ public static class StatisticalFunctions {
             : data.Average();
     }
 
+    public static double GuideRms(
+        IEnumerable<double> values) {
+        var list = values.ToList();
+
+        return list.Count == 0
+            ? 0
+            : StatisticalFunctions.StandardDeviation(list);
+    }
+
     public static double RootMeanSquare(IEnumerable<double> values) {
         ArgumentNullException.ThrowIfNull(values);
 
