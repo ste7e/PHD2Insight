@@ -20,4 +20,16 @@ public sealed record OscillationMetricsResult {
     public int RaDirectionReversals { get; init; }
 
     public int DecDirectionReversals { get; init; }
+
+    public double RaZeroCrossingsPerMinute { get; init; }
+
+    public double RaDirectionChangesPerMinute { get; init; }
+
+    public double DecZeroCrossingsPerMinute { get; init; }
+
+    public double DecDirectionChangesPerMinute { get; init; }
+
+    public double MeanRaOscillationAmplitude { get; init; }
+
+    public double MeanDecOscillationAmplitude { get; init; }
 }

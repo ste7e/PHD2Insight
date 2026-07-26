@@ -1,4 +1,5 @@
-﻿using PHD2Insight.Analysis.Models;
+﻿using PHD2Insight.Analysis.Diagnostics;
+using PHD2Insight.Analysis.Models;
 using PHD2Insight.Analysis.Statistics;
 using PHD2Insight.Core.Models;
 
@@ -8,13 +9,34 @@ public static class OscillationMetricsAnalysis {
     public static OscillationMetricsResult Calculate(GuidingSession session) {
         ArgumentNullException.ThrowIfNull(session);
 
-        var raErrors = session.Frames
+        var frames = AnalysisFrameSelector.GetAnalysisFrames(session);
+
+        if (frames.Count < 2) {
+            return new OscillationMetricsResult();
+        }
+
+        var duration =
+            frames[^1].ElapsedTime - frames[0].ElapsedTime;
+
+        if (duration <= TimeSpan.Zero) {
+            return new OscillationMetricsResult();
+        }
+
+        var raErrors = frames
             .Select(f => f.RaErrorArcSeconds)
             .ToArray();
 
-        var decErrors = session.Frames
+        var decErrors = frames
             .Select(f => f.DecErrorArcSeconds)
             .ToArray();
+
+        double minutes = (frames.Last().ElapsedTime - frames.First().ElapsedTime) .TotalMinutes;
+
+        int raZeroCrossings = StatisticalFunctions.CountZeroCrossings(raErrors);
+        int decZeroCrossings = StatisticalFunctions.CountZeroCrossings(decErrors);
+
+        int raDirectionReversals = StatisticalFunctions.CountDirectionReversals(raErrors);
+        int decDirectionReversals = StatisticalFunctions.CountDirectionReversals(decErrors);
 
         return new OscillationMetricsResult {
             MeanRaErrorArcSeconds =
@@ -35,17 +57,24 @@ public static class OscillationMetricsAnalysis {
             StandardDeviationDecErrorArcSeconds =
                 StatisticalFunctions.StandardDeviation(decErrors),
 
-            RaZeroCrossings =
-                StatisticalFunctions.CountZeroCrossings(raErrors),
+            RaZeroCrossings = raZeroCrossings,
 
-            DecZeroCrossings =
-                StatisticalFunctions.CountZeroCrossings(decErrors),
+            RaZeroCrossingsPerMinute = raZeroCrossings / minutes,
 
-            RaDirectionReversals =
-                StatisticalFunctions.CountDirectionReversals(raErrors),
+            DecZeroCrossings = decZeroCrossings,
 
-            DecDirectionReversals =
-                StatisticalFunctions.CountDirectionReversals(decErrors)
+            DecZeroCrossingsPerMinute = decZeroCrossings / minutes,
+
+            RaDirectionReversals = raDirectionReversals,
+
+            RaDirectionChangesPerMinute = raDirectionReversals / minutes,
+
+            DecDirectionReversals = decDirectionReversals,
+
+            DecDirectionChangesPerMinute = decDirectionReversals / minutes,
+
+
+
         };
     }
 }

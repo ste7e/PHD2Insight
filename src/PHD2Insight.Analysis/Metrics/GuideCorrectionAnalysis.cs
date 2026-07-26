@@ -1,4 +1,5 @@
-﻿using PHD2Insight.Analysis.Models;
+﻿using PHD2Insight.Analysis.Diagnostics;
+using PHD2Insight.Analysis.Models;
 using PHD2Insight.Core.Models;
 
 namespace PHD2Insight.Analysis.Metrics;
@@ -8,12 +9,14 @@ public static class GuideCorrectionAnalysis {
         GuidingSession session) {
         ArgumentNullException.ThrowIfNull(session);
 
-        var raPulses = session.Frames
+        var frames = AnalysisFrameSelector.GetAnalysisFrames(session);
+
+        var raPulses = frames
             .Where(f => f.RaPulseMilliseconds.HasValue)
             .Select(f => f.RaPulseMilliseconds!.Value)
             .ToList();
 
-        var decPulses = session.Frames
+        var decPulses = frames
             .Where(f => f.DecPulseMilliseconds.HasValue)
             .Select(f => f.DecPulseMilliseconds!.Value)
             .ToList();

@@ -9,6 +9,10 @@
     <Folder Include="Recommendations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="PHD2Insight.Analysis.Tests" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

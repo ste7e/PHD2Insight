@@ -1,4 +1,5 @@
-﻿using PHD2Insight.Analysis.Models;
+﻿using PHD2Insight.Analysis.Diagnostics;
+using PHD2Insight.Analysis.Models;
 using PHD2Insight.Core.Models;
 
 namespace PHD2Insight.Analysis.Metrics;
@@ -7,31 +8,33 @@ public static class PeakErrorAnalysis {
     public static PeakErrorResult Calculate(GuidingSession session) {
         ArgumentNullException.ThrowIfNull(session);
 
-        if (session.Frames.Count == 0) {
+        var frames = AnalysisFrameSelector.GetAnalysisFrames(session);
+
+        if (frames.Count == 0) {
             return new PeakErrorResult();
         }
 
         return new PeakErrorResult {
             MaximumRaErrorPixels =
-                session.Frames.Max(f => Math.Abs(f.RaErrorPixels)),
+                frames.Max(f => Math.Abs(f.RaErrorPixels)),
 
             MaximumDecErrorPixels =
-                session.Frames.Max(f => Math.Abs(f.DecErrorPixels)),
+                frames.Max(f => Math.Abs(f.DecErrorPixels)),
 
             MaximumTotalErrorPixels =
-                session.Frames.Max(f =>
+                frames.Max(f =>
                     Math.Sqrt(
                         f.RaErrorPixels * f.RaErrorPixels +
                         f.DecErrorPixels * f.DecErrorPixels)),
 
             MaximumRaErrorArcSeconds =
-                session.Frames.Max(f => Math.Abs(f.RaErrorArcSeconds)),
+                frames.Max(f => Math.Abs(f.RaErrorArcSeconds)),
 
             MaximumDecErrorArcSeconds =
-                session.Frames.Max(f => Math.Abs(f.DecErrorArcSeconds)),
+                frames.Max(f => Math.Abs(f.DecErrorArcSeconds)),
 
             MaximumTotalErrorArcSeconds =
-                session.Frames.Max(f =>
+                frames.Max(f =>
                     Math.Sqrt(
                         f.RaErrorArcSeconds * f.RaErrorArcSeconds +
                         f.DecErrorArcSeconds * f.DecErrorArcSeconds))

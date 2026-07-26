@@ -148,11 +148,14 @@ public sealed class DiagnosticRegressionTests {
 
         Assert.Equal(3, guideLog.Sessions.Count);
 
-        var analysis = MetricsCalculator.Calculate(guideLog.Sessions[0]);
+        var result = MetricsCalculator.Calculate(guideLog.Sessions[0]);
 
-        Assert.Equal(0.84, analysis.Rms.RaArcSeconds, 2);
-        Assert.Equal(0.43, analysis.Rms.DecArcSeconds, 2);
-        Assert.Equal(0.94, analysis.Rms.TotalArcSeconds, 2);
+        Assert.Equal(0.84, result.Rms.RaArcSeconds, 2);
+        Assert.Equal(0.43, result.Rms.DecArcSeconds, 2);
+        Assert.Equal(0.95, result.Rms.TotalArcSeconds, 2);
+
+        Assert.Equal(-0.03, result.Rms.MeanRaArcSeconds, 2);
+        Assert.Equal(0.25, result.Rms.MeanDecArcSeconds, 2);
     }
 
 

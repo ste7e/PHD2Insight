@@ -15,4 +15,16 @@ public sealed record RmsResult {
 
     public double TotalArcSeconds { get; init; }
 
+    public double MeanRaPixels { get; init; }
+
+    public double MeanDecPixels { get; init; }
+
+    public double MeanRaArcSeconds { get; init; }
+
+    public double MeanDecArcSeconds { get; init; }
+
+    public double MeanRadialOffsetArcSeconds =>
+                    System.Math.Sqrt(
+                        MeanRaArcSeconds * MeanRaArcSeconds +
+                        MeanDecArcSeconds * MeanDecArcSeconds);
 }

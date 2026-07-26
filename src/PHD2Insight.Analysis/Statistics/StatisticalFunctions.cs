@@ -112,4 +112,5 @@ public static class StatisticalFunctions {
 
         return reversals;
     }
+
 }

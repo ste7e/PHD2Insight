@@ -11,21 +11,25 @@ public sealed class OscillationMetricsAnalysisTests {
             [
                 new GuideFrame
                 {
+                    ElapsedTime = new TimeSpan(10000),
                     RaErrorArcSeconds = -1,
                     DecErrorArcSeconds = 1
                 },
                 new GuideFrame
                 {
+                    ElapsedTime = new TimeSpan(10360),
                     RaErrorArcSeconds = 1,
                     DecErrorArcSeconds = 2
                 },
                 new GuideFrame
                 {
+                    ElapsedTime = new TimeSpan(10720),
                     RaErrorArcSeconds = -1,
                     DecErrorArcSeconds = 1
                 },
                 new GuideFrame
                 {
+                    ElapsedTime = new TimeSpan(11080),
                     RaErrorArcSeconds = 1,
                     DecErrorArcSeconds = 2
                 }

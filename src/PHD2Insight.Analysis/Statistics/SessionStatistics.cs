@@ -1,4 +1,5 @@
-﻿using PHD2Insight.Analysis.Models;
+﻿using PHD2Insight.Analysis.Diagnostics;
+using PHD2Insight.Analysis.Models;
 using PHD2Insight.Core.Models;
 
 namespace PHD2Insight.Analysis.Statistics;
@@ -8,22 +9,24 @@ public static class SessionStatistics {
         GuidingSession session) {
         ArgumentNullException.ThrowIfNull(session);
 
+        var frames = AnalysisFrameSelector.GetAnalysisFrames(session);
+
         return new SessionStatisticsResult {
-            FrameCount = session.Frames.Count,
+            FrameCount = frames.Count,
 
             Duration = session.EndTime is null
                 ? null
                 : session.EndTime.Value - session.StartTime,
 
             AverageSignalToNoiseRatio =
-                session.Frames.Count == 0
+                frames.Count == 0
                     ? 0
-                    : session.Frames.Average(f => f.SignalToNoiseRatio),
+                    : frames.Average(f => f.SignalToNoiseRatio),
 
             AverageStarMass =
-                session.Frames.Count == 0
+                frames.Count == 0
                     ? 0
-                    : session.Frames.Average(f => f.StarMass)
+                    : frames.Average(f => f.StarMass)
         };
     }
 

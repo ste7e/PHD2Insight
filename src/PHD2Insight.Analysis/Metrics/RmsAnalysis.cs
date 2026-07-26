@@ -1,6 +1,7 @@
-﻿using PHD2Insight.Analysis.Models;
-using PHD2Insight.Core.Models;
+﻿using PHD2Insight.Analysis.Diagnostics;
+using PHD2Insight.Analysis.Models;
 using PHD2Insight.Analysis.Statistics;
+using PHD2Insight.Core.Models;
 
 namespace PHD2Insight.Analysis.Metrics;
 
@@ -9,23 +10,30 @@ public static class RmsAnalysis {
         GuidingSession session) {
         ArgumentNullException.ThrowIfNull(session);
 
-        if (session.Frames.Count == 0) {
+        var frames = AnalysisFrameSelector.GetAnalysisFrames(session);
+
+        if (frames.Count == 0) {
             return new RmsResult();
         }
 
-        double raPixels = StatisticalFunctions.GuideRms(session.Frames.Select(f => f.RaErrorPixels));
+        double raPixels = StatisticalFunctions.GuideRms(frames.Select(f => f.RaErrorPixels));
 
-        double decPixels = StatisticalFunctions.GuideRms(session.Frames.Select(f => f.DecErrorPixels));
+        double decPixels = StatisticalFunctions.GuideRms(frames.Select(f => f.DecErrorPixels));
 
-        double raArcSeconds = StatisticalFunctions.GuideRms(session.Frames.Select(f =>f.RaErrorArcSeconds));
+        double raArcSeconds = StatisticalFunctions.GuideRms(frames.Select(f =>f.RaErrorArcSeconds));
 
-        double decArcSeconds = StatisticalFunctions.GuideRms(session.Frames.Select(f =>f.DecErrorArcSeconds));
+        double decArcSeconds = StatisticalFunctions.GuideRms(frames.Select(f =>f.DecErrorArcSeconds));
 
-        var raToDecRatio =
-            decArcSeconds == 0
-                ? double.PositiveInfinity
-                : raArcSeconds / decArcSeconds;
+        double meanRaPixels = StatisticalFunctions.Mean( frames.Select(f => f.RaErrorPixels));
 
+        double meanDecPixels = StatisticalFunctions.Mean( frames.Select(f => f.DecErrorPixels));  
+        
+        double meanRaArcSeconds = StatisticalFunctions.Mean( frames.Select(f => f.RaErrorArcSeconds)); 
+
+        double meanDecArcSeconds = StatisticalFunctions.Mean(frames.Select(f => f.DecErrorArcSeconds));
+        
+        var raToDecRatio = decArcSeconds == 0 ? double.PositiveInfinity : raArcSeconds / decArcSeconds;
+        
         return new RmsResult {
             RaPixels = raPixels,
             DecPixels = decPixels,
@@ -38,7 +46,12 @@ public static class RmsAnalysis {
             RaToDecRatio = raToDecRatio,
             TotalArcSeconds = Math.Sqrt(
                 raArcSeconds * raArcSeconds +
-                decArcSeconds * decArcSeconds)
+                decArcSeconds * decArcSeconds),
+            MeanRaPixels = meanRaPixels,
+            MeanDecPixels = meanDecPixels,
+            MeanRaArcSeconds = meanRaArcSeconds,
+            MeanDecArcSeconds = meanDecArcSeconds,
         };
     }
+
 }
