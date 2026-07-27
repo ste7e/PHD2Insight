@@ -1,4 +1,5 @@
 ﻿using PHD2Insight.Analysis.Metrics;
+using PHD2Insight.Analysis.Tests.Builders;
 using PHD2Insight.Core.Models;
 
 namespace PHD2Insight.Analysis.Tests.Analysis;
@@ -6,35 +7,15 @@ namespace PHD2Insight.Analysis.Tests.Analysis;
 public sealed class OscillationMetricsAnalysisTests {
     [Fact]
     public void Calculate_Returns_Expected_Metrics() {
-        var session = new GuidingSession {
-            Frames =
-            [
-                new GuideFrame
-                {
-                    ElapsedTime = new TimeSpan(10000),
-                    RaErrorArcSeconds = -1,
-                    DecErrorArcSeconds = 1
-                },
-                new GuideFrame
-                {
-                    ElapsedTime = new TimeSpan(10360),
-                    RaErrorArcSeconds = 1,
-                    DecErrorArcSeconds = 2
-                },
-                new GuideFrame
-                {
-                    ElapsedTime = new TimeSpan(10720),
-                    RaErrorArcSeconds = -1,
-                    DecErrorArcSeconds = 1
-                },
-                new GuideFrame
-                {
-                    ElapsedTime = new TimeSpan(11080),
-                    RaErrorArcSeconds = 1,
-                    DecErrorArcSeconds = 2
-                }
-            ]
-        };
+
+        var builder = new GuidingSessionBuilder();
+
+        builder.AddFrame(raErrorArcSeconds: -1, decErrorArcSeconds: 1);
+        builder.AddFrame(raErrorArcSeconds: 1, decErrorArcSeconds: 2);
+        builder.AddFrame(raErrorArcSeconds: -1, decErrorArcSeconds: 1);
+        builder.AddFrame(raErrorArcSeconds: 1, decErrorArcSeconds: 2);
+
+        var session = builder.Build();
 
         var result = OscillationMetricsAnalysis.Calculate(session);
 
@@ -51,33 +32,6 @@ public sealed class OscillationMetricsAnalysisTests {
         Assert.Equal(2, result.DecDirectionReversals);
     }
 
-    private static GuidingSession CreateSession(
-    int frameCount,
-    TimeSpan duration,
-    IReadOnlyList<double> raErrors) {
-        var interval = frameCount > 1
-            ? duration.TotalSeconds / (frameCount - 1)
-            : 0;
-
-        var frames = Enumerable.Range(0, frameCount)
-            .Select(i => new GuideFrame {
-                FrameNumber = i + 1,
-                ElapsedTime = TimeSpan.FromSeconds(i * interval),
-
-                RaErrorArcSeconds = raErrors[i],
-                DecErrorArcSeconds = 0,
-
-                // Ensure the frame is included by AnalysisFrameSelector
-                RaPulseMilliseconds = 100,
-                DecPulseMilliseconds = 100
-            })
-            .ToList();
-
-        return new GuidingSession {
-            Frames = frames,
-            SettlingEvents = []
-        };
-    }
     [Fact]
     public void Calculate_Returns_Default_Result_For_Empty_Session() {
         var result = OscillationMetricsAnalysis.Calculate(
@@ -96,10 +50,16 @@ public sealed class OscillationMetricsAnalysisTests {
     [Fact]
     public void Calculate_Normalises_ZeroCrossings_To_PerMinute() {
         // Arrange
-        var session = CreateSession(
-            frameCount: 61,
-            duration: TimeSpan.FromMinutes(2),
-            raErrors: AlternateErrors(61));
+        var builder = new GuidingSessionBuilder();
+
+        for (int i = 0; i < 61; i++) {
+            builder.AddFrame(
+                i + 1,
+                TimeSpan.FromSeconds(i * 2),
+                raErrorArcSeconds: i % 2 == 0 ? 1.0 : -1.0);
+        }
+
+        var session = builder.Build();
 
         // Act
         var result = OscillationMetricsAnalysis.Calculate(session);
@@ -113,10 +73,11 @@ public sealed class OscillationMetricsAnalysisTests {
     [Fact]
     public void Analyse_Returns_Zero_Crossing_Rate_For_Single_Frame() {
         // Arrange
-        var session = CreateSession(
-            frameCount: 1,
-            duration: TimeSpan.Zero,
-            raErrors: [1.0]);
+        var builder = new GuidingSessionBuilder();
+
+        builder.AddFrame(raErrorArcSeconds: 1.0);
+
+        var session = builder.Build();
 
         // Act
         var result = OscillationMetricsAnalysis.Calculate(session);
@@ -131,10 +92,13 @@ public sealed class OscillationMetricsAnalysisTests {
     [Fact]
     public void Analyse_Returns_Zero_Rates_For_Zero_Duration() {
         // Arrange
-        var session = CreateSession(
-            frameCount: 5,
-            duration: TimeSpan.Zero,
-            raErrors: [1.0, -1.0, 1.0, -1.0, 1.0]);
+        var builder = new GuidingSessionBuilder();
+
+        foreach (var raError in new double[] { 1.0, -1.0, 1.0, -1.0, 1.0 }) {
+            builder.AddFrame(TimeSpan.Zero, raErrorArcSeconds: raError);
+        }
+        
+        var session = builder.Build();
 
         // Act
         var result = OscillationMetricsAnalysis.Calculate(session);

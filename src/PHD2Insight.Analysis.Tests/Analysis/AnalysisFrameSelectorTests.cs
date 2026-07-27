@@ -1,5 +1,6 @@
-﻿using PHD2Insight.Core.Models;
-using PHD2Insight.Analysis.Diagnostics;
+﻿using PHD2Insight.Analysis.Diagnostics;
+using PHD2Insight.Analysis.Tests.Builders;
+using PHD2Insight.Core.Models;
 
 namespace PHD2Insight.Analysis.Tests.Analysis;
 
@@ -36,39 +37,15 @@ public class AnalysisFrameSelectorTests {
     }
 
     private static GuidingSession CreateSession() {
-        return new GuidingSession {
-            Frames =
-            [
-                new GuideFrame
-            {
-                FrameNumber = 339,
-                ElapsedTime = TimeSpan.FromSeconds(3059.324)
-            },
-            new GuideFrame
-            {
-                FrameNumber = 340,
-                ElapsedTime = TimeSpan.FromSeconds(3068.679)
-            },
-            new GuideFrame
-            {
-                FrameNumber = 341,
-                ElapsedTime = TimeSpan.FromSeconds(3077.427)
-            }
-            ],
+        var builder = new GuidingSessionBuilder();
 
-            SettlingEvents =
-            [
-                new SettlingEvent
-            {
-                State = SettlingState.Started,
-                ElapsedTime = TimeSpan.FromSeconds(3059.500)
-            },
-            new SettlingEvent
-            {
-                State = SettlingState.Completed,
-                ElapsedTime = TimeSpan.FromSeconds(3070.000)
-            }
-            ]
-        };
+        builder.AddFrame(339, TimeSpan.FromSeconds(3059.324), raErrorArcSeconds: 1.0);
+        builder.AddFrame(340, TimeSpan.FromSeconds(3068.679), raErrorArcSeconds: -1.0);
+        builder.AddFrame(341, TimeSpan.FromSeconds(3077.427), raErrorArcSeconds: 1.0);
+
+        builder.AddSettlingEvent(TimeSpan.FromSeconds(3059.500), SettlingState.Started);
+        builder.AddSettlingEvent(TimeSpan.FromSeconds(3070.000), SettlingState.Completed);
+
+        return builder.Build();
     }
 }

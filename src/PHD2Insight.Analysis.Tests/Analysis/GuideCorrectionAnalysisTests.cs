@@ -1,4 +1,5 @@
 ﻿using PHD2Insight.Analysis.Metrics;
+using PHD2Insight.Analysis.Tests.Builders;
 using PHD2Insight.Core.Models;
 
 namespace PHD2Insight.Analysis.Tests.Analysis;
@@ -7,7 +8,13 @@ public sealed class GuideCorrectionAnalysisTests {
     [Fact]
     public void Calculate_Returns_GuideCorrectionStatistics() {
         // Arrange
-        var session = CreateSession();
+        var builder = new GuidingSessionBuilder();
+
+        builder.AddFrame(TimeSpan.Zero, raPulseMilliseconds: 100, decPulseMilliseconds: 50);
+        builder.AddFrame(TimeSpan.Zero, raPulseMilliseconds: 200, decPulseMilliseconds: 100);
+        builder.AddFrame(TimeSpan.Zero, raPulseMilliseconds: 300, decPulseMilliseconds: null);
+
+        var session = builder.Build();
 
         // Act
         var result = GuideCorrectionAnalysis.Calculate(session);
@@ -34,27 +41,14 @@ public sealed class GuideCorrectionAnalysisTests {
     [Fact]
     public void Calculate_Ignores_Missing_Pulses() {
         // Arrange
-        var session = new GuidingSession {
-            Frames =
-            [
-                new GuideFrame
-                {
-                    RaPulseMilliseconds = null
-                },
-                new GuideFrame
-                {
-                    RaPulseMilliseconds = 100
-                },
-                new GuideFrame
-                {
-                    RaPulseMilliseconds = null
-                },
-                new GuideFrame
-                {
-                    RaPulseMilliseconds = 300
-                }
-            ]
-        };
+        var builder = new GuidingSessionBuilder();
+
+        builder.AddFrame(TimeSpan.Zero, raPulseMilliseconds: null);
+        builder.AddFrame(TimeSpan.Zero, raPulseMilliseconds: 100);
+        builder.AddFrame(TimeSpan.Zero, raPulseMilliseconds: null);
+        builder.AddFrame(TimeSpan.Zero, raPulseMilliseconds: 300);
+
+        var session = builder.Build();
 
         // Act
         var result = GuideCorrectionAnalysis.Calculate(session);
@@ -96,26 +90,4 @@ public sealed class GuideCorrectionAnalysisTests {
             result.TotalDecCorrectionTime);
     }
 
-    private static GuidingSession CreateSession() {
-        return new GuidingSession {
-            Frames =
-            [
-                new GuideFrame
-            {
-                RaPulseMilliseconds = 100,
-                DecPulseMilliseconds = 50
-            },
-            new GuideFrame
-            {
-                RaPulseMilliseconds = 200,
-                DecPulseMilliseconds = 100
-            },
-            new GuideFrame
-            {
-                RaPulseMilliseconds = 300,
-                DecPulseMilliseconds = null
-            }
-            ]
-        };
-    }
 }
