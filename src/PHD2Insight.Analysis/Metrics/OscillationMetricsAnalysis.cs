@@ -30,13 +30,17 @@ public static class OscillationMetricsAnalysis {
             .Select(f => f.DecErrorArcSeconds)
             .ToArray();
 
-        double minutes = (frames.Last().ElapsedTime - frames.First().ElapsedTime) .TotalMinutes;
+        double minutes = (frames.Last().ElapsedTime - frames.First().ElapsedTime).TotalMinutes;
 
         int raZeroCrossings = StatisticalFunctions.CountZeroCrossings(raErrors);
         int decZeroCrossings = StatisticalFunctions.CountZeroCrossings(decErrors);
 
         int raDirectionReversals = StatisticalFunctions.CountDirectionReversals(raErrors);
         int decDirectionReversals = StatisticalFunctions.CountDirectionReversals(decErrors);
+
+        var raEvents = DetectOscillationEvents(frames, f => f.RaErrorArcSeconds);
+
+        var decEvents = DetectOscillationEvents(frames, f => f.DecErrorArcSeconds);
 
         return new OscillationMetricsResult {
             MeanRaErrorArcSeconds =
@@ -59,22 +63,107 @@ public static class OscillationMetricsAnalysis {
 
             RaZeroCrossings = raZeroCrossings,
 
-            RaZeroCrossingsPerMinute = raZeroCrossings / minutes,
+            RaZeroCrossingsPerMinute = CalculateRatePerMinute(raZeroCrossings, frames),
 
             DecZeroCrossings = decZeroCrossings,
 
-            DecZeroCrossingsPerMinute = decZeroCrossings / minutes,
+            DecZeroCrossingsPerMinute = CalculateRatePerMinute(decZeroCrossings, frames),
 
             RaDirectionReversals = raDirectionReversals,
 
-            RaDirectionChangesPerMinute = raDirectionReversals / minutes,
+            RaDirectionChangesPerMinute = CalculateRatePerMinute(raDirectionReversals, frames),
 
             DecDirectionReversals = decDirectionReversals,
 
-            DecDirectionChangesPerMinute = decDirectionReversals / minutes,
+            DecDirectionChangesPerMinute = CalculateRatePerMinute(decDirectionReversals, frames),
 
 
 
         };
+    }
+    private static IReadOnlyList<OscillationEvent> DetectOscillationEvents(
+        IReadOnlyList<GuideFrame> frames,
+        Func<GuideFrame, double> selector) {
+        if (frames.Count < 2) {
+            return Array.Empty<OscillationEvent>();
+        }
+
+        var events = new List<OscillationEvent>();
+
+        double? previous = null;
+        TimeSpan previousTime = TimeSpan.Zero;
+
+        foreach (var frame in frames) {
+            var current = selector(frame);
+
+            if (previous is not null &&
+                IsSignificantCrossing(previous.Value, current)) {
+                events.Add(
+                    new OscillationEvent(
+                        frame.ElapsedTime,
+                        System.Math.Max(previous.Value, current),
+                        System.Math.Abs(System.Math.Min(previous.Value, current))));
+            }
+
+            previous = current;
+            previousTime = frame.ElapsedTime;
+        }
+
+        return events;
+    }
+
+    private static bool IsSignificantCrossing(
+    double previous,
+    double current) {
+        if (System.Math.Abs(previous)
+            < OscillationThresholds.MinimumAmplitudeArcSeconds) {
+            return false;
+        }
+
+        if (System.Math.Abs(current)
+            < OscillationThresholds.MinimumAmplitudeArcSeconds) {
+            return false;
+        }
+
+        return System.Math.Sign(previous)
+            != System.Math.Sign(current);
+    }
+
+    private static double CalculateRatePerMinute(
+    int count,
+    IReadOnlyList<GuideFrame> frames) {
+        if (frames.Count < 2) {
+            return 0;
+        }
+
+        var duration = frames[^1].ElapsedTime - frames[0].ElapsedTime;
+
+        return duration.TotalMinutes <= 0
+            ? 0
+            : count / duration.TotalMinutes;
+    }
+
+    private static double CalculateRatePerMinute(
+            IReadOnlyList<OscillationEvent> events,
+            IReadOnlyList<GuideFrame> frames) {
+        if (events.Count == 0 || frames.Count < 2) {
+            return 0;
+        }
+
+        var duration =
+            frames[^1].ElapsedTime - frames[0].ElapsedTime;
+
+        if (duration.TotalMinutes <= 0) {
+            return 0;
+        }
+
+        return events.Count / duration.TotalMinutes;
+    }
+
+    private static double MeanAmplitude(
+    IReadOnlyList<OscillationEvent> events) {
+        return events.Count == 0
+            ? 0
+            : events.Average(e => e.MeanAmplitudeArcSeconds);
     }
 }

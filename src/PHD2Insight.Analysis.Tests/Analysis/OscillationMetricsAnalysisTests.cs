@@ -51,6 +51,33 @@ public sealed class OscillationMetricsAnalysisTests {
         Assert.Equal(2, result.DecDirectionReversals);
     }
 
+    private static GuidingSession CreateSession(
+    int frameCount,
+    TimeSpan duration,
+    IReadOnlyList<double> raErrors) {
+        var interval = frameCount > 1
+            ? duration.TotalSeconds / (frameCount - 1)
+            : 0;
+
+        var frames = Enumerable.Range(0, frameCount)
+            .Select(i => new GuideFrame {
+                FrameNumber = i + 1,
+                ElapsedTime = TimeSpan.FromSeconds(i * interval),
+
+                RaErrorArcSeconds = raErrors[i],
+                DecErrorArcSeconds = 0,
+
+                // Ensure the frame is included by AnalysisFrameSelector
+                RaPulseMilliseconds = 100,
+                DecPulseMilliseconds = 100
+            })
+            .ToList();
+
+        return new GuidingSession {
+            Frames = frames,
+            SettlingEvents = []
+        };
+    }
     [Fact]
     public void Calculate_Returns_Default_Result_For_Empty_Session() {
         var result = OscillationMetricsAnalysis.Calculate(
@@ -64,5 +91,63 @@ public sealed class OscillationMetricsAnalysisTests {
 
         Assert.Equal(0, result.MeanRaErrorArcSeconds);
         Assert.Equal(0, result.MeanDecErrorArcSeconds);
+    }
+
+    [Fact]
+    public void Calculate_Normalises_ZeroCrossings_To_PerMinute() {
+        // Arrange
+        var session = CreateSession(
+            frameCount: 61,
+            duration: TimeSpan.FromMinutes(2),
+            raErrors: AlternateErrors(61));
+
+        // Act
+        var result = OscillationMetricsAnalysis.Calculate(session);
+
+        // Assert
+        Assert.Equal(30.0,
+            result.RaZeroCrossingsPerMinute,
+            1);
+    }
+
+    [Fact]
+    public void Analyse_Returns_Zero_Crossing_Rate_For_Single_Frame() {
+        // Arrange
+        var session = CreateSession(
+            frameCount: 1,
+            duration: TimeSpan.Zero,
+            raErrors: [1.0]);
+
+        // Act
+        var result = OscillationMetricsAnalysis.Calculate(session);
+
+        // Assert
+        Assert.Equal(0.0, result.RaZeroCrossingsPerMinute);
+        Assert.Equal(0.0, result.DecZeroCrossingsPerMinute);
+        Assert.Equal(0.0, result.RaDirectionChangesPerMinute);
+        Assert.Equal(0.0, result.DecDirectionChangesPerMinute);
+    }
+
+    [Fact]
+    public void Analyse_Returns_Zero_Rates_For_Zero_Duration() {
+        // Arrange
+        var session = CreateSession(
+            frameCount: 5,
+            duration: TimeSpan.Zero,
+            raErrors: [1.0, -1.0, 1.0, -1.0, 1.0]);
+
+        // Act
+        var result = OscillationMetricsAnalysis.Calculate(session);
+
+        // Assert
+        Assert.Equal(0.0, result.RaZeroCrossingsPerMinute);
+        Assert.Equal(0.0, result.DecZeroCrossingsPerMinute);
+        Assert.Equal(0.0, result.RaDirectionChangesPerMinute);
+        Assert.Equal(0.0, result.DecDirectionChangesPerMinute);
+    }
+    private static IReadOnlyList<double> AlternateErrors(int count) {
+        return Enumerable.Range(0, count)
+            .Select(i => i % 2 == 0 ? 1.0 : -1.0)
+            .ToArray();
     }
 }
