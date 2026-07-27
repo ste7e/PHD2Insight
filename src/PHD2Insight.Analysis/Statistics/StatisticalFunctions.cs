@@ -65,27 +65,6 @@ public static class StatisticalFunctions {
         return System.Math.Sqrt(variance);
     }
 
-    public static int CountZeroCrossings(IEnumerable<double> values) {
-        ArgumentNullException.ThrowIfNull(values);
-
-        var data = values.ToArray();
-
-        if (data.Length < 2) {
-            return 0;
-        }
-
-        var crossings = 0;
-
-        for (var i = 1; i < data.Length; i++) {
-            if ((data[i - 1] < 0 && data[i] > 0) ||
-                (data[i - 1] > 0 && data[i] < 0)) {
-                crossings++;
-            }
-        }
-
-        return crossings;
-    }
-
     public static int CountDirectionReversals(IEnumerable<double> values) {
         ArgumentNullException.ThrowIfNull(values);
 

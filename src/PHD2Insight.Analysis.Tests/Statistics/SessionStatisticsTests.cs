@@ -101,19 +101,6 @@ public sealed class SessionStatisticsTests {
     }
 
     [Theory]
-    [InlineData(new[] { -1.0, 1.0 }, 1)]
-    [InlineData(new[] { 1.0, -1.0 }, 1)]
-    [InlineData(new[] { -1.0, -2.0, -3.0 }, 0)]
-    [InlineData(new[] { 1.0, -1.0, 1.0 }, 2)]
-    public void CountZeroCrossings_Returns_Expected_Value(
-        double[] values,
-        int expected) {
-        Assert.Equal(
-            expected,
-            StatisticalFunctions.CountZeroCrossings(values));
-    }
-
-    [Theory]
     [InlineData(new[] { 1.0, 2.0, 3.0 }, 0)]
     [InlineData(new[] { 3.0, 2.0, 1.0 }, 0)]
     [InlineData(new[] { 1.0, 3.0, 2.0 }, 1)]

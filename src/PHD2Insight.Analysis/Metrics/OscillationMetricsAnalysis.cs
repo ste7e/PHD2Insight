@@ -32,15 +32,15 @@ public static class OscillationMetricsAnalysis {
 
         double minutes = (frames.Last().ElapsedTime - frames.First().ElapsedTime).TotalMinutes;
 
-        int raZeroCrossings = StatisticalFunctions.CountZeroCrossings(raErrors);
-        int decZeroCrossings = StatisticalFunctions.CountZeroCrossings(decErrors);
-
         int raDirectionReversals = StatisticalFunctions.CountDirectionReversals(raErrors);
         int decDirectionReversals = StatisticalFunctions.CountDirectionReversals(decErrors);
 
-        var raEvents = DetectOscillationEvents(frames, f => f.RaErrorArcSeconds);
+        var raEvents = OscillationDetector.Detect( frames, f => f.RaErrorArcSeconds);
 
-        var decEvents = DetectOscillationEvents(frames, f => f.DecErrorArcSeconds);
+        var decEvents = OscillationDetector.Detect( frames, f => f.DecErrorArcSeconds);
+
+        var raZeroCrossings = raEvents.Count;
+        var decZeroCrossings = decEvents.Count;
 
         return new OscillationMetricsResult {
             MeanRaErrorArcSeconds =
@@ -164,6 +164,6 @@ public static class OscillationMetricsAnalysis {
     IReadOnlyList<OscillationEvent> events) {
         return events.Count == 0
             ? 0
-            : events.Average(e => e.MeanAmplitudeArcSeconds);
+            : events.Average(e => e.MeanAmplitude);
     }
 }

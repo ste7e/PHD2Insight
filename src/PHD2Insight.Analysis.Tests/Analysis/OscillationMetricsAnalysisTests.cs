@@ -6,6 +6,22 @@ namespace PHD2Insight.Analysis.Tests.Analysis;
 
 public sealed class OscillationMetricsAnalysisTests {
     [Fact]
+    public void Detect_Returns_Event_For_Single_Zero_Crossing() {
+        var session = new GuidingSessionBuilder()
+            .AddFrame(1, TimeSpan.Zero, raErrorArcSeconds: 1.0)
+            .AddFrame(2, TimeSpan.FromSeconds(2), raErrorArcSeconds: -1.0)
+            .Build();
+
+        var events = OscillationDetector.Detect(
+            (IReadOnlyList<GuideFrame>)session.Frames,
+            f => f.RaErrorArcSeconds);
+
+        var oscillation = Assert.Single(events);
+
+        Assert.Equal(1.0, oscillation.PreviousValue);
+        Assert.Equal(-1.0, oscillation.CurrentValue);
+    }
+    [Fact]
     public void Calculate_Returns_Expected_Metrics() {
 
         var builder = new GuidingSessionBuilder();

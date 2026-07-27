@@ -2,8 +2,9 @@
 
 internal sealed record OscillationEvent(
     TimeSpan ElapsedTime,
-    double PositiveAmplitudeArcSeconds,
-    double NegativeAmplitudeArcSeconds) {
-    public double MeanAmplitudeArcSeconds =>
-        (PositiveAmplitudeArcSeconds + NegativeAmplitudeArcSeconds) / 2.0;
+    double PreviousValue,
+    double CurrentValue) {
+    public double MeanAmplitude =>
+        (Math.Abs(PreviousValue) +
+         Math.Abs(CurrentValue)) / 2.0;
 }
