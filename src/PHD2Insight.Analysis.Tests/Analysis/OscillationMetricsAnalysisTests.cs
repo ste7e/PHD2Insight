@@ -1,4 +1,5 @@
-﻿using PHD2Insight.Analysis.Metrics;
+﻿using PHD2Insight.Analysis.Detection;
+using PHD2Insight.Analysis.Metrics;
 using PHD2Insight.Analysis.Tests.Builders;
 using PHD2Insight.Core.Models;
 
@@ -6,26 +7,12 @@ namespace PHD2Insight.Analysis.Tests.Analysis;
 
 public sealed class OscillationMetricsAnalysisTests {
     [Fact]
-    public void Detect_Returns_Event_For_Single_Zero_Crossing() {
-        var session = new GuidingSessionBuilder()
-            .AddFrame(1, TimeSpan.Zero, raErrorArcSeconds: 1.0)
-            .AddFrame(2, TimeSpan.FromSeconds(2), raErrorArcSeconds: -1.0)
-            .Build();
-
-        var events = OscillationDetector.Detect(
-            (IReadOnlyList<GuideFrame>)session.Frames,
-            f => f.RaErrorArcSeconds);
-
-        var oscillation = Assert.Single(events);
-
-        Assert.Equal(1.0, oscillation.PreviousValue);
-        Assert.Equal(-1.0, oscillation.CurrentValue);
-    }
-    [Fact]
     public void Calculate_Returns_Expected_Metrics() {
 
         var builder = new GuidingSessionBuilder();
 
+        builder.AddFrame(raErrorArcSeconds: -1, decErrorArcSeconds: 1);
+        builder.AddFrame(raErrorArcSeconds: 1, decErrorArcSeconds: 2);
         builder.AddFrame(raErrorArcSeconds: -1, decErrorArcSeconds: 1);
         builder.AddFrame(raErrorArcSeconds: 1, decErrorArcSeconds: 2);
         builder.AddFrame(raErrorArcSeconds: -1, decErrorArcSeconds: 1);
@@ -41,11 +28,11 @@ public sealed class OscillationMetricsAnalysisTests {
         Assert.Equal(1.0, result.MeanAbsoluteRaErrorArcSeconds, 10);
         Assert.Equal(1.5, result.MeanAbsoluteDecErrorArcSeconds, 10);
 
-        Assert.Equal(3, result.RaZeroCrossings);
-        Assert.Equal(0, result.DecZeroCrossings);
+        Assert.Equal(24, result.RaOscillationEventsPerMinute);
+        Assert.Equal(0, result.DecOscillationEventsPerMinute);
 
-        Assert.Equal(2, result.RaDirectionReversals);
-        Assert.Equal(2, result.DecDirectionReversals);
+        Assert.Equal(4, result.RaDirectionReversals);
+        Assert.Equal(4, result.DecDirectionReversals);
     }
 
     [Fact]
@@ -53,8 +40,8 @@ public sealed class OscillationMetricsAnalysisTests {
         var result = OscillationMetricsAnalysis.Calculate(
             new GuidingSession());
 
-        Assert.Equal(0, result.RaZeroCrossings);
-        Assert.Equal(0, result.DecZeroCrossings);
+        Assert.Equal(0, result.RaOscillationEventsPerMinute);
+        Assert.Equal(0, result.DecOscillationEventsPerMinute);
 
         Assert.Equal(0, result.RaDirectionReversals);
         Assert.Equal(0, result.DecDirectionReversals);
@@ -66,23 +53,49 @@ public sealed class OscillationMetricsAnalysisTests {
     [Fact]
     public void Calculate_Normalises_ZeroCrossings_To_PerMinute() {
         // Arrange
-        var builder = new GuidingSessionBuilder();
+        var session = new GuidingSessionBuilder()
+            .AddFrame(1)
+            .AddFrame(2)
+            .AddFrame(3)
+            .AddFrame(2)
+            .AddFrame(1)
+            .AddFrame(-1)
+            .AddFrame(-2)
+            .AddFrame(-3)
+            .AddFrame(-2)
+            .AddFrame(-1)
 
-        for (int i = 0; i < 61; i++) {
-            builder.AddFrame(
-                i + 1,
-                TimeSpan.FromSeconds(i * 2),
-                raErrorArcSeconds: i % 2 == 0 ? 1.0 : -1.0);
-        }
+            .AddFrame(1)
+            .AddFrame(2)
+            .AddFrame(3)
+            .AddFrame(2)
+            .AddFrame(1)
+            .AddFrame(-1)
+            .AddFrame(-2)
+            .AddFrame(-3)
+            .AddFrame(-2)
+            .AddFrame(-1)
 
-        var session = builder.Build();
+            .AddFrame(1)
+            .AddFrame(2)
+            .AddFrame(3)
+            .AddFrame(2)
+            .AddFrame(1)
+            .AddFrame(-1)
+            .AddFrame(-2)
+            .AddFrame(-3)
+            .AddFrame(-2)
+            .AddFrame(-1)
+
+            .AddFrame(1)
+            .Build();
 
         // Act
         var result = OscillationMetricsAnalysis.Calculate(session);
 
         // Assert
-        Assert.Equal(30.0,
-            result.RaZeroCrossingsPerMinute,
+        Assert.Equal(5.0,
+            result.RaOscillationEventsPerMinute,
             1);
     }
 
@@ -99,8 +112,8 @@ public sealed class OscillationMetricsAnalysisTests {
         var result = OscillationMetricsAnalysis.Calculate(session);
 
         // Assert
-        Assert.Equal(0.0, result.RaZeroCrossingsPerMinute);
-        Assert.Equal(0.0, result.DecZeroCrossingsPerMinute);
+        Assert.Equal(0.0, result.RaOscillationEventsPerMinute);
+        Assert.Equal(0.0, result.DecOscillationEventsPerMinute);
         Assert.Equal(0.0, result.RaDirectionChangesPerMinute);
         Assert.Equal(0.0, result.DecDirectionChangesPerMinute);
     }
@@ -120,14 +133,84 @@ public sealed class OscillationMetricsAnalysisTests {
         var result = OscillationMetricsAnalysis.Calculate(session);
 
         // Assert
-        Assert.Equal(0.0, result.RaZeroCrossingsPerMinute);
-        Assert.Equal(0.0, result.DecZeroCrossingsPerMinute);
+        Assert.Equal(0.0, result.RaOscillationEventsPerMinute);
+        Assert.Equal(0.0, result.DecOscillationEventsPerMinute);
         Assert.Equal(0.0, result.RaDirectionChangesPerMinute);
         Assert.Equal(0.0, result.DecDirectionChangesPerMinute);
     }
-    private static IReadOnlyList<double> AlternateErrors(int count) {
-        return Enumerable.Range(0, count)
-            .Select(i => i % 2 == 0 ? 1.0 : -1.0)
-            .ToArray();
+
+    [Fact]
+    public void Detect_Returns_One_Peak_For_One_Positive_Excursion() {
+        var session = new GuidingSessionBuilder()
+            .AddFrame(1, TimeSpan.Zero, 0.4)
+            .AddFrame(2, TimeSpan.FromSeconds(2), 1.1)
+            .AddFrame(3, TimeSpan.FromSeconds(4), 0.8)
+            .AddFrame(4, TimeSpan.FromSeconds(6), 1.5)
+            .AddFrame(5, TimeSpan.FromSeconds(8), 1.2)
+            .AddFrame(6, TimeSpan.FromSeconds(10), -0.2)
+            .Build();
+
+        var peaks = PeakDetector.Detect(
+            session.Frames,
+            f => f.RaErrorArcSeconds);
+
+        var peak = Assert.Single(peaks);
+
+        Assert.Equal(1.5, peak.Value);
+    }
+
+    [Fact]
+    public void Detect_Returns_Two_Peaks_For_Two_Excursions() {
+        var session = new GuidingSessionBuilder()
+            .AddFrame(1, TimeSpan.Zero, 0.4)
+            .AddFrame(2, TimeSpan.FromSeconds(2), 1.1)
+            .AddFrame(3, TimeSpan.FromSeconds(4), 1.5)
+            .AddFrame(4, TimeSpan.FromSeconds(6), 0.7)
+            .AddFrame(5, TimeSpan.FromSeconds(8), -0.2)
+            .AddFrame(6, TimeSpan.FromSeconds(10), -1.3)
+            .AddFrame(7, TimeSpan.FromSeconds(12), -0.8)
+            .AddFrame(8, TimeSpan.FromSeconds(14), 0.2)
+            .Build();
+
+        var peaks = PeakDetector.Detect(
+            session.Frames,
+            f => f.RaErrorArcSeconds);
+
+        Assert.Equal(2, peaks.Count);
+
+        Assert.Equal(1.5, peaks[0].Value);
+        Assert.Equal(-1.3, peaks[1].Value);
+    }
+
+    [Fact]
+    public void Detect_DoesNotEmitIncompleteFinalExcursion() {
+        var session = new GuidingSessionBuilder()
+            .AddFrame(1)
+            .AddFrame(2)
+            .AddFrame(3)
+            .Build();
+
+        var peaks = PeakDetector.Detect(
+            session.Frames,
+            f => f.RaErrorArcSeconds);
+
+        Assert.Empty(peaks);
+    }
+    [Fact]
+    public void Detect_EmitsPeakWhenExcursionCompletes() {
+        var session = new GuidingSessionBuilder()
+            .AddFrame(1)
+            .AddFrame(2)
+            .AddFrame(3)
+            .AddFrame(-1)
+            .Build();
+
+        var peaks = PeakDetector.Detect(
+            session.Frames,
+            f => f.RaErrorArcSeconds);
+
+        var peak = Assert.Single(peaks);
+
+        Assert.Equal(3, peak.Value);
     }
 }

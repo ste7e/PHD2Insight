@@ -34,7 +34,7 @@ internal sealed class GuidingSessionBuilder {
         double decErrorArcSeconds = 0,
         double? raPulseMilliseconds = 100,
         double? decPulseMilliseconds = 100) {
-        return AddFrame(frames.Count + 1, TimeSpan.FromSeconds(frames.Count), raErrorArcSeconds, decErrorArcSeconds, raPulseMilliseconds, decPulseMilliseconds);
+        return AddFrame(frames.Count + 1, TimeSpan.FromSeconds(frames.Count*2), raErrorArcSeconds, decErrorArcSeconds, raPulseMilliseconds, decPulseMilliseconds);
     }
 
     public GuidingSessionBuilder AddFrame(

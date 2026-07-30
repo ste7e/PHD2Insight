@@ -1,4 +1,5 @@
-﻿using PHD2Insight.Analysis.Diagnostics;
+﻿using PHD2Insight.Analysis.Detection;
+using PHD2Insight.Analysis.Diagnostics;
 using PHD2Insight.Analysis.Models;
 using PHD2Insight.Analysis.Statistics;
 using PHD2Insight.Core.Models;
@@ -30,17 +31,12 @@ public static class OscillationMetricsAnalysis {
             .Select(f => f.DecErrorArcSeconds)
             .ToArray();
 
-        double minutes = (frames.Last().ElapsedTime - frames.First().ElapsedTime).TotalMinutes;
-
         int raDirectionReversals = StatisticalFunctions.CountDirectionReversals(raErrors);
         int decDirectionReversals = StatisticalFunctions.CountDirectionReversals(decErrors);
 
         var raEvents = OscillationDetector.Detect( frames, f => f.RaErrorArcSeconds);
 
         var decEvents = OscillationDetector.Detect( frames, f => f.DecErrorArcSeconds);
-
-        var raZeroCrossings = raEvents.Count;
-        var decZeroCrossings = decEvents.Count;
 
         return new OscillationMetricsResult {
             MeanRaErrorArcSeconds =
@@ -61,13 +57,9 @@ public static class OscillationMetricsAnalysis {
             StandardDeviationDecErrorArcSeconds =
                 StatisticalFunctions.StandardDeviation(decErrors),
 
-            RaZeroCrossings = raZeroCrossings,
+            RaOscillationEventsPerMinute = CalculateRatePerMinute(raEvents.Count, frames),
 
-            RaZeroCrossingsPerMinute = CalculateRatePerMinute(raZeroCrossings, frames),
-
-            DecZeroCrossings = decZeroCrossings,
-
-            DecZeroCrossingsPerMinute = CalculateRatePerMinute(decZeroCrossings, frames),
+            DecOscillationEventsPerMinute = CalculateRatePerMinute(decEvents.Count, frames),
 
             RaDirectionReversals = raDirectionReversals,
 
@@ -77,51 +69,28 @@ public static class OscillationMetricsAnalysis {
 
             DecDirectionChangesPerMinute = CalculateRatePerMinute(decDirectionReversals, frames),
 
+            MeanRaOscillationAmplitudeArcSeconds = MeanAmplitude(raEvents),
 
+            MeanDecOscillationAmplitudeArcSeconds = MeanAmplitude(decEvents)
 
         };
     }
-    private static IReadOnlyList<OscillationEvent> DetectOscillationEvents(
-        IReadOnlyList<GuideFrame> frames,
-        Func<GuideFrame, double> selector) {
-        if (frames.Count < 2) {
-            return Array.Empty<OscillationEvent>();
-        }
-
-        var events = new List<OscillationEvent>();
-
-        double? previous = null;
-        TimeSpan previousTime = TimeSpan.Zero;
-
-        foreach (var frame in frames) {
-            var current = selector(frame);
-
-            if (previous is not null &&
-                IsSignificantCrossing(previous.Value, current)) {
-                events.Add(
-                    new OscillationEvent(
-                        frame.ElapsedTime,
-                        System.Math.Max(previous.Value, current),
-                        System.Math.Abs(System.Math.Min(previous.Value, current))));
-            }
-
-            previous = current;
-            previousTime = frame.ElapsedTime;
-        }
-
-        return events;
-    }
-
     private static bool IsSignificantCrossing(
     double previous,
     double current) {
+        var amplitude = Math.Abs(previous - current);
+
+        if (amplitude < OscillationThresholds.MinimumOscillationAmplitudeArcSeconds) {
+            return false;
+        }
+
         if (System.Math.Abs(previous)
-            < OscillationThresholds.MinimumAmplitudeArcSeconds) {
+            < OscillationThresholds.MinimumOscillationAmplitudeArcSeconds) {
             return false;
         }
 
         if (System.Math.Abs(current)
-            < OscillationThresholds.MinimumAmplitudeArcSeconds) {
+            < OscillationThresholds.MinimumOscillationAmplitudeArcSeconds) {
             return false;
         }
 
@@ -161,9 +130,9 @@ public static class OscillationMetricsAnalysis {
     }
 
     private static double MeanAmplitude(
-    IReadOnlyList<OscillationEvent> events) {
+        IReadOnlyList<OscillationEvent> events) {
         return events.Count == 0
             ? 0
-            : events.Average(e => e.MeanAmplitude);
+            : events.Average(e => e.MeanAmplitudeArcSeconds);
     }
 }

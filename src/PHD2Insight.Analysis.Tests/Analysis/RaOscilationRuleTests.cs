@@ -19,8 +19,7 @@ public sealed class RaOscillationRuleTests {
             },
 
             OscillationMetrics = new OscillationMetricsResult {
-                RaZeroCrossings = 185,
-                RaDirectionReversals = 170
+                RaOscillationEventsPerMinute = 185,
             },
 
             GuideCorrections = new GuideCorrectionResult {
@@ -28,7 +27,7 @@ public sealed class RaOscillationRuleTests {
             }
         };
 
-        var rule = new RaOscillationRule();
+        var rule = new RaOscillationDiagnosisRule();
 
         // Act
         var diagnoses = rule.Evaluate(analysis).ToList();
@@ -47,14 +46,13 @@ public sealed class RaOscillationRuleTests {
         // Arrange
         var analysis = new AnalysisResult {
             Rms = new RmsResult {
-                RaArcSeconds = 1.8,
+                RaArcSeconds = 0.4,
                 DecArcSeconds = 1.2,
                 RaToDecRatio = 1.5
             },
 
             OscillationMetrics = new OscillationMetricsResult {
-                RaZeroCrossings = 120,
-                RaDirectionReversals = 50
+                RaOscillationEventsPerMinute = 1.5,
             },
 
             GuideCorrections = new GuideCorrectionResult {
@@ -62,7 +60,7 @@ public sealed class RaOscillationRuleTests {
             }
         };
 
-        var rule = new RaOscillationRule();
+        var rule = new RaOscillationDiagnosisRule();
 
         // Act
         var diagnoses = rule.Evaluate(analysis).ToList();
@@ -75,19 +73,21 @@ public sealed class RaOscillationRuleTests {
         // Arrange
         var analysis = new AnalysisResult {
             Rms = new RmsResult {
-                RaArcSeconds = 1.8,
+                RaArcSeconds = 2.1,     // High RA RMS (+2)
                 DecArcSeconds = 1.2,
-                RaToDecRatio = 1.5
+                RaToDecRatio = 1.5      // Not RA dominant
             },
 
             OscillationMetrics = new OscillationMetricsResult {
-                RaZeroCrossings = 160
+                RaOscillationEventsPerMinute = 0.4,              // Below Medium threshold
+                MeanRaOscillationAmplitudeArcSeconds = 1.2       // Medium amplitude (+1)
             },
 
-            GuideCorrections = new GuideCorrectionResult()
+            GuideCorrections = new GuideCorrectionResult {
+                AverageRaPulseMilliseconds = 250                    // Large guide pulses (+1)
+            }
         };
-
-        var rule = new RaOscillationRule();
+        var rule = new RaOscillationDiagnosisRule();
 
         // Act
         var diagnosis = Assert.Single(rule.Evaluate(analysis));
@@ -100,23 +100,26 @@ public sealed class RaOscillationRuleTests {
         // Arrange
         var analysis = new AnalysisResult {
             Rms = new RmsResult {
-                RaArcSeconds = 1.8,
+                RaArcSeconds = 1.8,     // Medium RA RMS (+2)
                 DecArcSeconds = 0.4,
-                RaToDecRatio = 4.5
+                RaToDecRatio = 4.5      // RA Dominance (+3)
             },
 
             OscillationMetrics = new OscillationMetricsResult {
-                RaZeroCrossings = 160
+                RaOscillationEventsPerMinute = 0.4,              // Below Medium threshold
+                MeanRaOscillationAmplitudeArcSeconds = 1.2       // Medium amplitude (+2)
             },
 
-            GuideCorrections = new GuideCorrectionResult()
+            GuideCorrections = new GuideCorrectionResult {
+                AverageRaPulseMilliseconds = 45                 // No Large guide pulses
+            }
         };
-
-        var rule = new RaOscillationRule();
+        var rule = new RaOscillationDiagnosisRule();
 
         // Act
         var diagnosis = Assert.Single(rule.Evaluate(analysis));
 
+        Assert.Equal(7, diagnosis.Evidence.Sum(e => e.Weight));
         // Assert
         Assert.Equal(DiagnosisConfidence.Medium, diagnosis.Confidence);
     }
@@ -125,29 +128,29 @@ public sealed class RaOscillationRuleTests {
         // Arrange
         var analysis = new AnalysisResult {
             Rms = new RmsResult {
-                RaArcSeconds = 1.8,
+                RaArcSeconds = 1.8,     // High RA RMS (+2)
                 DecArcSeconds = 0.4,
-                RaToDecRatio = 4.5
+                RaToDecRatio = 4.5      // RA Dominance (+3)
             },
 
             OscillationMetrics = new OscillationMetricsResult {
-                RaZeroCrossings = 185,
-                RaDirectionReversals = 170
+                RaOscillationEventsPerMinute = 4.0,              // Above High threshold (+3)
+                MeanRaOscillationAmplitudeArcSeconds = 0.3       // Amplitude below threshold
             },
 
             GuideCorrections = new GuideCorrectionResult {
-                AverageRaPulseMilliseconds = 245
+                AverageRaPulseMilliseconds = 245                 // Large guide pulses (+1)
             }
         };
 
-        var rule = new RaOscillationRule();
+        var rule = new RaOscillationDiagnosisRule();
 
         // Act
         var diagnosis = Assert.Single(rule.Evaluate(analysis));
 
         // Assert
         Assert.Equal(
-            10,
+            9,
             diagnosis.Evidence.Sum(e => e.Weight));
     }
 }

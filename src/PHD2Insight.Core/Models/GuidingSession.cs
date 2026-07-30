@@ -28,7 +28,7 @@ public sealed record GuidingSession {
 
     public GuideFrameSchema? GuideFrameSchema { get; init; }
 
-    public ICollection<GuideFrame> Frames { get; init; } = Array.Empty<GuideFrame>();
+    public IReadOnlyList<GuideFrame> Frames { get; init; } = [];
 
     public ICollection<SettlingEvent> SettlingEvents { get; init; } = Array.Empty<SettlingEvent>();
 

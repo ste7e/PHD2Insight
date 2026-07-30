@@ -1,6 +1,7 @@
 ﻿using PHD2Insight.Analysis;
 using PHD2Insight.Analysis.Diagnostics;
 using PHD2Insight.Analysis.Metrics;
+using PHD2Insight.Analysis.Models;
 using PHD2Insight.Core.Models;
 using PHD2Insight.Parser.Abstractions;
 using PHD2Insight.Parser.Parsers;
@@ -30,33 +31,41 @@ public sealed class DiagnosticRegressionTests {
 
         var diagnosticEngine = new DiagnosticEngine(
         [
-            new RaOscillationRule()
+            new RaOscillationDiagnosisRule()
         ]);
 
         var path = Path.Combine(
             SampleFolder,
             sampleName);
 
+        Console.WriteLine("---------------------------------");
+        Console.WriteLine("---------------------------------");
+
+        Console.WriteLine($"Dumping values for {sampleName}\n\n");
+
         using var stream = File.OpenRead(path);
 
-        Console.WriteLine($"Dumping values for {sampleName}");
         // Act
         var guideLog = AssertParsed(parser.Parse(stream));
 
-        reportSessions(diagnosticEngine, guideLog);
+        ICollection<AnalysisResult> analyses = new List<AnalysisResult>();
+
+        reportSessions(diagnosticEngine, guideLog, analyses);
 
         for (int i=0;i< guideLog.Sessions.Count; i++) {
-            Console.WriteLine($"Session {i} metrics:");
-            reportSessionMetrics(diagnosticEngine, guideLog, i);
+            reportSessionMetrics(diagnosticEngine, guideLog, i, analyses.ElementAt(i));
         }
-
-        var analysis = MetricsCalculator.Calculate(guideLog.Sessions[2]);
-        var diagnoses = diagnosticEngine.Diagnose(analysis);
-
-        var diagnosis = Assert.Single(diagnoses);
     }
-    private static void reportSessionMetrics(DiagnosticEngine diagnosticEngine, GuideLog guideLog, int sessionIndex) {
-        var analysis = MetricsCalculator.Calculate(guideLog.Sessions[sessionIndex]);
+    private static void reportSessionMetrics(DiagnosticEngine diagnosticEngine, GuideLog guideLog, int sessionIndex, AnalysisResult analysis) {
+        var oscillation = analysis.OscillationMetrics;
+
+        Console.WriteLine("---------------------------------");
+        Console.WriteLine($"Session {sessionIndex} metrics:");
+
+        Console.WriteLine($"RA Oscillation Events/min : {oscillation.RaOscillationEventsPerMinute}");
+        Console.WriteLine($"DEC Oscillation Events/min : {oscillation.DecOscillationEventsPerMinute}");
+        Console.WriteLine($"Mean RA amplitude : {oscillation.MeanRaOscillationAmplitudeArcSeconds:F2}");
+        Console.WriteLine($"Mean DEC amplitude: {oscillation.MeanDecOscillationAmplitudeArcSeconds:F2}");
 
         Console.WriteLine($"Frames               : {analysis.SessionStatistics.FrameCount:F0}");
         Console.WriteLine($"RA RMS (pixels)      : {analysis.Rms.RaPixels:F2}");
@@ -64,13 +73,16 @@ public sealed class DiagnosticRegressionTests {
         Console.WriteLine($"RA RMS (arcsec)      : {analysis.Rms.RaArcSeconds:F2}");
         Console.WriteLine($"DEC RMS (arcsec)     : {analysis.Rms.DecArcSeconds:F2}");
         Console.WriteLine($"RA/DEC Ratio         : {analysis.Rms.RaToDecRatio:F2}");
-        Console.WriteLine($"RA Zero Crossings    : {analysis.OscillationMetrics.RaZeroCrossings}");
         Console.WriteLine($"RA Direction Changes : {analysis.OscillationMetrics.RaDirectionReversals}");
         Console.WriteLine($"Average RA Pulse (ms): {analysis.GuideCorrections.AverageRaPulseMilliseconds:F0}");
+
+        Console.WriteLine("=========================================");
 
         var diagnoses = diagnosticEngine.Diagnose(analysis);
         if (diagnoses.Count > 0) {
             var diagnosis = Assert.Single(diagnoses);
+
+            Console.WriteLine($"Diagnosis: {diagnosis.Code} ({diagnosis.Confidence})");
 
             foreach (var e in diagnosis.Evidence) {
                 Console.WriteLine($"{e.Code,-35} +{e.Weight}");
@@ -79,12 +91,15 @@ public sealed class DiagnosticRegressionTests {
 
     }
 
-    private static void reportSessions(DiagnosticEngine diagnosticEngine, GuideLog guideLog) {
+    private static void reportSessions(DiagnosticEngine diagnosticEngine, GuideLog guideLog, ICollection<AnalysisResult> analyses) {
         for (var i = 0; i < guideLog.Sessions.Count; i++) {
-            var analysis = MetricsCalculator.Calculate(guideLog.Sessions[i]);
+            Console.WriteLine("---------------------------------");
+            Console.WriteLine($"Calculating metrics for Session {i}:");
+            analyses.Add(MetricsCalculator.Calculate(guideLog.Sessions[i]));
 
+            Console.WriteLine($"Diagnosing metrics for Session {i}");
             var diagnoses = diagnosticEngine
-                .Diagnose(analysis)
+                .Diagnose(analyses.ElementAt(i))
                 .ToList();
 
             Console.WriteLine(
@@ -99,7 +114,7 @@ public sealed class DiagnosticRegressionTests {
 
         var diagnosticEngine = new DiagnosticEngine(
         [
-            new RaOscillationRule()
+            new RaOscillationDiagnosisRule()
         ]);
 
         var path = Path.Combine(
@@ -134,7 +149,7 @@ public sealed class DiagnosticRegressionTests {
 
         var diagnosticEngine = new DiagnosticEngine(
         [
-            new RaOscillationRule()
+            new RaOscillationDiagnosisRule()
         ]);
 
         var path = Path.Combine(
