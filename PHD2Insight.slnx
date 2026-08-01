@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/docs/">
+    <File Path="ParserNotes.md" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path="samples/PHD2_GuideLog_001.md" />
     <File Path="samples/PHD2_GuideLog_001.txt" />

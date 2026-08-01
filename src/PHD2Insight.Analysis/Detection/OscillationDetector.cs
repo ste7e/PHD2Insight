@@ -16,12 +16,12 @@ internal static class OscillationDetector {
 
         var events = new List<OscillationEvent>();
 
-        Console.WriteLine("Peaks");
+/*        Console.WriteLine("Peaks");
         foreach (var peak in peaks) {
             Console.WriteLine(
                 $"{peak.ElapsedTime.TotalSeconds,6:F1}s  {peak.Value,6:F2}\"");
         }
-
+*/
         foreach (var pair in peaks.Zip(peaks.Skip(1))) {
             var previous = pair.First;
             var current = pair.Second;
@@ -46,11 +46,12 @@ internal static class OscillationDetector {
                     current.ElapsedTime,
                     Math.Max(previous.Value, current.Value),
                     Math.Min(previous.Value, current.Value));
-            Console.WriteLine(
+/*            Console.WriteLine(
                 $"Oscillation: {amplitude:F2}\" " +
                 $"Period={e.Period.TotalSeconds,5:F1}s  " +
                 $"Amp={e.MeanAmplitudeArcSeconds,4:F2}\"  " +
                 $"P2P={e.PeakToPeakAmplitudeArcSeconds,4:F2}\"");
+*/
             events.Add(e);
         }
 

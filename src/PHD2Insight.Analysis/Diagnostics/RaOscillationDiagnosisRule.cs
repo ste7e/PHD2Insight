@@ -33,6 +33,8 @@ public sealed class RaOscillationDiagnosisRule : IDiagnosticRule {
                 DiagnosisThresholds.HighRaOscillationEventsPerMinute,
             EvidenceCodes.MediumRateRaOscillationEvents,
             EvidenceCodes.HighRateRaOscillationEvents,
+            "Moderatly high RA Oscillation Events Per Minute",
+            "High RA Oscillation Events Per Minute",
             DiagnosisEvidenceWeights.MediumRateRaOscillationEvents,
             DiagnosisEvidenceWeights.HighRateRaOscillationEvents);
 
@@ -43,6 +45,8 @@ public sealed class RaOscillationDiagnosisRule : IDiagnosticRule {
             DiagnosisThresholds.HighRaOscillationAmplitudeArcSeconds,
             EvidenceCodes.MediumRaOscillationAmplitude,
             EvidenceCodes.HighRaOscillationAmplitude,
+            "Moderatly high RA Oscillation Amplitude",
+            "High RA Oscillation Amplitude",
             DiagnosisEvidenceWeights.MediumRaOscillationAmplitude,
             DiagnosisEvidenceWeights.HighRaOscillationAmplitude);
 
@@ -85,7 +89,9 @@ public sealed class RaOscillationDiagnosisRule : IDiagnosticRule {
 
             Confidence = CalculateConfidence(score),
 
-            Evidence = evidence
+            Evidence = evidence,
+
+            Score = score
         };
     }
 
@@ -97,6 +103,8 @@ public sealed class RaOscillationDiagnosisRule : IDiagnosticRule {
     double highThreshold,
     string mediumCode,
     string highCode,
+    string mediumExplanation,
+    string highExplanation,
     int mediumWeight,
     int highWeight) {
         if (!AddEvidenceIf(amplitude >= highThreshold,
@@ -104,7 +112,7 @@ public sealed class RaOscillationDiagnosisRule : IDiagnosticRule {
             highCode,
             $"{axis} Oscillation Amplitude",
             $"{amplitude:F2}\"",
-            $"Large oscillation reversals were detected in the {axis} axis.",
+            highExplanation,
             highWeight)) {
             
             AddEvidenceIf(amplitude >= mediumThreshold,
@@ -112,7 +120,7 @@ public sealed class RaOscillationDiagnosisRule : IDiagnosticRule {
                 mediumCode,
                 $"{axis} Oscillation Amplitude",
                 $"{amplitude:F2}\"",
-                $"Moderate oscillation reversals were detected in the {axis} axis.",
+                mediumExplanation,
                 mediumWeight);
         }
     }

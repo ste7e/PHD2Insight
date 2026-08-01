@@ -53,84 +53,86 @@ public sealed class GuideLogParser : IGuideLogParser {
                 continue;
             }
 
-            if (EquipmentProfileLineParser.TryParse(line, out var profileName)) {
+            if (context.CurrentSession is not null) {
+                if (EquipmentProfileLineParser.TryParse(line, out var profileName)) {
 
-                context.ClearContinuation();
+                    context.ClearContinuation();
 
-                if (context.CurrentSession is not null) {
-                    context.CurrentSession.Equipment =
-                        new EquipmentProfile {
-                            Name = profileName!
-                        };
-                }
-
-                continue;
-            }
-
-            if (ExposureLineParser.TryParse(
-                                        line,
-                                        out var exposureMs)) {
-
-                context.ClearContinuation();
-
-                if (context.CurrentSession is not null) {
-                    context.CurrentSession.ExposureMilliseconds =
-                        exposureMs;
-                }
-
-                continue;
-            }
-
-            if (PixelScaleLineParser.TryParse(
-                                        line,
-                                        out var info)) {
-
-                context.ClearContinuation();
-
-                context.CurrentSession!.PixelScale = info.PixelScale;
-                context.CurrentSession.Binning = info.Binning;
-                context.CurrentSession.FocalLengthMm = info.FocalLengthMm;
-
-                continue;
-            }
-
-            if (CameraInfoLineParser.TryParse(line, out var cameraInfo)) {
-
-                context.ClearContinuation();
-
-                if (context.CurrentSession is not null) {
-                    context.CurrentSession.Camera = cameraInfo;
-                }
-                continue;
-            }
-
-            if (MountInfoLineParser.TryParse(
-                                        line,
-                                        out var mount)) {
-
-                context.ClearContinuation();
-
-                context.CurrentSession!.Mount = mount;
-
-                continue;
-            }
-
-            if (GuideAlgorithmLineParser.TryParse(
-                    line,
-                    out var axis,
-                    out var algorithm)) {
-
-                if (context.CurrentSession is not null) {
-                    if (axis == GuideAxis.X) {
-                        context.CurrentSession.XGuideAlgorithm = algorithm;
-                        context.ContinuationMode = ContinuationMode.XGuideAlgorithm;
-                    } else {
-                        context.CurrentSession.YGuideAlgorithm = algorithm;
-                        context.ContinuationMode = ContinuationMode.YGuideAlgorithm;
+                    if (context.CurrentSession is not null) {
+                        context.CurrentSession.Equipment =
+                            new EquipmentProfile {
+                                Name = profileName!
+                            };
                     }
+
+                    continue;
                 }
 
-                continue;
+                if (ExposureLineParser.TryParse(
+                                            line,
+                                            out var exposureMs)) {
+
+                    context.ClearContinuation();
+
+                    if (context.CurrentSession is not null) {
+                        context.CurrentSession.ExposureMilliseconds =
+                            exposureMs;
+                    }
+
+                    continue;
+                }
+
+                if (PixelScaleLineParser.TryParse(
+                                            line,
+                                            out var info)) {
+
+                    context.ClearContinuation();
+
+                    context.CurrentSession!.PixelScale = info.PixelScale;
+                    context.CurrentSession.Binning = info.Binning;
+                    context.CurrentSession.FocalLengthMm = info.FocalLengthMm;
+
+                    continue;
+                }
+
+                if (CameraInfoLineParser.TryParse(line, out var cameraInfo)) {
+
+                    context.ClearContinuation();
+
+                    if (context.CurrentSession is not null) {
+                        context.CurrentSession.Camera = cameraInfo;
+                    }
+                    continue;
+                }
+
+                if (MountInfoLineParser.TryParse(
+                                            line,
+                                            out var mount)) {
+
+                    context.ClearContinuation();
+
+                    context.CurrentSession!.Mount = mount;
+
+                    continue;
+                }
+
+                if (GuideAlgorithmLineParser.TryParse(
+                        line,
+                        out var axis,
+                        out var algorithm)) {
+
+                    if (context.CurrentSession is not null) {
+                        if (axis == GuideAxis.X) {
+                            context.CurrentSession.XGuideAlgorithm = algorithm;
+                            context.ContinuationMode = ContinuationMode.XGuideAlgorithm;
+                        } else {
+                            context.CurrentSession.YGuideAlgorithm = algorithm;
+                            context.ContinuationMode = ContinuationMode.YGuideAlgorithm;
+                        }
+                    }
+
+                    continue;
+                }
             }
 
             if (context.ContinuationMode == ContinuationMode.XGuideAlgorithm &&
@@ -182,8 +184,7 @@ public sealed class GuideLogParser : IGuideLogParser {
                     out var settlingEvent)) {
                 if (context.CurrentSession is not null) {
                     context.CurrentSession.AddSettlingEvent(
-                    settlingEvent with 
-                    {
+                    settlingEvent with {
                         ElapsedTime = context.CurrentElapsedTime
                     });
                 }

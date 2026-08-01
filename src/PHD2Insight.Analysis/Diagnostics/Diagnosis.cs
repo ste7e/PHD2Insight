@@ -11,6 +11,8 @@ public sealed record Diagnosis {
 
     public DiagnosisConfidence Confidence { get; init; }
 
+    public int Score { get; init; }
+
     public IReadOnlyList<DiagnosisEvidence> Evidence { get; init; }
         = Array.Empty<DiagnosisEvidence>();
 }

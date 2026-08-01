@@ -19,3 +19,6 @@ TestResults/
 *.fit
 *.fits
 *.raw
+/samples/other samples
+/samples/.~lock.RegressionResults.csv#
+/samples/RegressionResults.csv
