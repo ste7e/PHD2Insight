@@ -86,4 +86,5 @@ public sealed class DiagnosticEngineTests {
             };
         }
     }
+
 }

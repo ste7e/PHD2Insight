@@ -13,8 +13,6 @@ namespace PHD2Insight.Analysis.Observations {
 
         public const int FrequentDirectionReversals = 2;
 
-        public const int LargeGuidePulses = 1;
-
         public const int MediumRaOscillationAmplitude = 2;
         public const int HighRaOscillationAmplitude = 3;
 
@@ -27,8 +25,6 @@ namespace PHD2Insight.Analysis.Observations {
         public const int HighDecRms = 2;
 
         public const int DecDominance = 3;
-
-        public const int LargeDecGuidePulses = 1;
 
         public const int OccasionalLostStars = 1;
 
@@ -46,5 +42,8 @@ namespace PHD2Insight.Analysis.Observations {
 
         public const int RaGuideReversal = 2;
         public const int DecGuideReversal = 2;
+
+        public const int LargeRaGuidePulses = 1;
+        public const int LargeDecGuidePulses = 1;
     }
 }

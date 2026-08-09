@@ -6,4 +6,5 @@ public static class DiagnosisCodes {
     public const string PoorTransparency = "POOR_TRANSPARENCY";
     public const string AggressiveGuiding = "AGGRESSIVE_GUIDING";
     public const string GuideReversal = "GUIDE_REVERSAL";
+    public const string LargeGuideCorrections = "LARGE_GUIDE_CORRECTIONS";
 }

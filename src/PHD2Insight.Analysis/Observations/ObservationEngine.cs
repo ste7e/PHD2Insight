@@ -77,7 +77,7 @@ public static class ObservationEngine {
             "Average RA Pulse",
             $"{analysis.GuideCorrections.AverageRaPulseMilliseconds:F0} ms",
             "Guide corrections are consistently large.",
-            ObservationWeights.LargeGuidePulses);
+            ObservationWeights.LargeRaGuidePulses);
 
 
         // DEC oscillation rate
