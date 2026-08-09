@@ -443,28 +443,6 @@ public sealed class DiagnosticRegressionTests {
 
                     sum.RaOscillationEventsPerMinute[$"{sampleName}_{i}"] = analysis.OscillationMetrics.RaOscillationEventsPerMinute;
 
-                    if (diagnoses.Count > 1) {
-                        var combination = string.Join(
-                            " + ",
-                            diagnoses
-                                .Select(d => d.Code)
-                                .OrderBy(c => c));
-                        if (!sum.CountCoOccurrence.ContainsKey(combination))
-                            sum.CountCoOccurrence[combination] = 0;
-                        sum.CountCoOccurrence[combination]++;
-                    }
-
-                    if (diagnoses.Count > 1) {
-                        var diagByCode = diagnoses.Select(d => d.Code).OrderBy(c => c).ToList();
-                        for (int j = 0; j < diagByCode.Count; j++) {
-                            for (int k = j + 1; k < diagByCode.Count; k++) {
-                                var pair = (diagByCode[j], diagByCode[k]);
-                                if (!sum.CoOccurrenceMatrix.ContainsKey(pair))
-                                    sum.CoOccurrenceMatrix[pair] = 0;
-                                sum.CoOccurrenceMatrix[pair]++;
-                            }
-                        }
-                    }
                     if (diagnosis.SupportingObservations.Count > 0) {
                         foreach (var obs in diagnosis.SupportingObservations) {
                             var key = (diagnosis.Code, obs.Code);
@@ -486,6 +464,29 @@ public sealed class DiagnosticRegressionTests {
                         }
                     }
                 }
+                if (diagnoses.Count > 1) {
+                    var combination = string.Join(
+                        " + ",
+                        diagnoses
+                            .Select(d => d.Code)
+                            .OrderBy(c => c));
+                    if (!sum.CountCoOccurrence.ContainsKey(combination))
+                        sum.CountCoOccurrence[combination] = 0;
+                    sum.CountCoOccurrence[combination]++;
+                }
+
+                if (diagnoses.Count > 1) {
+                    var diagByCode = diagnoses.Select(d => d.Code).OrderBy(c => c).ToList();
+                    for (int j = 0; j < diagByCode.Count; j++) {
+                        for (int k = j + 1; k < diagByCode.Count; k++) {
+                            var pair = (diagByCode[j], diagByCode[k]);
+                            if (!sum.CoOccurrenceMatrix.ContainsKey(pair))
+                                sum.CoOccurrenceMatrix[pair] = 0;
+                            sum.CoOccurrenceMatrix[pair]++;
+                        }
+                    }
+                }
+
             }
         }
     }
