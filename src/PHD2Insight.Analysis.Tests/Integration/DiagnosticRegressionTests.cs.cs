@@ -325,6 +325,8 @@ public sealed class DiagnosticRegressionTests {
             new DecOscillationDiagnosisRule(),
             new PoorTransparencyDiagnosisRule(),
             new GuideReversalDiagnosisRule(),
+            new LargeGuideCorrectionsDiagnosisRule(),
+            new AggressiveGuidingDiagnosisRule(),
         ]);
 
         string sampleName;

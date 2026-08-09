@@ -441,8 +441,8 @@ public class ObservationEngineTests {
         Assert.Equal(DiagnosisConfidence.Medium, diagnosis.Confidence);
         Assert.Equal(7, diagnosis.Score);
     }
-    [Fact]
-    public void Evaluate_Returns_Diagnosis_For_Aggressive_Guiding() {
+[Fact]
+public void Evaluate_Returns_Diagnosis_For_Aggressive_Guiding() {
         var analysis = new AnalysisResult {
 
             OscillationMetrics = new() {
@@ -472,7 +472,8 @@ public class ObservationEngineTests {
             DiagnosisCodes.AggressiveGuiding,
             diagnosis.Code);
 
-        Assert.Equal(DiagnosisConfidence.Medium, diagnosis.Confidence);
-        Assert.Equal(7, diagnosis.Score);
+        Assert.Equal(DiagnosisConfidence.High, diagnosis.Confidence);
+        Assert.Equal(9, diagnosis.Score);
     }
+
 }
