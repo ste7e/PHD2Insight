@@ -1,156 +1,47 @@
-﻿using PHD2Insight.Analysis.Models;
+﻿using PHD2Insight.Analysis.Diagnostics;
+using PHD2Insight.Analysis.Models;
+using PHD2Insight.Analysis.Observations;
 
-namespace PHD2Insight.Analysis.Diagnostics;
+public sealed class RaOscillationDiagnosisRule
+    : DiagnosticRuleBase {
 
-public sealed class RaOscillationDiagnosisRule : IDiagnosticRule {
-    public IEnumerable<Diagnosis> Evaluate(AnalysisResult analysis) {
-        ArgumentNullException.ThrowIfNull(analysis);
+    private static readonly HashSet<string> EvidenceObservationCodes = [
+        ObservationCodes.HighRaRms,
+        ObservationCodes.RaDominance,
+        ObservationCodes.MediumRaOscillationRate,
+        ObservationCodes.HighRaOscillationRate,
+        ObservationCodes.MediumRaOscillationAmplitude,
+        ObservationCodes.HighRaOscillationAmplitude,
+        ObservationCodes.LargeRaGuidePulses
+    ];
 
-        var evidence = new List<DiagnosisEvidence>();
+    public override IEnumerable<Diagnosis> Evaluate(
+        AnalysisResult analysis) {
 
-        AddEvidenceIf(
-            analysis.Rms.RaArcSeconds >= DiagnosisThresholds.HighRaRmsArcSeconds,
-            evidence,
-            EvidenceCodes.HighRaRms,
-            "RA RMS",
-            $"{analysis.Rms.RaArcSeconds:F2}\"",
-            "RA RMS exceeds the expected range.",
-            DiagnosisEvidenceWeights.HighRaRms);
+        var diagnosis = BuildDiagnosis(
+            analysis,
+            DiagnosisCodes.RaOscillation,
+            "RA Oscillation",
+            "The RA axis exhibits characteristics consistent with sustained oscillation.",
+            DiagnosisSeverity.Warning,
+            EvidenceObservationCodes,
+            AdjustForContext);
 
-        AddEvidenceIf(
-            analysis.Rms.RaToDecRatio >= DiagnosisThresholds.HighRaToDecRatio,
-            evidence,
-            EvidenceCodes.RaDominance,
-            "RA/DEC RMS Ratio",
-            analysis.Rms.RaToDecRatio.ToString("F2"),
-            "RA guiding errors dominate DEC.",
-            DiagnosisEvidenceWeights.RaDominance);
-
-        AddOscillationAmplitudeEvidence(evidence,
-            "RA",
-            analysis.OscillationMetrics.RaOscillationEventsPerMinute,
-                DiagnosisThresholds.MediumRaOscillationEventsPerMinute,
-                DiagnosisThresholds.HighRaOscillationEventsPerMinute,
-            EvidenceCodes.MediumRateRaOscillationEvents,
-            EvidenceCodes.HighRateRaOscillationEvents,
-            "Moderatly high RA Oscillation Events Per Minute",
-            "High RA Oscillation Events Per Minute",
-            DiagnosisEvidenceWeights.MediumRateRaOscillationEvents,
-            DiagnosisEvidenceWeights.HighRateRaOscillationEvents);
-
-        AddOscillationAmplitudeEvidence(evidence,
-            "RA",
-            analysis.OscillationMetrics.MeanRaOscillationAmplitudeArcSeconds,
-            DiagnosisThresholds.MediumRaOscillationAmplitudeArcSeconds,
-            DiagnosisThresholds.HighRaOscillationAmplitudeArcSeconds,
-            EvidenceCodes.MediumRaOscillationAmplitude,
-            EvidenceCodes.HighRaOscillationAmplitude,
-            "Moderatly high RA Oscillation Amplitude",
-            "High RA Oscillation Amplitude",
-            DiagnosisEvidenceWeights.MediumRaOscillationAmplitude,
-            DiagnosisEvidenceWeights.HighRaOscillationAmplitude);
-
-        /*          This is now superceded by OscillationMetrics.RaOscillationEventsPerMinute evidence, which is more relevant to oscillation diagnosis.
-         * AddEvidenceIf(
-                    analysis.OscillationMetrics.RaDirectionReversals >=
-                    DiagnosisThresholds.HighRaDirectionReversals,
-                    evidence,
-                    EvidenceCodes.FrequentRaDirectionReversals,
-                    "RA Direction Reversals",
-                    analysis.OscillationMetrics.RaDirectionReversals.ToString(),
-                    "Guide corrections repeatedly reverse direction.",
-                    DiagnosisEvidenceWeights.FrequentDirectionReversals);
-
-        */
-        AddEvidenceIf(
-            analysis.GuideCorrections.AverageRaPulseMilliseconds >=
-            DiagnosisThresholds.LargeAverageRaPulseMilliseconds,
-            evidence,
-            EvidenceCodes.LargeRaGuidePulses,
-            "Average RA Pulse",
-            $"{analysis.GuideCorrections.AverageRaPulseMilliseconds:F0} ms",
-            "Guide corrections are consistently large.",
-            DiagnosisEvidenceWeights.LargeGuidePulses);
-
-        var score = evidence.Sum(e => e.Weight);
-
-        if (score < 4)
-            yield break;
-
-        yield return new Diagnosis {
-            Code = DiagnosisCodes.RaOscillation,
-
-            Title = "RA Oscillation",
-
-            Description =
-                "The RA axis exhibits characteristics consistent with sustained oscillation.",
-
-            Severity = DiagnosisSeverity.Warning,
-
-            Confidence = CalculateConfidence(score),
-
-            Evidence = evidence,
-
-            Score = score
-        };
-    }
-
-    private static void AddOscillationAmplitudeEvidence(
-    List<DiagnosisEvidence> evidence,
-    string axis,
-    double amplitude,
-    double mediumThreshold,
-    double highThreshold,
-    string mediumCode,
-    string highCode,
-    string mediumExplanation,
-    string highExplanation,
-    int mediumWeight,
-    int highWeight) {
-        if (!AddEvidenceIf(amplitude >= highThreshold,
-            evidence,
-            highCode,
-            $"{axis} Oscillation Amplitude",
-            $"{amplitude:F2}\"",
-            highExplanation,
-            highWeight)) {
-            
-            AddEvidenceIf(amplitude >= mediumThreshold,
-                evidence,
-                mediumCode,
-                $"{axis} Oscillation Amplitude",
-                $"{amplitude:F2}\"",
-                mediumExplanation,
-                mediumWeight);
+        if (diagnosis != null) {
+            yield return diagnosis;
         }
     }
-    private static bool AddEvidenceIf(
-        bool condition,
-        ICollection<DiagnosisEvidence> evidence,
-        string code,
-        string metric,
-        string value,
-        string explanation,
-        int weight) {
-        if (!condition)
-            return false;
 
-        evidence.Add(new DiagnosisEvidence {
-            Code = code,
-            Metric = metric,
-            Value = value,
-            Explanation = explanation,
-            Weight = weight
-        });
+    private static int AdjustForContext(
+        int score,
+        IReadOnlyList<Observation> observations) {
 
-        return true;
-    }
+        if (observations.Any(o =>
+            o.Code == ObservationCodes.SevereLostStars)) {
 
-    private static DiagnosisConfidence CalculateConfidence(int score) {
-        return score switch {
-            >= 8 => DiagnosisConfidence.High,
-            >= 6 => DiagnosisConfidence.Medium,
-            _ => DiagnosisConfidence.Low
-        };
+            score = Math.Max(0, score - 2);
+        }
+
+        return score;
     }
 }

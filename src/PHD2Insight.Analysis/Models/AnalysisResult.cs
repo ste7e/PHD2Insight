@@ -16,4 +16,6 @@ public sealed record AnalysisResult {
     public SettlingResult Settling { get; init; } = new();
 
     public OscillationMetricsResult OscillationMetrics { get; init; } = new();
+
+    public GuideReversalResult GuideReversals { get; init; } = new();
 }

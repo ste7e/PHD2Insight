@@ -1,6 +1,6 @@
 ﻿namespace PHD2Insight.Analysis.Diagnostics;
 
-public sealed record DiagnosisEvidence {
+public sealed record SupportingObservation {
     public string Code { get; init; } = string.Empty;
 
     public string Metric { get; init; } = string.Empty;

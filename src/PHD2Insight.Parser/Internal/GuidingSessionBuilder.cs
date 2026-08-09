@@ -1,4 +1,5 @@
 ﻿using PHD2Insight.Core.Models;
+using PHD2Insight.Parser.Models;
 
 namespace PHD2Insight.Parser.Internal;
 
@@ -35,6 +36,8 @@ internal sealed class GuidingSessionBuilder {
 
     internal ICollection<SettlingEvent> SettlingEvents { get; } = [];
 
+    internal IList<LostStarEvent> LostStarEvents { get; } = [];
+
     internal void Close(DateTime endTime) {
         EndTime = endTime;
     }
@@ -68,7 +71,8 @@ internal sealed class GuidingSessionBuilder {
             GuideFrameSchema = GuideFrameSchema,
 
             Frames = Frames.ToList(),
-            SettlingEvents = SettlingEvents.ToList()
+            SettlingEvents = SettlingEvents.ToList(),
+            LostStarEvents = LostStarEvents.ToList()
         };
 
 

@@ -6,6 +6,7 @@
     <File Path="samples/PHD2_GuideLog_001.md" />
     <File Path="samples/PHD2_GuideLog_001.txt" />
     <File Path="samples/PHD2_GuideLog_002.txt" />
+    <File Path="samples/PHD2_GuideLog_003.txt" />
     <File Path="samples/samples.md" />
   </Folder>
   <Folder Name="/src/">

@@ -1,0 +1,358 @@
+---------------------------------
+---------------------------------
+Dumping diagnoses for PHD2_GuideLog_2026-08-01_220106.txt
+---------------------------------
+Session 0 metrics:
+RA Oscillation Events/min : 1.4287585279024635
+DEC Oscillation Events/min : 1.4287585279024635
+Mean RA amplitude : 1.13
+Mean DEC amplitude: 1.26
+Frames               : 29
+RA RMS (pixels)      : 1.10
+DEC RMS (pixels)     : 0.79
+RA RMS (arcsec)      : 1.15
+DEC RMS (arcsec)     : 0.83
+RA/DEC Ratio         : 1.38
+RA Direction Changes : 16
+Average RA Pulse (ms): 96
+DEC Direction Changes: 21
+Average DEC Pulse(ms): 112
+Lost Stars           : 0
+Lost Stars (%)       : 0.00%
+Settling Events      : 1
+Longest settling Time (s)    : 9.07
+=========================================
+Diagnosis: RA_OSCILLATION (Low)
+MEDIUM_RATE_RA_OSCILLATION_EVENTS        +2
+MEDIUM_RA_OSCILLATION_AMPLITUDE          +2
+---------------------------------
+Diagnosis combinations
+---------------------------------
+RA_OSCILLATION(4)                                                1
+---------------------------------
+---------------------------------
+Session 1 metrics:
+RA Oscillation Events/min : 0
+DEC Oscillation Events/min : 0
+Mean RA amplitude : 0.00
+Mean DEC amplitude: 0.00
+Frames               : 0
+RA RMS (pixels)      : 0.00
+DEC RMS (pixels)     : 0.00
+RA RMS (arcsec)      : 0.00
+DEC RMS (arcsec)     : 0.00
+RA/DEC Ratio         : 8
+RA Direction Changes : 0
+Average RA Pulse (ms): 0
+DEC Direction Changes: 0
+Average DEC Pulse(ms): 0
+Lost Stars           : 0
+Lost Stars (%)       : 0.00%
+Settling Events      : 0
+Longest settling Time (s)    : 0.00
+=========================================
+---------------------------------
+Diagnosis combinations
+---------------------------------
+(None)                                                           1
+---------------------------------
+---------------------------------
+Session 2 metrics:
+RA Oscillation Events/min : 1.978535016309415
+DEC Oscillation Events/min : 2.2909352820424806
+Mean RA amplitude : 0.97
+Mean DEC amplitude: 0.59
+Frames               : 574
+RA RMS (pixels)      : 0.89
+DEC RMS (pixels)     : 0.48
+RA RMS (arcsec)      : 0.94
+DEC RMS (arcsec)     : 0.50
+RA/DEC Ratio         : 1.86
+RA Direction Changes : 333
+Average RA Pulse (ms): 74
+DEC Direction Changes: 348
+Average DEC Pulse(ms): 67
+Lost Stars           : 0
+Lost Stars (%)       : 0.00%
+Settling Events      : 1
+Longest settling Time (s)    : 9.37
+=========================================
+Diagnosis: RA_OSCILLATION (Low)
+MEDIUM_RATE_RA_OSCILLATION_EVENTS        +2
+MEDIUM_RA_OSCILLATION_AMPLITUDE          +2
+---------------------------------
+Diagnosis combinations
+---------------------------------
+RA_OSCILLATION(4)                                                1
+---------------------------------
+---------------------------------
+Session 3 metrics:
+RA Oscillation Events/min : 1.7859623360387356
+DEC Oscillation Events/min : 2.0905450600143336
+Mean RA amplitude : 0.80
+Mean DEC amplitude: 0.69
+Frames               : 473
+RA RMS (pixels)      : 0.67
+DEC RMS (pixels)     : 0.69
+RA RMS (arcsec)      : 0.71
+DEC RMS (arcsec)     : 0.73
+RA/DEC Ratio         : 0.97
+RA Direction Changes : 262
+Average RA Pulse (ms): 62
+DEC Direction Changes: 286
+Average DEC Pulse(ms): 65
+Lost Stars           : 0
+Lost Stars (%)       : 0.00%
+Settling Events      : 3
+Longest settling Time (s)    : 52.68
+=========================================
+Diagnosis: RA_OSCILLATION (Low)
+MEDIUM_RATE_RA_OSCILLATION_EVENTS        +2
+MEDIUM_RA_OSCILLATION_AMPLITUDE          +2
+---------------------------------
+Diagnosis combinations
+---------------------------------
+RA_OSCILLATION(4)                                                1
+---------------------------------
+---------------------------------
+Session 4 metrics:
+RA Oscillation Events/min : 1.7296201253811418
+DEC Oscillation Events/min : 1.2727393375446139
+Mean RA amplitude : 0.98
+Mean DEC amplitude: 0.43
+Frames               : 204
+RA RMS (pixels)      : 0.80
+DEC RMS (pixels)     : 0.28
+RA RMS (arcsec)      : 0.84
+DEC RMS (arcsec)     : 0.29
+RA/DEC Ratio         : 2.89
+RA Direction Changes : 118
+Average RA Pulse (ms): 55
+DEC Direction Changes: 117
+Average DEC Pulse(ms): 52
+Lost Stars           : 8
+Lost Stars (%)       : 3.92%
+Settling Events      : 1
+Longest settling Time (s)    : -4333.90
+=========================================
+Diagnosis: RA_OSCILLATION (Medium)
+RA_DOMINANCE                             +3
+MEDIUM_RATE_RA_OSCILLATION_EVENTS        +2
+MEDIUM_RA_OSCILLATION_AMPLITUDE          +2
+Diagnosis: POOR_TRANSPARENCY (Low)
+FREQUENT_LOST_STARS                      +2
+LOW_DEC_OSCILLATION_AMPLITUDE            +1
+NORMAL_RA_GUIDE_PULSES                   +1
+NORMAL_DEC_GUIDE_PULSES                  +1
+---------------------------------
+Diagnosis combinations
+---------------------------------
+POOR_TRANSPARENCY(5) + RA_OSCILLATION(7)                         1
+---------------------------------
+---------------------------------
+Session 5 metrics:
+RA Oscillation Events/min : 2.0542652088992073
+DEC Oscillation Events/min : 0.9782215280472416
+Mean RA amplitude : 0.66
+Mean DEC amplitude: 0.44
+Frames               : 272
+RA RMS (pixels)      : 0.57
+DEC RMS (pixels)     : 0.37
+RA RMS (arcsec)      : 0.60
+DEC RMS (arcsec)     : 0.39
+RA/DEC Ratio         : 1.56
+RA Direction Changes : 163
+Average RA Pulse (ms): 45
+DEC Direction Changes: 114
+Average DEC Pulse(ms): 67
+Lost Stars           : 98
+Lost Stars (%)       : 36.03%
+Settling Events      : 2
+Longest settling Time (s)    : 9.42
+=========================================
+Diagnosis: POOR_TRANSPARENCY (Medium)
+SEVERE_LOST_STARS                        +3
+LOW_DEC_OSCILLATION_AMPLITUDE            +1
+NORMAL_RA_GUIDE_PULSES                   +1
+NORMAL_DEC_GUIDE_PULSES                  +1
+---------------------------------
+Diagnosis combinations
+---------------------------------
+POOR_TRANSPARENCY(6)                                             1
+---------------------------------
+---------------------------------
+Session 6 metrics:
+RA Oscillation Events/min : 2.5875753253813643
+DEC Oscillation Events/min : 0.1990442557985665
+Mean RA amplitude : 0.45
+Mean DEC amplitude: 0.25
+Frames               : 68
+RA RMS (pixels)      : 0.36
+DEC RMS (pixels)     : 0.10
+RA RMS (arcsec)      : 0.38
+DEC RMS (arcsec)     : 0.10
+RA/DEC Ratio         : 3.76
+RA Direction Changes : 37
+Average RA Pulse (ms): 38
+DEC Direction Changes: 20
+Average DEC Pulse(ms): 0
+Lost Stars           : 49
+Lost Stars (%)       : 72.06%
+Settling Events      : 1
+Longest settling Time (s)    : 0.00
+=========================================
+Diagnosis: POOR_TRANSPARENCY (Medium)
+SEVERE_LOST_STARS                        +3
+LOW_RA_OSCILLATION_AMPLITUDE             +1
+LOW_DEC_OSCILLATION_AMPLITUDE            +1
+NORMAL_RA_GUIDE_PULSES                   +1
+---------------------------------
+Diagnosis combinations
+---------------------------------
+POOR_TRANSPARENCY(6)                                             1
+---------------------------------
+---------------------------------
+Session 7 metrics:
+RA Oscillation Events/min : 1.5552610160001799
+DEC Oscillation Events/min : 0.31105220320003596
+Mean RA amplitude : 0.57
+Mean DEC amplitude: 0.25
+Frames               : 65
+RA RMS (pixels)      : 0.44
+DEC RMS (pixels)     : 0.09
+RA RMS (arcsec)      : 0.46
+DEC RMS (arcsec)     : 0.09
+RA/DEC Ratio         : 5.17
+RA Direction Changes : 40
+Average RA Pulse (ms): 40
+DEC Direction Changes: 19
+Average DEC Pulse(ms): 0
+Lost Stars           : 43
+Lost Stars (%)       : 66.15%
+Settling Events      : 1
+Longest settling Time (s)    : 0.00
+=========================================
+Diagnosis: RA_OSCILLATION (Low)
+RA_DOMINANCE                             +3
+MEDIUM_RATE_RA_OSCILLATION_EVENTS        +2
+MEDIUM_RA_OSCILLATION_AMPLITUDE          +2
+Diagnosis: POOR_TRANSPARENCY (Low)
+SEVERE_LOST_STARS                        +3
+LOW_DEC_OSCILLATION_AMPLITUDE            +1
+NORMAL_RA_GUIDE_PULSES                   +1
+---------------------------------
+Diagnosis combinations
+---------------------------------
+POOR_TRANSPARENCY(5) + RA_OSCILLATION(5)                         1
+---------------------------------
+---------------------------------
+Session 8 metrics:
+RA Oscillation Events/min : 2.1043217507956964
+DEC Oscillation Events/min : 0.9469447878580635
+Mean RA amplitude : 0.51
+Mean DEC amplitude: 0.33
+Frames               : 64
+RA RMS (pixels)      : 0.41
+DEC RMS (pixels)     : 0.18
+RA RMS (arcsec)      : 0.43
+DEC RMS (arcsec)     : 0.19
+RA/DEC Ratio         : 2.32
+RA Direction Changes : 43
+Average RA Pulse (ms): 44
+DEC Direction Changes: 20
+Average DEC Pulse(ms): 43
+Lost Stars           : 41
+Lost Stars (%)       : 64.06%
+Settling Events      : 1
+Longest settling Time (s)    : 0.00
+=========================================
+Diagnosis: POOR_TRANSPARENCY (Medium)
+SEVERE_LOST_STARS                        +3
+LOW_DEC_OSCILLATION_AMPLITUDE            +1
+NORMAL_RA_GUIDE_PULSES                   +1
+NORMAL_DEC_GUIDE_PULSES                  +1
+Diagnosis: RA_OSCILLATION (Low)
+RA_DOMINANCE                             +3
+MEDIUM_RATE_RA_OSCILLATION_EVENTS        +2
+MEDIUM_RA_OSCILLATION_AMPLITUDE          +2
+---------------------------------
+Diagnosis combinations
+---------------------------------
+POOR_TRANSPARENCY(6) + RA_OSCILLATION(5)                         1
+---------------------------------
+---------------------------------
+Session 9 metrics:
+RA Oscillation Events/min : 0
+DEC Oscillation Events/min : 0
+Mean RA amplitude : 0.00
+Mean DEC amplitude: 0.00
+Frames               : 2
+RA RMS (pixels)      : 0.51
+DEC RMS (pixels)     : 0.00
+RA RMS (arcsec)      : 0.54
+DEC RMS (arcsec)     : 0.00
+RA/DEC Ratio         : 8
+RA Direction Changes : 0
+Average RA Pulse (ms): 91
+DEC Direction Changes: 0
+Average DEC Pulse(ms): 0
+Lost Stars           : 2
+Lost Stars (%)       : 100.00%
+Settling Events      : 0
+Longest settling Time (s)    : 0.00
+=========================================
+Diagnosis: POOR_TRANSPARENCY (Low)
+SEVERE_LOST_STARS                        +3
+NORMAL_RA_GUIDE_PULSES                   +1
+---------------------------------
+Diagnosis combinations
+---------------------------------
+POOR_TRANSPARENCY(4)                                             1
+---------------------------------
+---------------------------------
+Session 10 metrics:
+RA Oscillation Events/min : 1.2614658232866591
+DEC Oscillation Events/min : 0
+Mean RA amplitude : 0.90
+Mean DEC amplitude: 0.00
+Frames               : 38
+RA RMS (pixels)      : 0.67
+DEC RMS (pixels)     : 0.09
+RA RMS (arcsec)      : 0.71
+DEC RMS (arcsec)     : 0.09
+RA/DEC Ratio         : 7.61
+RA Direction Changes : 22
+Average RA Pulse (ms): 83
+DEC Direction Changes: 24
+Average DEC Pulse(ms): 0
+Lost Stars           : 2
+Lost Stars (%)       : 5.26%
+Settling Events      : 1
+Longest settling Time (s)    : -9.03
+=========================================
+Diagnosis: RA_OSCILLATION (Medium)
+RA_DOMINANCE                             +3
+MEDIUM_RATE_RA_OSCILLATION_EVENTS        +2
+MEDIUM_RA_OSCILLATION_AMPLITUDE          +2
+---------------------------------
+Diagnosis combinations
+---------------------------------
+RA_OSCILLATION(7)                                                1
+---------------------------------
+Summary of diagnoses:
+Confidence, Count
+Low, 8
+Medium, 5
+Evidence combination, Count
+MEDIUM_RATE_RA_OSCILLATION_EVENTS|MEDIUM_RA_OSCILLATION_AMPLITUDE, 3
+RA_DOMINANCE|MEDIUM_RATE_RA_OSCILLATION_EVENTS|MEDIUM_RA_OSCILLATION_AMPLITUDE, 4
+FREQUENT_LOST_STARS|LOW_DEC_OSCILLATION_AMPLITUDE|NORMAL_RA_GUIDE_PULSES|NORMAL_DEC_GUIDE_PULSES, 1
+SEVERE_LOST_STARS|LOW_DEC_OSCILLATION_AMPLITUDE|NORMAL_RA_GUIDE_PULSES|NORMAL_DEC_GUIDE_PULSES, 2
+SEVERE_LOST_STARS|LOW_RA_OSCILLATION_AMPLITUDE|LOW_DEC_OSCILLATION_AMPLITUDE|NORMAL_RA_GUIDE_PULSES, 1
+SEVERE_LOST_STARS|LOW_DEC_OSCILLATION_AMPLITUDE|NORMAL_RA_GUIDE_PULSES, 1
+SEVERE_LOST_STARS|NORMAL_RA_GUIDE_PULSES, 1
+Diagnosis code, Count
+RA_OSCILLATION, 7
+POOR_TRANSPARENCY, 6
+[xUnit.net 00:00:00.25]   Finished:    PHD2Insight.Analysis.Tests
+========== Test run finished: 3 Tests (3 Passed, 0 Failed, 0 Skipped) run in 262 ms ==========

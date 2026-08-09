@@ -16,6 +16,7 @@ public static class MetricsCalculator {
             LostStars = LostStarAnalysis.Calculate(session),
             Settling = SettlingAnalysis.Calculate(session),
             OscillationMetrics = OscillationMetricsAnalysis.Calculate(session),
+            GuideReversals = GuideReversalAnalysis.Calculate(session),
         };
 
         return result;

@@ -32,8 +32,6 @@ public static class RmsAnalysis {
 
         double meanDecArcSeconds = StatisticalFunctions.Mean(frames.Select(f => f.DecErrorArcSeconds));
         
-        var raToDecRatio = decArcSeconds == 0 ? double.PositiveInfinity : raArcSeconds / decArcSeconds;
-        
         return new RmsResult {
             RaPixels = raPixels,
             DecPixels = decPixels,
@@ -43,7 +41,6 @@ public static class RmsAnalysis {
 
             RaArcSeconds = raArcSeconds,
             DecArcSeconds = decArcSeconds,
-            RaToDecRatio = raToDecRatio,
             TotalArcSeconds = Math.Sqrt(
                 raArcSeconds * raArcSeconds +
                 decArcSeconds * decArcSeconds),

@@ -11,7 +11,8 @@ public sealed record RmsResult {
 
     public double DecArcSeconds { get; init; }
 
-    public double RaToDecRatio { get; init; }
+    public double RaToDecRatio =>
+        DecArcSeconds <= 0 ? double.PositiveInfinity : RaArcSeconds / DecArcSeconds;
 
     public double TotalArcSeconds { get; init; }
 
@@ -27,4 +28,9 @@ public sealed record RmsResult {
                     System.Math.Sqrt(
                         MeanRaArcSeconds * MeanRaArcSeconds +
                         MeanDecArcSeconds * MeanDecArcSeconds);
+
+    public double DecToRaRatio =>
+    RaArcSeconds <= 0
+        ? double.PositiveInfinity
+        : DecArcSeconds / RaArcSeconds;
 }

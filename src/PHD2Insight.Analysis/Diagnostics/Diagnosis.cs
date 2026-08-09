@@ -1,4 +1,6 @@
-﻿namespace PHD2Insight.Analysis.Diagnostics;
+﻿using PHD2Insight.Analysis.Observations;
+
+namespace PHD2Insight.Analysis.Diagnostics;
 
 public sealed record Diagnosis {
     public string Code { get; init; } = string.Empty;
@@ -13,6 +15,5 @@ public sealed record Diagnosis {
 
     public int Score { get; init; }
 
-    public IReadOnlyList<DiagnosisEvidence> Evidence { get; init; }
-        = Array.Empty<DiagnosisEvidence>();
+    public required IReadOnlyList<SupportingObservation> SupportingObservations { get; init; }
 }

@@ -15,6 +15,9 @@ internal static class DiagnosisEvidenceWeights {
     public const int MediumRaOscillationAmplitude = 2;
     public const int HighRaOscillationAmplitude = 3;
 
+    public const int MediumDecOscillationRate = 2;
+    public const int HighDecOscillationRate = 3;
+
     public const int MediumDecOscillationAmplitude = 1;
     public const int HighDecOscillationAmplitude = 2;
 }

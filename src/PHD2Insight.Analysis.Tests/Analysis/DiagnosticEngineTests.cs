@@ -1,5 +1,6 @@
 ﻿using PHD2Insight.Analysis.Diagnostics;
 using PHD2Insight.Analysis.Models;
+using PHD2Insight.Analysis.Observations;
 
 namespace PHD2Insight.Analysis.Tests.Analysis;
 
@@ -66,7 +67,8 @@ public sealed class DiagnosticEngineTests {
 
         public IEnumerable<Diagnosis> Evaluate(AnalysisResult analysis) {
             yield return new Diagnosis {
-                Code = _code
+                Code = _code,
+                SupportingObservations = Array.Empty<SupportingObservation>()
             };
         }
     }
@@ -74,11 +76,13 @@ public sealed class DiagnosticEngineTests {
     private sealed class MultipleDiagnosisRule : IDiagnosticRule {
         public IEnumerable<Diagnosis> Evaluate(AnalysisResult analysis) {
             yield return new Diagnosis {
-                Code = "FIRST"
+                Code = "FIRST",
+                SupportingObservations = Array.Empty<SupportingObservation>()
             };
 
             yield return new Diagnosis {
-                Code = "SECOND"
+                Code = "SECOND",
+                SupportingObservations = Array.Empty<SupportingObservation>()
             };
         }
     }

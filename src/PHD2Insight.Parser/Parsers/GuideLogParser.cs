@@ -179,6 +179,11 @@ public sealed class GuideLogParser : IGuideLogParser {
                 continue;
             }
 
+            if (LostStarLineParser.TryParse(line, out var lostStarEvent)) {
+                context.CurrentSession!.LostStarEvents.Add(lostStarEvent);
+                continue;
+            }
+
             if (SettlingEventParser.TryParse(
                     line,
                     out var settlingEvent)) {

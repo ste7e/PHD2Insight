@@ -13,9 +13,6 @@ public sealed class RaOscillationRuleTests {
             Rms = new RmsResult {
                 RaArcSeconds = raArcSeconds,
                 DecArcSeconds = decArcSeconds,
-                RaToDecRatio = decArcSeconds == 0
-                    ? double.PositiveInfinity
-                    : raArcSeconds / decArcSeconds
             },
 
             OscillationMetrics = new OscillationMetricsResult {
@@ -39,7 +36,7 @@ public sealed class RaOscillationRuleTests {
         Assert.Equal(DiagnosisSeverity.Warning, diagnosis.Severity);
         Assert.Equal(DiagnosisConfidence.High, diagnosis.Confidence);
 
-        Assert.NotEmpty(diagnosis.Evidence);
+        Assert.NotEmpty(diagnosis.SupportingObservations);
     }
     [Fact]
     public void Evaluate_Returns_No_Diagnosis_When_Evidence_Score_Is_Below_Threshold() {
@@ -48,7 +45,6 @@ public sealed class RaOscillationRuleTests {
             Rms = new RmsResult {
                 RaArcSeconds = 0.4,
                 DecArcSeconds = 1.2,
-                RaToDecRatio = 1.5
             },
 
             OscillationMetrics = new OscillationMetricsResult {
@@ -75,7 +71,6 @@ public sealed class RaOscillationRuleTests {
             Rms = new RmsResult {
                 RaArcSeconds = 2.1,     // High RA RMS (+2)
                 DecArcSeconds = 1.2,
-                RaToDecRatio = 1.5      // Not RA dominant
             },
 
             OscillationMetrics = new OscillationMetricsResult {
@@ -102,7 +97,6 @@ public sealed class RaOscillationRuleTests {
             Rms = new RmsResult {
                 RaArcSeconds = 1.8,     // Medium RA RMS (+2)
                 DecArcSeconds = 0.4,
-                RaToDecRatio = 4.5      // RA Dominance (+3)
             },
 
             OscillationMetrics = new OscillationMetricsResult {
@@ -119,7 +113,7 @@ public sealed class RaOscillationRuleTests {
         // Act
         var diagnosis = Assert.Single(rule.Evaluate(analysis));
 
-        Assert.Equal(7, diagnosis.Evidence.Sum(e => e.Weight));
+        Assert.Equal(7, diagnosis.SupportingObservations.Sum(o => o.Weight));
         // Assert
         Assert.Equal(DiagnosisConfidence.Medium, diagnosis.Confidence);
     }
@@ -130,7 +124,6 @@ public sealed class RaOscillationRuleTests {
             Rms = new RmsResult {
                 RaArcSeconds = 1.8,     // High RA RMS (+2)
                 DecArcSeconds = 0.4,
-                RaToDecRatio = 4.5      // RA Dominance (+3)
             },
 
             OscillationMetrics = new OscillationMetricsResult {
@@ -151,6 +144,6 @@ public sealed class RaOscillationRuleTests {
         // Assert
         Assert.Equal(
             9,
-            diagnosis.Evidence.Sum(e => e.Weight));
+            diagnosis.SupportingObservations.Sum(o => o.Weight));
     }
 }

@@ -16,5 +16,24 @@
     public const double MediumDecOscillationAmplitudeArcSeconds = 0.50;
     public const double HighDecOscillationAmplitudeArcSeconds = 2.00;
 
+    public const int MinimumDiagnosisScore = 4;
 
+    public const double MediumDecOscillationEventsPerMinute = 1.0;
+    public const double HighDecOscillationEventsPerMinute = 3.0;
+
+    public const double HighDecRmsArcSeconds = 1.2;
+
+    public const double HighDecToRaRatio = 2.0;
+
+    public const double LargeAverageDecPulseMilliseconds = 200;
+
+    public const double FrequentLostStarPercentage = 2.0;
+
+    public const double SevereLostStarPercentage = 10.0;
+
+    public const double LowRaOscillationAmplitudeArcSeconds = 0.50;
+
+    public const double LowDecOscillationAmplitudeArcSeconds = 0.50;
+
+    public const double NormalAverageGuidePulseMilliseconds = 100.0;
 }

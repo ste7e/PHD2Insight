@@ -1,4 +1,6 @@
-﻿namespace PHD2Insight.Core.Models;
+﻿using PHD2Insight.Parser.Models;
+
+namespace PHD2Insight.Core.Models;
 
 /// <summary>
 /// Represents one guiding run.
@@ -31,5 +33,7 @@ public sealed record GuidingSession {
     public IReadOnlyList<GuideFrame> Frames { get; init; } = [];
 
     public ICollection<SettlingEvent> SettlingEvents { get; init; } = Array.Empty<SettlingEvent>();
+
+    public IList<LostStarEvent> LostStarEvents { get; init; } = Array.Empty<LostStarEvent>();
 
 }
