@@ -178,4 +178,47 @@ public sealed class AggressiveGuidingDiagnosisRuleTests {
         // Assert
         Assert.Empty(diagnoses);
     }
+    [Fact]
+    public void Evaluate_WithHighRaRateAndMediumDecAmplitude_ReturnsNoDiagnosis() {
+        // Arrange
+        var analysis = new AnalysisResult {
+
+            OscillationMetrics = new() {
+
+                RaOscillationEventsPerMinute = 4.0,
+                MeanDecOscillationAmplitudeArcSeconds = 0.7
+            }
+        };
+
+        var rule = new AggressiveGuidingDiagnosisRule();
+
+        // Act
+        var diagnoses = rule.Evaluate(analysis).ToList();
+
+        // Assert
+        Assert.Empty(diagnoses);
+    }
+
+    [Fact]
+    public void Evaluate_WithHighDecRateAndMediumRaAmplitude_ReturnsNoDiagnosis() {
+        // Arrange
+        var analysis = new AnalysisResult {
+
+            OscillationMetrics = new() {
+
+                DecOscillationEventsPerMinute = 4.0,
+                MeanRaOscillationAmplitudeArcSeconds = 0.8
+            }
+        };
+
+        var rule = new AggressiveGuidingDiagnosisRule();
+
+        // Act
+        var diagnoses = rule.Evaluate(analysis).ToList();
+
+        // Assert
+        Assert.Empty(diagnoses);
+    }
+
+
 }
