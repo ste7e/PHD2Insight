@@ -12,17 +12,17 @@ public sealed class AggressiveGuidingDiagnosisRuleTests {
 
             OscillationMetrics = new() {
 
-                RaOscillationEventsPerMinute = 6.0,
+                RaOscillationEventsPerMinute = 15.0,
                 MeanRaOscillationAmplitudeArcSeconds = 0.8,
 
-                DecOscillationEventsPerMinute = 5.0,
+                DecOscillationEventsPerMinute = 10.0,
                 MeanDecOscillationAmplitudeArcSeconds = 0.7
             },
 
             GuideCorrections = new() {
 
-                AverageRaPulseMilliseconds = 50,
-                AverageDecPulseMilliseconds = 55
+                AverageRaPulseMilliseconds = 250,
+                AverageDecPulseMilliseconds = 250
             }
         };
 
@@ -52,8 +52,8 @@ public sealed class AggressiveGuidingDiagnosisRuleTests {
 
             OscillationMetrics = new() {
 
-                RaOscillationEventsPerMinute = 4.0,
-                MeanRaOscillationAmplitudeArcSeconds = 0.8
+                RaOscillationEventsPerMinute = 15.0,
+                MeanRaOscillationAmplitudeArcSeconds = 0.95
             }
         };
 
@@ -83,7 +83,7 @@ public sealed class AggressiveGuidingDiagnosisRuleTests {
 
             OscillationMetrics = new() {
 
-                DecOscillationEventsPerMinute = 4.0,
+                DecOscillationEventsPerMinute = 10.0,
                 MeanDecOscillationAmplitudeArcSeconds = 0.7
             }
         };
@@ -114,8 +114,8 @@ public sealed class AggressiveGuidingDiagnosisRuleTests {
 
             OscillationMetrics = new() {
 
-                RaOscillationEventsPerMinute = 4.0,
-                DecOscillationEventsPerMinute = 4.0
+                RaOscillationEventsPerMinute = 15.0,
+                DecOscillationEventsPerMinute = 10.0    
             }
         };
 

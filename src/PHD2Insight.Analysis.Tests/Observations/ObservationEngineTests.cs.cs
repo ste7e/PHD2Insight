@@ -14,11 +14,11 @@ public class ObservationEngineTests {
         var analysis = new AnalysisResult {
             Rms = new RmsResult {
                 RaArcSeconds = 1.8,
-                DecArcSeconds = 0.6,
+                DecArcSeconds = 0.5,
             },
 
             OscillationMetrics = new OscillationMetricsResult {
-                RaOscillationEventsPerMinute = 6.0,
+                RaOscillationEventsPerMinute = 16.0,
                 MeanRaOscillationAmplitudeArcSeconds = 2.2
             },
 
@@ -318,11 +318,11 @@ public class ObservationEngineTests {
         var analysis = new AnalysisResult {
             Rms = new RmsResult {
                 RaArcSeconds = 1.0,   // Below 1.2" threshold
-                DecArcSeconds = 0.2   // Ratio = 5.0 (RA dominance still fires)
+                DecArcSeconds = 0.2   // Ratio = 5.0 (RA dominance still fires +3)
             },
 
             OscillationMetrics = new OscillationMetricsResult {
-                RaOscillationEventsPerMinute = 1.5,
+                RaOscillationEventsPerMinute = 16.0,    // High Ra Oscillation Rate fires +3
                 MeanRaOscillationAmplitudeArcSeconds = 0.8
             },
 
@@ -341,7 +341,7 @@ public class ObservationEngineTests {
 
         // Assert
         Assert.Equal(DiagnosisConfidence.Low, diagnosis.Confidence);
-        Assert.Equal(5, diagnosis.Score);
+        Assert.Equal(4, diagnosis.Score);
     }
 
     [Fact]
@@ -447,18 +447,18 @@ public void Evaluate_Returns_Diagnosis_For_Aggressive_Guiding() {
 
             OscillationMetrics = new() {
 
-                RaOscillationEventsPerMinute = 6.0,
+                RaOscillationEventsPerMinute = 16.0,    // High Ra Oscillation Rate fires +3
 
-                MeanRaOscillationAmplitudeArcSeconds = 0.8,
+                MeanRaOscillationAmplitudeArcSeconds = 1.8, // High Ra Oscillation Amplitude fires +3
 
-                DecOscillationEventsPerMinute = 5.0,
+                DecOscillationEventsPerMinute = 16.0, // High Dec Oscillation Rate fires +3
 
-                MeanDecOscillationAmplitudeArcSeconds = 0.7
+                MeanDecOscillationAmplitudeArcSeconds = 0.6 // below threshold
             },
 
             GuideCorrections = new() {
 
-                AverageRaPulseMilliseconds = 50,
+                AverageRaPulseMilliseconds = 250,
 
                 AverageDecPulseMilliseconds = 55
             }
@@ -475,5 +475,70 @@ public void Evaluate_Returns_Diagnosis_For_Aggressive_Guiding() {
         Assert.Equal(DiagnosisConfidence.High, diagnosis.Confidence);
         Assert.Equal(9, diagnosis.Score);
     }
+[Fact]
+public void PoorTransparency_ShouldNotDiagnoseWithoutLostStars() {
+        var analysis = new AnalysisResult {
+
+            OscillationMetrics = new() {
+
+                MeanRaOscillationAmplitudeArcSeconds = 0.4,
+
+                MeanDecOscillationAmplitudeArcSeconds = 0.4
+            },
+
+            GuideCorrections = new() {
+
+                AverageRaPulseMilliseconds = 50,
+
+                AverageDecPulseMilliseconds = 50
+            },
+
+            LostStars = new() {
+
+                LostStarPercentage = 0
+            }
+        };
+
+        var rule = new PoorTransparencyDiagnosisRule();
+
+        var diagnoses = rule.Evaluate(analysis).ToList();
+
+        Assert.DoesNotContain(
+            diagnoses,
+            d => d.Code == DiagnosisCodes.PoorTransparency);
+    }
+[Fact]
+public void PoorTransparency_ShouldDiagnoseWithLostStars() {
+        var analysis = new AnalysisResult {
+
+            OscillationMetrics = new() {
+
+                MeanRaOscillationAmplitudeArcSeconds = 0.4,
+
+                MeanDecOscillationAmplitudeArcSeconds = 0.4
+            },
+
+            GuideCorrections = new() {
+
+                AverageRaPulseMilliseconds = 50,
+
+                AverageDecPulseMilliseconds = 50
+            },
+
+            LostStars = new() {
+
+                LostStarPercentage = 2.0
+            }
+        };
+
+        var rule = new PoorTransparencyDiagnosisRule();
+
+        var diagnosis = Assert.Single(rule.Evaluate(analysis), d => d.Code == DiagnosisCodes.PoorTransparency);
+
+        Assert.Equal(
+            DiagnosisCodes.PoorTransparency,
+            diagnosis.Code);
+    }
+
 
 }

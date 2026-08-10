@@ -57,6 +57,143 @@ public sealed class DiagnosticRegressionTests {
         Assert.Equal(0.25, result.Rms.MeanDecArcSeconds, 2);
     }
 
+    private static double Percentile(
+    IReadOnlyList<double> values,
+    double percentile) {
+        if (values.Count == 0)
+            return double.NaN;
+
+        var sorted = values.OrderBy(v => v).ToArray();
+
+        if (sorted.Length == 1)
+            return sorted[0];
+
+        var position = percentile * (sorted.Length - 1);
+        var lower = (int)Math.Floor(position);
+        var upper = (int)Math.Ceiling(position);
+
+        if (lower == upper)
+            return sorted[lower];
+
+        var fraction = position - lower;
+
+        return sorted[lower] +
+               (sorted[upper] - sorted[lower]) * fraction;
+    }
+    private static double Percentile(
+    IEnumerable<double> values,
+    double percentile) {
+        var sorted = values
+            .Where(v => !double.IsNaN(v) && !double.IsInfinity(v))
+            .OrderBy(v => v)
+            .ToArray();
+
+        if (sorted.Length == 0)
+            return double.NaN;
+
+        if (sorted.Length == 1)
+            return sorted[0];
+
+        var position = percentile * (sorted.Length - 1);
+
+        var lower = (int)Math.Floor(position);
+        var upper = (int)Math.Ceiling(position);
+
+        if (lower == upper)
+            return sorted[lower];
+
+        var fraction = position - lower;
+
+        return sorted[lower] +
+               (sorted[upper] - sorted[lower]) * fraction;
+    }
+    private static void ReportDistribution(
+    string name,
+    IEnumerable<double> values) {
+        var data = values
+            .Where(v => !double.IsNaN(v) && !double.IsInfinity(v))
+            .ToArray();
+
+        if (data.Length == 0)
+            return;
+
+        Console.WriteLine();
+        Console.WriteLine(name);
+        Console.WriteLine($"  Count : {data.Length}");
+        Console.WriteLine($"  Min   : {Percentile(data, 0.00):F2}");
+        Console.WriteLine($"  P25   : {Percentile(data, 0.25):F2}");
+        Console.WriteLine($"  Median: {Percentile(data, 0.50):F2}");
+        Console.WriteLine($"  P75   : {Percentile(data, 0.75):F2}");
+        Console.WriteLine($"  P90   : {Percentile(data, 0.90):F2}");
+        Console.WriteLine($"  P95   : {Percentile(data, 0.95):F2}");
+        Console.WriteLine($"  P99   : {Percentile(data, 0.99):F2}");
+        Console.WriteLine($"  Max   : {Percentile(data, 1.00):F2}");
+    }
+    private static void ReportCorpusMetricDistributions(Summary summary) {
+        Console.WriteLine();
+        Console.WriteLine("=========================================");
+        Console.WriteLine("Corpus metric distributions");
+        Console.WriteLine("=========================================");
+
+        ReportDistribution(
+            "RA Oscillation Events/min",
+            summary.RaOscillationEventsPerMinute.Values);
+
+        ReportDistribution(
+            "DEC Oscillation Events/min",
+            summary.DecOscillationEventsPerMinute.Values);
+
+        ReportDistribution(
+            "Mean RA amplitude (arcsec)",
+            summary.MeanRaOscillationAmplitudeArcSeconds.Values);
+
+
+        ReportDistribution(
+            "Mean DEC amplitude (arcsec)",
+            summary.MeanDecOscillationAmplitudeArcSeconds.Values);
+
+        ReportDistribution(
+            "RA RMS (arcsec)",
+            summary.RaRmsArcSeconds.Values);
+
+        ReportDistribution(
+            "DEC RMS (arcsec)",
+            summary.DecRmsArcSeconds.Values);
+
+        ReportDistribution(
+            "RA/DEC Ratio",
+            summary.RaToDecRatio.Values);
+
+        ReportDistribution(
+            "RA Direction Changes",
+            summary.RaDirectionReversals.Values);
+
+        ReportDistribution(
+            "DEC Direction Changes",
+            summary.DecDirectionReversals.Values);
+
+        ReportDistribution(
+            "Average RA Pulse (ms)",
+            summary.AverageRaPulseMilliseconds.Values);
+
+        ReportDistribution(
+            "Average DEC Pulse (ms)",
+            summary.AverageDecPulseMilliseconds.Values);
+
+        ReportDistribution(
+            "Lost Stars (%)",
+            summary.LostStarPercentage.Values);
+
+        ReportDistribution(
+            "RA Reversal Rate (per minute)",
+            summary.RaReversalRatePerMinute.Values);
+
+        ReportDistribution(
+            "DEC Reversal Rate (per minute)",
+            summary.DecReversalRatePerMinute.Values);
+
+        Console.WriteLine("=========================================");
+    }
     [Fact]
     public void RunRegressionTestOnAllLogsInFolder() {
         var csv = new StringBuilder();
@@ -64,7 +201,6 @@ public sealed class DiagnosticRegressionTests {
 
         csv.AppendLine(
             "File,Session,RA RMS,DEC RMS,RA/DEC Ratio,RA Osc/min,DEC Osc/min,RA Osc Amp,DEC Osc Amp,Mean RA Pulse,Mean DEC Pulse,Diagnosis,Supporting Observations");
-
 
         foreach (var sample in GetFilenames(SampleFolder /*+ "\\Bad guiding"*/, pattern: "PHD2_GuideLog*.txt", recursive: true)) {
             RunRegressionTestOnSample(Path.GetFullPath(sample), csv, sum);
@@ -74,16 +210,25 @@ public sealed class DiagnosticRegressionTests {
 
         Console.WriteLine("Summary of diagnoses:");
         Console.WriteLine("=================");
-        Console.WriteLine("Session, RA osc events/min");
+
+        ReportCorpusMetricDistributions(sum);
+
+/*        Console.WriteLine("Session, RA osc events/min");
         Console.WriteLine("-----------------");
         foreach (var kvp in sum.RaOscillationEventsPerMinute) {
             Console.WriteLine($"{kvp.Key}, {kvp.Value}");
         }
-
+*/
         Console.WriteLine("=================");
         Console.WriteLine("Confidence, Count");
         Console.WriteLine("-----------------");
         foreach (var kvp in sum.CountByConfidence) {
+            Console.WriteLine($"{kvp.Key,-20} {kvp.Value}");
+        }
+        Console.WriteLine("=================");
+        Console.WriteLine("Score, Count");
+        Console.WriteLine("-----------------");
+        foreach (var kvp in sum.CountByScore) {
             Console.WriteLine($"{kvp.Key,-20} {kvp.Value}");
         }
         Console.WriteLine("=================");
@@ -141,7 +286,7 @@ public sealed class DiagnosticRegressionTests {
 
     }
     [Fact]
-    public void RaOscillation_Log_Is_Diagnosed_As_Medium_Confidence() {
+    public void RaOscillation_Log_Is_Diagnosed_As_Low_Confidence() {
         // Arrange
         var parser = new GuideLogParser();
 
@@ -170,7 +315,7 @@ public sealed class DiagnosticRegressionTests {
             diagnosis.Code);
 
         Assert.Equal(
-            DiagnosisConfidence.Medium,
+            DiagnosisConfidence.Low,
             diagnosis.Confidence);
 
     }
@@ -201,8 +346,13 @@ public sealed class DiagnosticRegressionTests {
         }
     }
 
-    private static void reportSessionMetrics(DiagnosticEngine diagnosticEngine, GuideLog guideLog, int sessionIndex, AnalysisResult analysis) {
+    private static void reportSessionMetrics(
+        DiagnosticEngine diagnosticEngine,
+        GuideLog guideLog,
+        int sessionIndex,
+        AnalysisResult analysis) {
         var oscillation = analysis.OscillationMetrics;
+
 
         Console.WriteLine("---------------------------------");
         Console.WriteLine($"Session {sessionIndex} metrics:");
@@ -233,9 +383,9 @@ public sealed class DiagnosticRegressionTests {
         var diagnosisCombinations = new Dictionary<string, int>();
 
         var diagnoses = diagnosticEngine.Diagnose(analysis)
-    .OrderByDescending(d => d.Score)
-    .ThenByDescending(d => d.Confidence)
-    .ToList();
+            .OrderByDescending(d => d.Score)
+            .ThenByDescending(d => d.Confidence)
+            .ToList();
 
         var combination = diagnoses.Count == 0
     ? "(None)"
@@ -313,6 +463,45 @@ public sealed class DiagnosticRegressionTests {
         }
 
         public ReversalSummary ReversalStats { get; set; } = new ReversalSummary();
+
+        public IDictionary<string, double> DecOscillationEventsPerMinute { get; set; }
+            = new Dictionary<string, double>();
+
+        public IDictionary<string, double> DecReversalRatePerMinute { get; set; }
+            = new Dictionary<string, double>();
+
+        public IDictionary<string, double> RaReversalRatePerMinute { get; set; }
+            = new Dictionary<string, double>();
+
+        public IDictionary<string, double> MeanRaOscillationAmplitudeArcSeconds { get; set; }
+            = new Dictionary<string, double>();
+
+        public IDictionary<string, double> MeanDecOscillationAmplitudeArcSeconds { get; set; }
+            = new Dictionary<string, double>();
+
+        public IDictionary<string, double> RaRmsArcSeconds { get; set; }
+            = new Dictionary<string, double>();
+
+        public IDictionary<string, double> DecRmsArcSeconds { get; set; }
+            = new Dictionary<string, double>();
+
+        public IDictionary<string, double> RaToDecRatio { get; set; }
+            = new Dictionary<string, double>();
+
+        public IDictionary<string, double> RaDirectionReversals { get; set; }
+            = new Dictionary<string, double>();
+
+        public IDictionary<string, double> DecDirectionReversals { get; set; }
+            = new Dictionary<string, double>();
+
+        public IDictionary<string, double> AverageRaPulseMilliseconds { get; set; }
+            = new Dictionary<string, double>();
+
+        public IDictionary<string, double> AverageDecPulseMilliseconds { get; set; }
+            = new Dictionary<string, double>();
+
+        public IDictionary<string, double> LostStarPercentage { get; set; }
+            = new Dictionary<string, double>();
     }
 
     private void RunRegressionTestOnSample(string samplePath, StringBuilder? csv = null, Summary? sum = null) {
@@ -375,6 +564,51 @@ public sealed class DiagnosticRegressionTests {
                 } else {
                     sum.ReversalStats.NoReversal++;
                 }
+
+                var key = $"{sampleName}_{i}";
+
+                sum.RaOscillationEventsPerMinute[key] =
+                    analysis.OscillationMetrics.RaOscillationEventsPerMinute;
+
+                sum.DecOscillationEventsPerMinute[key] =
+                    analysis.OscillationMetrics.DecOscillationEventsPerMinute;
+
+                sum.DecReversalRatePerMinute[key] =
+                    analysis.GuideReversals.DecReversalRatePerMinute;
+
+                sum.RaReversalRatePerMinute[key] =
+                    analysis.GuideReversals.RaReversalRatePerMinute;
+
+                sum.MeanRaOscillationAmplitudeArcSeconds[key] =
+                    analysis.OscillationMetrics.MeanRaOscillationAmplitudeArcSeconds;
+
+                sum.MeanDecOscillationAmplitudeArcSeconds[key] =
+                    analysis.OscillationMetrics.MeanDecOscillationAmplitudeArcSeconds;
+
+                sum.RaRmsArcSeconds[key] =
+                    analysis.Rms?.RaArcSeconds ?? 0;
+
+                sum.DecRmsArcSeconds[key] =
+                    analysis.Rms?.DecArcSeconds ?? 0;
+
+                sum.RaToDecRatio[key] =
+                    analysis.Rms?.RaToDecRatio ?? 0;
+
+                sum.RaDirectionReversals[key] =
+                    analysis.OscillationMetrics.RaDirectionReversals;
+
+                sum.DecDirectionReversals[key] =
+                    analysis.OscillationMetrics.DecDirectionReversals;
+
+                sum.AverageRaPulseMilliseconds[key] =
+                    analysis.GuideCorrections?.AverageRaPulseMilliseconds ?? 0;
+
+                sum.AverageDecPulseMilliseconds[key] =
+                    analysis.GuideCorrections?.AverageDecPulseMilliseconds ?? 0;
+
+                sum.LostStarPercentage[key] =
+                    analysis.LostStars?.LostStarPercentage ?? 0;
+
             }
 
             Console.WriteLine(
@@ -417,6 +651,8 @@ public sealed class DiagnosticRegressionTests {
                     evidenceSummary));
 
             if (sum != null) {
+
+
                 foreach (var diagnosis in diagnoses) {
 
                     if (!sum.CountByConfidence.ContainsKey(diagnosis.Confidence))
@@ -441,14 +677,12 @@ public sealed class DiagnosticRegressionTests {
 
                     sum.CountByDiagnosisCode[diagnosis.Code]++;
 
-                    sum.RaOscillationEventsPerMinute[$"{sampleName}_{i}"] = analysis.OscillationMetrics.RaOscillationEventsPerMinute;
-
                     if (diagnosis.SupportingObservations.Count > 0) {
                         foreach (var obs in diagnosis.SupportingObservations) {
-                            var key = (diagnosis.Code, obs.Code);
-                            if (!sum.ObservationFreqByDiagnosis.ContainsKey(key))
-                                sum.ObservationFreqByDiagnosis[key] = 0;
-                            sum.ObservationFreqByDiagnosis[key]++;
+                            var key2 = (diagnosis.Code, obs.Code);
+                            if (!sum.ObservationFreqByDiagnosis.ContainsKey(key2))
+                                sum.ObservationFreqByDiagnosis[key2] = 0;
+                            sum.ObservationFreqByDiagnosis[key2]++;
                         }
                     }
 

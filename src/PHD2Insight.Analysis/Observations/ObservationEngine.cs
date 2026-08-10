@@ -203,7 +203,7 @@ public static class ObservationEngine {
             ObservationWeights.NormalDecGuidePulses);
 
         AddObservationIf(
-            analysis.GuideReversals.RaReversalRatePerMinute >= 1.0,
+            analysis.GuideReversals.RaReversalRatePerMinute >= DiagnosisThresholds.FrequentRaGuideReversalRatePerMinute,
             observations,
             ObservationCodes.RaGuideReversal,
             "RA Guide Reversal Rate",
@@ -212,7 +212,7 @@ public static class ObservationEngine {
             ObservationWeights.RaGuideReversal);
 
         AddObservationIf(
-            analysis.GuideReversals.DecReversalRatePerMinute >= 1.0,
+            analysis.GuideReversals.DecReversalRatePerMinute >= DiagnosisThresholds.FrequentDecGuideReversalRatePerMinute,
             observations,
             ObservationCodes.DecGuideReversal,
             "DEC Guide Reversal Rate",

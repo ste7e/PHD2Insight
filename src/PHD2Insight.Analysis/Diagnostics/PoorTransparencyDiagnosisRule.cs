@@ -19,6 +19,17 @@ public sealed class PoorTransparencyDiagnosisRule
     public override IEnumerable<Diagnosis> Evaluate(
         AnalysisResult analysis) {
 
+        var observations = ObservationEngine.Observe(analysis);
+
+        var hasLostStarEvidence =
+            observations.Any(o =>
+                o.Code == ObservationCodes.FrequentLostStars ||
+                o.Code == ObservationCodes.SevereLostStars);
+
+        if (!hasLostStarEvidence) {
+            yield break;
+        }
+
         var diagnosis = BuildDiagnosis(
             analysis,
             DiagnosisCodes.PoorTransparency,
@@ -31,5 +42,4 @@ public sealed class PoorTransparencyDiagnosisRule
             yield return diagnosis;
         }
     }
-
 }

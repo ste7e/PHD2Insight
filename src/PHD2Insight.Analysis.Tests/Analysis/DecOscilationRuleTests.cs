@@ -136,7 +136,7 @@ public sealed class DecOscillationRuleTests {
             },  // Dec dominance (+3)
 
             OscillationMetrics = new OscillationMetricsResult {
-                DecOscillationEventsPerMinute = 4.0,              // Above High threshold (+3)
+                DecOscillationEventsPerMinute = 10.0,              // Above High threshold (+3)
                 MeanDecOscillationAmplitudeArcSeconds = 2.3       // Amplitude above high threshold (+2)
             },
 

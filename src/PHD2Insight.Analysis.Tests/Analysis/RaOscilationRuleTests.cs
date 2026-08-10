@@ -127,7 +127,7 @@ public sealed class RaOscillationRuleTests {
             },
 
             OscillationMetrics = new OscillationMetricsResult {
-                RaOscillationEventsPerMinute = 4.0,              // Above High threshold (+3)
+                RaOscillationEventsPerMinute = 15.0,              // Above High threshold (+3)
                 MeanRaOscillationAmplitudeArcSeconds = 0.3       // Amplitude below threshold
             },
 
