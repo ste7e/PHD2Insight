@@ -6,4 +6,5 @@
     public double RaReversalRatePerMinute { get; init; }
 
     public double DecReversalRatePerMinute { get; init; }
+
 }

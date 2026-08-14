@@ -5,9 +5,9 @@ using PHD2Insight.Core.Models;
 namespace PHD2Insight.Analysis.Metrics;
 
 public static class GuideReversalAnalysis {
+
     public static GuideReversalResult Calculate(
         GuidingSession session) {
-
         ArgumentNullException.ThrowIfNull(session);
 
         var frames = AnalysisFrameSelector.GetAnalysisFrames(session);
@@ -35,18 +35,18 @@ public static class GuideReversalAnalysis {
                 raReversals / durationMinutes,
 
             DecReversalRatePerMinute =
-                decReversals / durationMinutes
+                decReversals / durationMinutes,
+
         };
     }
+
     private static int CountRaGuideReversals(
     IReadOnlyList<GuideFrame> frames) {
-
         var count = 0;
 
         GuideFrame? previous = null;
 
         foreach (var frame in frames) {
-
             if (frame.RaPulseMilliseconds is null ||
                 frame.RaDirection == GuideDirection.None) {
                 continue;
@@ -57,7 +57,6 @@ public static class GuideReversalAnalysis {
                 previous.RaDirection != GuideDirection.None &&
                 previous.RaDirection != frame.RaDirection &&
                 previous.RaErrorArcSeconds * frame.RaErrorArcSeconds < 0) {
-
                 count++;
             }
 
@@ -69,13 +68,11 @@ public static class GuideReversalAnalysis {
 
     private static int CountDecGuideReversals(
     IReadOnlyList<GuideFrame> frames) {
-
         var count = 0;
 
         GuideFrame? previous = null;
 
         foreach (var frame in frames) {
-
             if (frame.DecPulseMilliseconds is null ||
                 frame.DecDirection == GuideDirection.None) {
                 continue;
@@ -86,7 +83,6 @@ public static class GuideReversalAnalysis {
                 previous.DecDirection != GuideDirection.None &&
                 previous.DecDirection != frame.DecDirection &&
                 previous.DecErrorArcSeconds * frame.DecErrorArcSeconds < 0) {
-
                 count++;
             }
 
