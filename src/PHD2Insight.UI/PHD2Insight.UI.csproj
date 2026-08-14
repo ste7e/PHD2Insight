@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 
@@ -20,11 +20,17 @@
 
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
 
+    <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.3" />
+
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PHD2Insight.Analysis\PHD2Insight.Analysis.csproj" />
+    <ProjectReference Include="..\PHD2Insight.Parser\PHD2Insight.Parser.csproj" />
   </ItemGroup>
 
 </Project>

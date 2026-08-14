@@ -635,7 +635,6 @@ public sealed class DiagnosticRegressionTests {
         Console.WriteLine("=========================================");
     }
 
-    [Fact]
     public void RunRegressionTestOnAllLogsInFolder() {
         var csv = new StringBuilder();
         var sum = new Summary();

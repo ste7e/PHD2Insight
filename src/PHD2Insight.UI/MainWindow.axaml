@@ -10,27 +10,25 @@
     <StackPanel Spacing="20">
 
       <TextBlock
-       Text="PHD2Insight"
-       FontSize="32"/>
-
+          Text="PHD2Insight"
+          FontSize="32"/>
 
       <Button
-       Content="Load PHD2 Log"
-       Command="{Binding LoadCommand}"/>
-
-
-      <TextBlock
-       Text="{Binding Status}"
-       FontSize="18"/>
-
+          Content="Load PHD2 Log"
+          Click="LoadLog"/>
 
       <TextBlock
-       Text="{Binding Metrics}"
-       FontSize="16"/>
+          Text="{Binding Status}"
+          FontSize="18"/>
 
+      <ScrollViewer>
+        <TextBlock
+            Text="{Binding Metrics}"
+            FontSize="16"
+            TextWrapping="Wrap"/>
+      </ScrollViewer>
 
     </StackPanel>
-
 
   </Grid>
 
