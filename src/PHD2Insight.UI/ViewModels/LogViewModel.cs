@@ -146,6 +146,29 @@ public partial class LogViewModel : ViewModelBase {
         get;
     }
 
+    public string SessionHeading =>
+    GetSessionSortIndicator("Session", "Session");
+
+    public string StartTimeHeading =>
+        GetSessionSortIndicator("StartTime", "Start");
+
+    public string DurationHeading =>
+        GetSessionSortIndicator("Duration", "Duration");
+
+    public string RaRmsHeading =>
+        GetSessionSortIndicator("RaRms", "RA RMS");
+
+    public string DecRmsHeading =>
+        GetSessionSortIndicator("DecRms", "DEC RMS");
+
+    public string TotalRmsHeading =>
+        GetSessionSortIndicator("TotalRms", "Total RMS");
+
+    public string DiagnosesHeading =>
+        GetSessionSortIndicator("Diagnoses", "Diagnoses");
+
+    public string QualityHeading =>
+        GetSessionSortIndicator("Quality", "Quality");
 
     [ObservableProperty]
     private bool isExpanded;
@@ -247,6 +270,14 @@ public partial class LogViewModel : ViewModelBase {
                             : allSessions.OrderByDescending(
                                 s => s.Diagnoses.Count),
 
+                "Quality" =>
+                    sessionSortDirection ==
+                    SortDirection.Ascending
+                    ? allSessions.OrderBy(
+                    s => s.Quality)
+                    : allSessions.OrderByDescending(
+                    s => s.Quality),
+
                 _ =>
                     allSessions
             };
@@ -256,9 +287,25 @@ public partial class LogViewModel : ViewModelBase {
 
         foreach (var session in sorted)
             Sessions.Add(session);
+
+        OnPropertyChanged(nameof(SessionHeading));
+        OnPropertyChanged(nameof(StartTimeHeading));
+        OnPropertyChanged(nameof(DurationHeading));
+        OnPropertyChanged(nameof(RaRmsHeading));
+        OnPropertyChanged(nameof(DecRmsHeading));
+        OnPropertyChanged(nameof(TotalRmsHeading));
+        OnPropertyChanged(nameof(DiagnosesHeading));
+        OnPropertyChanged(nameof(QualityHeading));
     }
 
+    private string GetSessionSortIndicator(string column, string heading) {
+        if (sessionSortColumn != column)
+            return heading;
 
+        return sessionSortDirection == SortDirection.Ascending
+            ? $"{heading} ▲"
+            : $"{heading} ▼";
+    }
     private static double GetDuration(
         SessionViewModel session) {
 

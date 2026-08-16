@@ -11,9 +11,9 @@
 
   <Window.Resources>
     <ui:GuidingQualityToBrushConverter
-        x:Key="GuidingQualityToBrush"/>
+        x:Key="GuidingQualityToBrush" />
   </Window.Resources>
-  
+
   <Grid RowDefinitions="Auto,*">
 
     <!-- Header -->
@@ -29,24 +29,20 @@
           <TextBlock
               Text="PHD2Insight"
               FontSize="26"
-              FontWeight="SemiBold"/>
+              FontWeight="SemiBold" />
 
           <TextBlock
               Text="{Binding Explorer.Status}"
-              Opacity="0.7"/>
-
+              Opacity="0.7" />
         </StackPanel>
 
         <Button
             Grid.Column="1"
             Content="Open Folder"
             Command="{Binding Explorer.OpenFolderCommand}"
-            Padding="16,8"/>
-
+            Padding="16,8" />
       </Grid>
-
     </Border>
-
 
     <!-- Explorer -->
     <Grid
@@ -66,7 +62,7 @@
               Text="Folders"
               FontSize="18"
               FontWeight="SemiBold"
-              Margin="4,4,4,12"/>
+              Margin="4,4,4,12" />
 
           <ListBox
               ItemsSource="{Binding Explorer.Folders}"
@@ -78,18 +74,12 @@
 
                 <TextBlock
                     Text="{Binding Name}"
-                    Padding="6"/>
-
+                    Padding="6" />
               </DataTemplate>
-
             </ListBox.ItemTemplate>
-
           </ListBox>
-
         </DockPanel>
-
       </Border>
-
 
       <!-- Log pane -->
       <!-- Log pane -->
@@ -106,69 +96,79 @@
           <TextBlock
               Text="{Binding Explorer.SelectedFolder.Name}"
               FontSize="22"
-              FontWeight="SemiBold"/>
+              FontWeight="SemiBold" />
 
           <TextBlock
               Text="{Binding Explorer.SelectedFolder.Path}"
               Opacity="0.6"
-              FontSize="12"/>
-
+              FontSize="12" />
         </StackPanel>
-
 
         <!-- Log column headings -->
         <Grid
             Grid.Row="1"
-            ColumnDefinitions="28,*,90,100,100,100,100"
+            ColumnDefinitions="28,*,90,100,100,100,100,100"
             Margin="0,16,0,6">
 
           <!-- Empty space for expand button -->
-          <Border Grid.Column="0"/>
+          <Border Grid.Column="0" />
 
           <Button
               Grid.Column="1"
-              Content="Log / Date"
+              HorizontalAlignment="Stretch"
+              Content="{Binding Explorer.DateHeading}"
               Command="{Binding Explorer.SortLogsCommand}"
               CommandParameter="Date"
-              HorizontalContentAlignment="Left"/>
+              HorizontalContentAlignment="Left" />
 
           <Button
               Grid.Column="2"
-              Content="Sessions"
+              HorizontalAlignment="Stretch"
+              Content="{Binding Explorer.SessionsHeading}"
               Command="{Binding Explorer.SortLogsCommand}"
               CommandParameter="Sessions"
-              Margin="6,0,0,0"/>
+              Margin="6,0,0,0" />
 
           <Button
               Grid.Column="3"
-              Content="Avg RMS"
+              HorizontalAlignment="Stretch"
+              Content="{Binding Explorer.AverageRmsHeading}"
               Command="{Binding Explorer.SortLogsCommand}"
               CommandParameter="AverageRms"
-              Margin="6,0,0,0"/>
+              Margin="6,0,0,0" />
 
           <Button
               Grid.Column="4"
-              Content="Best RMS"
+              HorizontalAlignment="Stretch"
+              Content="{Binding Explorer.BestRmsHeading}"
               Command="{Binding Explorer.SortLogsCommand}"
               CommandParameter="BestRms"
-              Margin="6,0,0,0"/>
+              Margin="6,0,0,0" />
 
           <Button
               Grid.Column="5"
-              Content="Worst RMS"
+              HorizontalAlignment="Stretch"
+              Content="{Binding Explorer.WorstRmsHeading}"
               Command="{Binding Explorer.SortLogsCommand}"
               CommandParameter="WorstRms"
-              Margin="6,0,0,0"/>
+              Margin="6,0,0,0" />
 
           <Button
               Grid.Column="6"
-              Content="Diagnoses"
+              HorizontalAlignment="Stretch"
+              Content="{Binding Explorer.DiagnosesHeading}"
               Command="{Binding Explorer.SortLogsCommand}"
               CommandParameter="Diagnoses"
-              Margin="6,0,0,0"/>
+              Margin="6,0,0,0" />
 
+          <Button
+            Grid.Column="7"
+              HorizontalAlignment="Stretch"
+            Content="{Binding Explorer.QualityHeading}"
+            Command="{Binding Explorer.SortLogsCommand}"
+            CommandParameter="Quality"
+            Margin="6,0,0,0" />
         </Grid>
-
 
         <!-- Logs -->
         <ScrollViewer
@@ -217,9 +217,7 @@
                             Background="Transparent"
                             BorderThickness="0"
                             Content="▶"
-                            Command="{Binding ToggleExpansionCommand}"/>
-
-
+                            Command="{Binding ToggleExpansionCommand}" />
 
                         <!-- Log / date -->
                         <StackPanel
@@ -229,63 +227,55 @@
                           <TextBlock
                               Text="{Binding FileName}"
                               FontSize="15"
-                              FontWeight="SemiBold"/>
+                              FontWeight="SemiBold" />
 
                           <TextBlock
                               Text="{Binding DisplayDateTime}"
                               FontSize="12"
-                              Opacity="0.65"/>
-
+                              Opacity="0.65" />
                         </StackPanel>
-
 
                         <!-- Sessions -->
                         <TextBlock
                             Grid.Column="2"
                             Text="{Binding SessionCount}"
                             VerticalAlignment="Center"
-                            Margin="6,0,0,0"/>
-
+                            Margin="10,0,0,0" />
 
                         <!-- Average RMS -->
                         <TextBlock
                             Grid.Column="3"
                             Text="{Binding AverageTotalRmsDisplay}"
                             VerticalAlignment="Center"
-                            Margin="6,0,0,0"/>
-
+                            Margin="10,0,0,0" />
 
                         <!-- Best RMS -->
                         <TextBlock
                             Grid.Column="4"
                             Text="{Binding BestTotalRmsDisplay}"
                             VerticalAlignment="Center"
-                            Margin="6,0,0,0"/>
-
+                            Margin="10,0,0,0" />
 
                         <!-- Worst RMS -->
                         <TextBlock
                             Grid.Column="5"
                             Text="{Binding WorstTotalRmsDisplay}"
                             VerticalAlignment="Center"
-                            Margin="6,0,0,0"/>
-
+                            Margin="10,0,0,0" />
 
                         <!-- Diagnoses -->
                         <TextBlock
                             Grid.Column="6"
                             Text="{Binding DiagnosisCountDisplay}"
                             VerticalAlignment="Center"
-                            Margin="6,0,0,0"/>
+                            Margin="10,0,0,0" />
 
                         <TextBlock
                             Grid.Column="7"
                             Text="{Binding QualityDisplay}"
                             VerticalAlignment="Center"
-                            Margin="6,0,0,0"/>
-
+                            Margin="10,0,0,0" />
                       </Grid>
-
 
                       <!-- Sessions -->
                       <StackPanel
@@ -294,59 +284,72 @@
 
                         <!-- Session headings -->
                         <Grid
-                            ColumnDefinitions="70,*,90,90,90,90,90"
+                            ColumnDefinitions="70,*,90,90,90,90,90,90"
                             Margin="0,0,0,4">
 
                           <Button
                               Grid.Column="0"
-                              Content="Session"
+                              Content="{Binding SessionHeading}"
                               Command="{Binding SortSessionsCommand}"
-                              CommandParameter="Session"/>
+                              CommandParameter="Session"
+                              HorizontalAlignment="Stretch"/>
 
                           <Button
                               Grid.Column="1"
-                              Content="Start"
+                              Content="{Binding StartTimeHeading}"
                               Command="{Binding SortSessionsCommand}"
                               CommandParameter="StartTime"
-                              Margin="6,0,0,0"/>
+                              Margin="6,0,0,0"
+                              HorizontalAlignment="Stretch"/>
 
                           <Button
                               Grid.Column="2"
-                              Content="Duration"
+                              Content="{Binding DurationHeading}"
                               Command="{Binding SortSessionsCommand}"
                               CommandParameter="Duration"
-                              Margin="6,0,0,0"/>
+                              Margin="6,0,0,0"
+                              HorizontalAlignment="Stretch"/>
 
                           <Button
                               Grid.Column="3"
-                              Content="RA RMS"
+                              Content="{Binding RaRmsHeading}"
                               Command="{Binding SortSessionsCommand}"
                               CommandParameter="RaRms"
-                              Margin="6,0,0,0"/>
+                              Margin="6,0,0,0"
+                              HorizontalAlignment="Stretch"/>
 
                           <Button
                               Grid.Column="4"
-                              Content="DEC RMS"
+                              Content="{Binding DecRmsHeading}"
                               Command="{Binding SortSessionsCommand}"
                               CommandParameter="DecRms"
-                              Margin="6,0,0,0"/>
+                              Margin="6,0,0,0"
+                              HorizontalAlignment="Stretch"/>
 
                           <Button
                               Grid.Column="5"
-                              Content="Total RMS"
+                              Content="{Binding TotalRmsHeading}"
                               Command="{Binding SortSessionsCommand}"
                               CommandParameter="TotalRms"
-                              Margin="6,0,0,0"/>
+                              Margin="6,0,0,0"
+                              HorizontalAlignment="Stretch"/>
 
                           <Button
                               Grid.Column="6"
-                              Content="Diagnoses"
+                              Content="{Binding DiagnosesHeading}"
                               Command="{Binding SortSessionsCommand}"
                               CommandParameter="Diagnoses"
-                              Margin="6,0,0,0"/>
+                              Margin="6,0,0,0"
+                              HorizontalAlignment="Stretch"/>
 
+                          <Button
+                              Grid.Column="7"
+                              Content="{Binding QualityHeading}"
+                              Command="{Binding SortSessionsCommand}"
+                              CommandParameter="Quality"
+                              Margin="6,0,0,0"
+                              HorizontalAlignment="Stretch"/>
                         </Grid>
-
 
                         <!-- Session rows -->
                         <ItemsControl
@@ -357,8 +360,9 @@
                             <DataTemplate>
 
                               <Border
-                                  Margin="0,1,0,1"
-                                  Padding="6,5"
+                                  Margin="0"
+                                  Padding="0"
+                                  Background="#404040"
                                   BorderThickness="0,1,0,0">
 
                                 <Grid ColumnDefinitions="10,*">
@@ -367,7 +371,7 @@
                                   <Border
                                       Grid.Column="0"
                                       Margin="0,0,8,0"
-                                      Background="{Binding Quality, Converter={StaticResource GuidingQualityToBrush}}"/>
+                                      Background="{Binding Quality, Converter={StaticResource GuidingQualityToBrush}}" />
 
                                   <Grid
                                       Grid.Column="1"
@@ -376,75 +380,58 @@
                                     <TextBlock
                                         Grid.Column="0"
                                         Text="{Binding SessionTitle}"
-                                        FontWeight="SemiBold"/>
+                                        FontWeight="SemiBold" />
 
                                     <TextBlock
                                         Grid.Column="1"
                                         Text="{Binding StartTime}"
-                                        Margin="6,0,0,0"/>
+                                        Margin="6,0,0,0" />
 
                                     <TextBlock
                                         Grid.Column="2"
                                         Text="{Binding DurationDisplay}"
-                                        Margin="6,0,0,0"/>
+                                        HorizontalAlignment="Right"
+                                        Margin="10,0,0,0" />
 
                                     <TextBlock
                                         Grid.Column="3"
                                         Text="{Binding RaRmsDisplay}"
-                                        Margin="6,0,0,0"/>
+                                        Margin="10,0,0,0" />
 
                                     <TextBlock
                                         Grid.Column="4"
                                         Text="{Binding DecRmsDisplay}"
-                                        Margin="6,0,0,0"/>
+                                        Margin="10,0,0,0" />
 
                                     <TextBlock
                                         Grid.Column="5"
                                         Text="{Binding TotalRmsDisplay}"
-                                        Margin="6,0,0,0"/>
+                                        Margin="10,0,0,0" />
 
                                     <TextBlock
                                         Grid.Column="6"
                                         Text="{Binding DiagnosisCountDisplay}"
-                                        Margin="6,0,0,0"/>
+                                        Margin="10,0,0,0" />
 
                                     <TextBlock
                                         Grid.Column="7"
                                         Text="{Binding QualityDisplay}"
-                                        Margin="6,0,0,0"/>
-
+                                        Margin="10,0,0,0" />
                                   </Grid>
-                                  
                                 </Grid>
-
                               </Border>
-
                             </DataTemplate>
-
                           </ItemsControl.ItemTemplate>
-
                         </ItemsControl>
-
                       </StackPanel>
-
                     </StackPanel>
-                    
                   </Grid>
-
                 </Border>
-
               </DataTemplate>
-
             </ItemsControl.ItemTemplate>
-
           </ItemsControl>
-
         </ScrollViewer>
-
       </Grid>
-      
     </Grid>
-
   </Grid>
-
 </Window>

@@ -75,9 +75,22 @@ public partial class ExplorerViewModel : ViewModelBase {
     private string logSortColumn =
     "Date";
 
+    private string GetLogSortIndicator(string column) =>
+    logSortColumn == column
+        ? logSortDirection == SortDirection.Ascending
+            ? " ▲"
+            : " ▼"
+        : string.Empty;
 
-    private SortDirection logSortDirection =
-        SortDirection.Descending;
+    public string DateHeading => $"Log / Date{GetLogSortIndicator("Date")}";
+    public string SessionsHeading => $"Sessions{GetLogSortIndicator("Sessions")}";
+    public string AverageRmsHeading => $"Avg RMS{GetLogSortIndicator("AverageRms")}";
+    public string BestRmsHeading => $"Best RMS{GetLogSortIndicator("BestRms")}";
+    public string WorstRmsHeading => $"Worst RMS{GetLogSortIndicator("WorstRms")}";
+    public string DiagnosesHeading => $"Diagnoses{GetLogSortIndicator("Diagnoses")}";
+    public string QualityHeading => $"Quality{GetLogSortIndicator("Quality")}";
+
+    private SortDirection logSortDirection = SortDirection.Descending;
     public void LoadFolder(string path) {
 
         if (!Directory.Exists(path))
@@ -122,9 +135,11 @@ public partial class ExplorerViewModel : ViewModelBase {
             .OrderByDescending(File.GetLastWriteTime)) {
 
             try {
-
                 var result =
                     analysisService.Analyse(file);
+
+                if (result.Sessions.Count == 0)
+                    continue;
 
                 folder.Logs.Add(
                     new LogViewModel(result));
@@ -237,8 +252,14 @@ public partial class ExplorerViewModel : ViewModelBase {
                             : logs.OrderByDescending(
                                 l => l.DiagnosisCount),
 
+                "Quality" =>
+                    logSortDirection ==
+                    SortDirection.Ascending
+                    ? logs.OrderBy(l => l.Quality)
+                    : logs.OrderByDescending(l => l.Quality),
+
                 _ =>
-                    logs
+                  logs
             };
 
 
@@ -246,5 +267,13 @@ public partial class ExplorerViewModel : ViewModelBase {
 
         foreach (var log in sorted)
             SelectedFolder.Logs.Add(log);
+
+        OnPropertyChanged(nameof(DateHeading));
+        OnPropertyChanged(nameof(SessionsHeading));
+        OnPropertyChanged(nameof(AverageRmsHeading));
+        OnPropertyChanged(nameof(BestRmsHeading));
+        OnPropertyChanged(nameof(WorstRmsHeading));
+        OnPropertyChanged(nameof(DiagnosesHeading));
+        OnPropertyChanged(nameof(QualityHeading));
     }
 }
