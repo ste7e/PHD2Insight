@@ -4,6 +4,7 @@ using PHD2Insight.Analysis.Metrics;
 using PHD2Insight.Analysis.Models;
 using PHD2Insight.Parser;
 using PHD2Insight.Parser.Parsers;
+using PHD2Insight.Analysis.Quality;
 
 namespace PHD2Insight.UI.Services;
 
@@ -11,9 +12,11 @@ public sealed class PHD2LogAnalysisService {
 
     private readonly GuideLogParser parser;
     private readonly DiagnosticEngine diagnosticEngine;
+    private readonly GuidingQualityClassifier qualityClassifier;
 
     public PHD2LogAnalysisService() {
         parser = new GuideLogParser();
+        qualityClassifier = new GuidingQualityClassifier();
 
         diagnosticEngine = new DiagnosticEngine(
         [
@@ -45,34 +48,37 @@ public sealed class PHD2LogAnalysisService {
 
         var sessions = guideLog.Sessions
             .Select((session, index) => {
-                var analysis = MetricsCalculator.Calculate(session);
 
-                var diagnoses = diagnosticEngine
-                    .Diagnose(analysis)
-                    .OrderByDescending(d => d.Score)
-                    .ThenByDescending(d => d.Confidence)
-                    .ToList();
+                var analysis =
+                    MetricsCalculator.Calculate(session);
+
+                var diagnoses =
+                    diagnosticEngine
+                        .Diagnose(analysis)
+                        .OrderByDescending(d => d.Score)
+                        .ThenByDescending(d => d.Confidence)
+                        .ToList();
+
+                var quality =
+                    qualityClassifier.Classify(
+                        analysis.Rms?.TotalArcSeconds);
 
                 return new SessionAnalysisResult(
                     index,
+                    session,
                     analysis,
-                    diagnoses);
+                    diagnoses,
+                    quality);
             })
             .ToList();
 
-        return new LogAnalysisResult(
-            Path.GetFileName(filePath),
-            sessions);
+        return new LogAnalysisResult {
+            FileName = Path.GetFileName(filePath),
+            Sessions = sessions
+        };
     }
 }
 
 
-public sealed record LogAnalysisResult(
-    string FileName,
-    IReadOnlyList<SessionAnalysisResult> Sessions);
 
 
-public sealed record SessionAnalysisResult(
-    int SessionNumber,
-    AnalysisResult Analysis,
-    IReadOnlyList<Diagnosis> Diagnoses);
