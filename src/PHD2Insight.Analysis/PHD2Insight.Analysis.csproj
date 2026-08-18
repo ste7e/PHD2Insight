@@ -6,10 +6,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Recommendations\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <InternalsVisibleTo Include="PHD2Insight.Analysis.Tests" />
   </ItemGroup>
 

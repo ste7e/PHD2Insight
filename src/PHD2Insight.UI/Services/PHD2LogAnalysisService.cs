@@ -5,6 +5,7 @@ using PHD2Insight.Analysis.Models;
 using PHD2Insight.Parser;
 using PHD2Insight.Parser.Parsers;
 using PHD2Insight.Analysis.Quality;
+using PHD2Insight.Analysis.Recommendations;
 
 namespace PHD2Insight.UI.Services;
 
@@ -12,6 +13,7 @@ public sealed class PHD2LogAnalysisService {
 
     private readonly GuideLogParser parser;
     private readonly DiagnosticEngine diagnosticEngine;
+    private readonly RecommendationEngine recommendationEngine;
     private readonly GuidingQualityClassifier qualityClassifier;
 
     public PHD2LogAnalysisService() {
@@ -26,7 +28,14 @@ public sealed class PHD2LogAnalysisService {
             new GuideReversalDiagnosisRule(),
             new LargeGuideCorrectionsDiagnosisRule(),
             new AggressiveGuidingDiagnosisRule(),
+
         ]);
+
+        recommendationEngine = new RecommendationEngine(
+            [
+                new ReviewRaGuidingAggressivenessRule()
+            ]);
+
     }
 
     public LogAnalysisResult Analyse(string filePath) {
@@ -59,6 +68,10 @@ public sealed class PHD2LogAnalysisService {
                         .ThenByDescending(d => d.Confidence)
                         .ToList();
 
+                var recommendations =
+                    recommendationEngine
+                        .Evaluate(analysis, diagnoses);
+
                 var quality =
                     qualityClassifier.Classify(
                         analysis.Rms?.TotalArcSeconds);
@@ -68,6 +81,7 @@ public sealed class PHD2LogAnalysisService {
                     session,
                     analysis,
                     diagnoses,
+                    recommendations,
                     quality);
             })
             .ToList();
