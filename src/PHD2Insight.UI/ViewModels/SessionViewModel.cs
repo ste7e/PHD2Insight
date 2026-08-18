@@ -295,4 +295,16 @@ public sealed partial class SessionViewModel :
     Diagnoses
         .Select(d => new DiagnosisViewModel(d))
         .ToList();
+
+    public string PeakRaErrorDisplay =>
+    $"{Analysis.PeakErrors.MaximumRaErrorArcSeconds:F2}\"";
+
+    public string PeakDecErrorDisplay =>
+        $"{Analysis.PeakErrors.MaximumDecErrorArcSeconds:F2}\"";
+
+    public string PeakTotalErrorDisplay =>
+        $"{Analysis.PeakErrors.MaximumTotalErrorArcSeconds:F2}\"";
+
+    public string DiagnosisCountNumberDisplay =>
+    Diagnoses.Count.ToString();
 }

@@ -450,491 +450,637 @@
                                         Margin="0,0,0,12"/>
 
 
-                                    <!-- Overview -->
-                                    <StackPanel
+                                    <!-- Diagnoses -->
+                                    <Border
                                         Grid.Row="1"
                                         Grid.Column="0"
-                                        Spacing="4">
+                                        Grid.ColumnSpan="3"
+                                        Background="#242424"
+                                        Padding="12"
+                                        BorderThickness="1"
+                                        CornerRadius="8">
 
-                                      <TextBlock
-                                          Text="Overview"
-                                          FontWeight="SemiBold"/>
+                                      <StackPanel Spacing="8">
 
-                                      <TextBlock Text="{Binding Camera, StringFormat=Camera: {0}}"/>
-                                      <TextBlock Text="{Binding Mount, StringFormat=Mount: {0}}"/>
-                                      <TextBlock Text="{Binding Exposure, StringFormat=Exposure: {0}}"/>
-                                      <TextBlock Text="{Binding FrameCountDisplay, StringFormat=Frames: {0}}"/>
-                                      <TextBlock Text="{Binding SignalToNoiseDisplay, StringFormat=Average SNR: {0}}"/>
-                                      <TextBlock Text="{Binding StarMassDisplay, StringFormat=Average Star Mass: {0}}"/>
-
-                                    </StackPanel>
-
-
-                                    <!-- RMS -->
-                                    <StackPanel
-                                        Grid.Row="1"
-                                        Grid.Column="1"
-                                        Spacing="4">
-
-                                      <TextBlock
-                                          Text="RMS"
-                                          FontWeight="SemiBold"/>
-
-                                      <TextBlock Text="{Binding RaRmsDisplay, StringFormat=RA: {0}}"/>
-                                      <TextBlock Text="{Binding DecRmsDisplay, StringFormat=DEC: {0}}"/>
-                                      <TextBlock Text="{Binding TotalRmsDisplay, StringFormat=Total: {0}}"/>
-                                      <TextBlock Text="{Binding RaToDecRatioDisplay, StringFormat=RA:DEC: {0}}"/>
-                                      <TextBlock Text="{Binding MeanRaDisplay, StringFormat=Mean RA: {0}}"/>
-                                      <TextBlock Text="{Binding MeanDecDisplay, StringFormat=Mean DEC: {0}}"/>
-                                      <TextBlock Text="{Binding MeanRadialOffsetDisplay, StringFormat=Mean radial: {0}}"/>
-
-                                    </StackPanel>
-
-
-                                    <!-- Setup -->
-                                    <StackPanel
-                                        Grid.Row="1"
-                                        Grid.Column="2"
-                                        Spacing="4">
-
-                                      <TextBlock
-                                          Text="Equipment"
-                                          FontWeight="SemiBold"/>
-
-                                      <TextBlock Text="{Binding PixelScale, StringFormat=Pixel scale: {0}}"/>
-                                      <TextBlock Text="{Binding FocalLength, StringFormat=Focal length: {0}}"/>
-                                      <TextBlock Text="{Binding Binning, StringFormat=Binning: {0}}"/>
-
-                                    </StackPanel>
-
-                                    <!-- Guiding Behaviour -->
-                                    <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Spacing="8" Margin="0,16,0,0">
-
-                                      <TextBlock
-                                          Text="Guiding Behaviour"
-                                          FontSize="18"
-                                          FontWeight="SemiBold" />
-
-                                      <!-- RA / DEC behaviour -->
-                                      <Grid ColumnDefinitions="*,*">
-
-                                        <!-- RA -->
-                                        <Border
-                                            Grid.Column="0"
-                                            Padding="12"
-                                            BorderThickness="1">
-
-                                          <StackPanel Spacing="6">
-
-                                            <TextBlock
-                                                Text="RA"
-                                                FontWeight="SemiBold"
-                                                FontSize="15" />
-
-                                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto">
-
-                                              <TextBlock
-                                                  Grid.Row="0"
-                                                  Text="Oscillation rate" />
-
-                                              <TextBlock
-                                                  Grid.Row="0"
-                                                  Grid.Column="1"
-                                                  Text="{Binding RaOscillationRateDisplay}" />
-
-                                              <TextBlock
-                                                  Grid.Row="1"
-                                                  Text="Oscillation amplitude" />
-
-                                              <TextBlock
-                                                  Grid.Row="1"
-                                                  Grid.Column="1"
-                                                  Text="{Binding RaOscillationAmplitudeDisplay}" />
-
-                                              <TextBlock
-                                                  Grid.Row="2"
-                                                  Text="Direction changes" />
-
-                                              <TextBlock
-                                                  Grid.Row="2"
-                                                  Grid.Column="1"
-                                                  Text="{Binding RaDirectionChangesDisplay}" />
-
-                                              <TextBlock
-                                                  Grid.Row="3"
-                                                  Text="Guide reversals" />
-
-                                              <TextBlock
-                                                  Grid.Row="3"
-                                                  Grid.Column="1"
-                                                  Text="{Binding RaGuideReversalRateDisplay}" />
-
-                                            </Grid>
-                                          </StackPanel>
-                                        </Border>
-
-                                        <!-- DEC -->
-                                        <Border
-                                            Grid.Column="1"
-                                            Padding="12"
-                                            BorderThickness="1">
-
-                                          <StackPanel Spacing="6">
-
-                                            <TextBlock
-                                                Text="DEC"
-                                                FontWeight="SemiBold"
-                                                FontSize="15" />
-
-                                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto">
-
-                                              <TextBlock
-                                                  Grid.Row="0"
-                                                  Text="Oscillation rate" />
-
-                                              <TextBlock
-                                                  Grid.Row="0"
-                                                  Grid.Column="1"
-                                                  Text="{Binding DecOscillationRateDisplay}" />
-
-                                              <TextBlock
-                                                  Grid.Row="1"
-                                                  Text="Oscillation amplitude" />
-
-                                              <TextBlock
-                                                  Grid.Row="1"
-                                                  Grid.Column="1"
-                                                  Text="{Binding DecOscillationAmplitudeDisplay}" />
-
-                                              <TextBlock
-                                                  Grid.Row="2"
-                                                  Text="Direction changes" />
-
-                                              <TextBlock
-                                                  Grid.Row="2"
-                                                  Grid.Column="1"
-                                                  Text="{Binding DecDirectionChangesDisplay}" />
-
-                                              <TextBlock
-                                                  Grid.Row="3"
-                                                  Text="Guide reversals" />
-
-                                              <TextBlock
-                                                  Grid.Row="3"
-                                                  Grid.Column="1"
-                                                  Text="{Binding DecGuideReversalRateDisplay}" />
-
-                                            </Grid>
-                                          </StackPanel>
-                                        </Border>
-
-                                      </Grid>
-
-                                      <!-- Lost stars / settling -->
-                                      <Grid ColumnDefinitions="*,*" Margin="0,4,0,0">
-
-                                        <!-- Lost stars -->
-                                        <Border
-                                            Grid.Column="0"
-                                            Padding="12"
-                                            BorderThickness="1">
+                                        <Grid ColumnDefinitions="*,Auto">
 
                                           <Grid ColumnDefinitions="*,Auto">
 
-                                            <TextBlock
-                                                Text="Lost Stars"
-                                                FontWeight="SemiBold" />
+                                            <StackPanel Spacing="2">
+
+                                              <TextBlock
+                                                  Text="Session Assessment"
+                                                  FontSize="18"
+                                                  FontWeight="SemiBold" />
+
+                                              <TextBlock
+                                                  Text="{Binding DiagnosisCountDisplay}"
+                                                  FontSize="12" />
+
+                                            </StackPanel>
 
                                             <TextBlock
                                                 Grid.Column="1"
-                                                Text="{Binding LostStarsDisplay}" />
+                                                Text="{Binding QualityDisplay}"
+                                                Foreground="{Binding QualityForeground}"
+                                                FontSize="18"
+                                                FontWeight="Bold"
+                                                VerticalAlignment="Center" />
 
                                           </Grid>
-                                        </Border>
+                                        </Grid>
 
-                                        <!-- Settling -->
-                                        <Border
-                                            Grid.Column="1"
-                                            Padding="12"
-                                            BorderThickness="1">
+                                        <Grid
+                                          ColumnDefinitions="*,*,*,*"
+                                          Margin="0,4,0,4">
 
-                                          <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
-
-                                            <TextBlock
-                                                Grid.Row="0"
-                                                Text="Settling"
-                                                FontWeight="SemiBold" />
+                                          <StackPanel
+                                              Grid.Column="0"
+                                              Spacing="2">
 
                                             <TextBlock
-                                                Grid.Row="0"
-                                                Grid.Column="1"
-                                                Text="{Binding SettlingDisplay}" />
+                                                Text="Total RMS"
+                                                FontSize="11"/>
 
                                             <TextBlock
-                                                Grid.Row="1"
-                                                Text="Average time" />
+                                                Text="{Binding TotalRmsDisplay}"
+                                                FontWeight="SemiBold"/>
 
-                                            <TextBlock
-                                                Grid.Row="1"
-                                                Grid.Column="1"
-                                                Text="{Binding AverageSettlingTimeDisplay}" />
-
-                                            <TextBlock
-                                                Grid.Row="2"
-                                                Text="Longest time" />
-
-                                            <TextBlock
-                                                Grid.Row="2"
-                                                Grid.Column="1"
-                                                Text="{Binding LongestSettlingTimeDisplay}" />
-
-                                          </Grid>
-                                        </Border>
-
-                                      </Grid>
-
-                                    </StackPanel>
-
-                                    <!-- Guide Corrections -->
-                                    <StackPanel
-                                        Grid.Row="3"
-                                        Grid.Column="0"
-                                        Grid.ColumnSpan="3"
-                                        Spacing="8"
-                                        Margin="0,16,0,0">
-
-                                      <TextBlock
-                                          Text="Guide Corrections"
-                                          FontSize="18"
-                                          FontWeight="SemiBold" />
-
-                                      <Grid ColumnDefinitions="*,*">
-
-                                        <!-- RA -->
-                                        <Border
-                                            Grid.Column="0"
-                                            Padding="12"
-                                            BorderThickness="1">
-
-                                          <StackPanel Spacing="6">
-
-                                            <TextBlock
-                                                Text="RA"
-                                                FontWeight="SemiBold"
-                                                FontSize="15" />
-
-                                            <Grid
-                                                ColumnDefinitions="*,Auto"
-                                                RowDefinitions="Auto,Auto,Auto,Auto,Auto">
-
-                                              <TextBlock
-                                                  Grid.Row="0"
-                                                  Text="Corrections" />
-
-                                              <TextBlock
-                                                  Grid.Row="0"
-                                                  Grid.Column="1"
-                                                  Text="{Binding RaCorrectionCountDisplay}" />
-
-                                              <TextBlock
-                                                  Grid.Row="1"
-                                                  Text="Average pulse" />
-
-                                              <TextBlock
-                                                  Grid.Row="1"
-                                                  Grid.Column="1"
-                                                  Text="{Binding RaAveragePulseDisplay}" />
-
-                                              <TextBlock
-                                                  Grid.Row="2"
-                                                  Text="Maximum pulse" />
-
-                                              <TextBlock
-                                                  Grid.Row="2"
-                                                  Grid.Column="1"
-                                                  Text="{Binding RaMaximumPulseDisplay}" />
-
-                                              <TextBlock
-                                                  Grid.Row="3"
-                                                  Text="Total correction time" />
-
-                                              <TextBlock
-                                                  Grid.Row="3"
-                                                  Grid.Column="1"
-                                                  Text="{Binding RaTotalCorrectionTimeDisplay}" />
-
-                                              <TextBlock
-                                                  Grid.Row="4"
-                                                  Text="Directional imbalance" />
-
-                                              <TextBlock
-                                                  Grid.Row="4"
-                                                  Grid.Column="1"
-                                                  Text="{Binding RaDirectionalImbalanceDisplay}" />
-
-                                            </Grid>
                                           </StackPanel>
-                                        </Border>
 
-                                        <!-- DEC -->
-                                        <Border
-                                            Grid.Column="1"
-                                            Padding="12"
-                                            BorderThickness="1">
-
-                                          <StackPanel Spacing="6">
+                                          <StackPanel
+                                              Grid.Column="1"
+                                              Spacing="2">
 
                                             <TextBlock
-                                                Text="DEC"
-                                                FontWeight="SemiBold"
-                                                FontSize="15" />
+                                                Text="Peak error"
+                                                FontSize="11"/>
 
-                                            <Grid
-                                                ColumnDefinitions="*,Auto"
-                                                RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+                                            <TextBlock
+                                                Text="{Binding PeakTotalErrorDisplay}"
+                                                FontWeight="SemiBold"/>
 
-                                              <TextBlock
-                                                  Grid.Row="0"
-                                                  Text="Corrections" />
-
-                                              <TextBlock
-                                                  Grid.Row="0"
-                                                  Grid.Column="1"
-                                                  Text="{Binding DecCorrectionCountDisplay}" />
-
-                                              <TextBlock
-                                                  Grid.Row="1"
-                                                  Text="Average pulse" />
-
-                                              <TextBlock
-                                                  Grid.Row="1"
-                                                  Grid.Column="1"
-                                                  Text="{Binding DecAveragePulseDisplay}" />
-
-                                              <TextBlock
-                                                  Grid.Row="2"
-                                                  Text="Maximum pulse" />
-
-                                              <TextBlock
-                                                  Grid.Row="2"
-                                                  Grid.Column="1"
-                                                  Text="{Binding DecMaximumPulseDisplay}" />
-
-                                              <TextBlock
-                                                  Grid.Row="3"
-                                                  Text="Total correction time" />
-
-                                              <TextBlock
-                                                  Grid.Row="3"
-                                                  Grid.Column="1"
-                                                  Text="{Binding DecTotalCorrectionTimeDisplay}" />
-
-                                              <TextBlock
-                                                  Grid.Row="4"
-                                                  Text="Directional imbalance" />
-
-                                              <TextBlock
-                                                  Grid.Row="4"
-                                                  Grid.Column="1"
-                                                  Text="{Binding DecDirectionalImbalanceDisplay}" />
-
-                                            </Grid>
                                           </StackPanel>
-                                        </Border>
 
-                                      </Grid>
-                                    </StackPanel>
-                                    
-                                    <!-- Diagnoses -->
-                                    <StackPanel
-                                        Grid.Row="4"
+                                          <StackPanel
+                                              Grid.Column="2"
+                                              Spacing="2">
+
+                                            <TextBlock
+                                                Text="RA:DEC"
+                                                FontSize="11"/>
+
+                                            <TextBlock
+                                                Text="{Binding RaToDecRatioDisplay}"
+                                                FontWeight="SemiBold"/>
+
+                                          </StackPanel>
+
+                                          <StackPanel
+                                              Grid.Column="3"
+                                              Spacing="2">
+
+                                            <TextBlock
+                                                Text="Findings"
+                                                FontSize="11"/>
+
+                                            <TextBlock
+                                                Text="{Binding DiagnosisCountNumberDisplay}"
+                                                FontWeight="SemiBold"/>
+
+                                          </StackPanel>
+
+                                        </Grid>
+                                        
+                                        <ItemsControl ItemsSource="{Binding DiagnosisViewModels}">
+
+                                          <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+
+                                              <Border
+                                                  Padding="12"
+                                                  Margin="0,0,0,6"
+                                                  BorderThickness="1">
+
+                                                <Grid
+                                                    ColumnDefinitions="*,Auto"
+                                                    RowDefinitions="Auto,Auto">
+
+                                                  <StackPanel
+                                                      Grid.Row="0"
+                                                      Grid.Column="0"
+                                                      Spacing="3">
+
+                                                    <TextBlock
+                                                        Text="{Binding Title}"
+                                                        FontWeight="SemiBold"
+                                                        FontSize="15" />
+
+                                                    <TextBlock
+                                                        Text="{Binding Description}"
+                                                        TextWrapping="Wrap" />
+
+                                                  </StackPanel>
+
+                                                  <StackPanel
+                                                      Grid.Row="0"
+                                                      Grid.Column="1"
+                                                      Spacing="2"
+                                                      HorizontalAlignment="Right">
+
+                                                    <TextBlock
+                                                        Text="{Binding Severity}"
+                                                        Foreground="{Binding SeverityForeground}"
+                                                        HorizontalAlignment="Right"
+                                                        FontWeight="SemiBold" />
+
+                                                    <TextBlock
+                                                        Text="{Binding Confidence}"
+                                                        Foreground="{Binding ConfidenceForeground}"
+                                                        HorizontalAlignment="Right" />
+
+                                                  </StackPanel>
+
+                                                </Grid>
+
+                                              </Border>
+
+                                            </DataTemplate>
+                                          </ItemsControl.ItemTemplate>
+
+                                        </ItemsControl>
+
+                                      </StackPanel>
+                                    </Border>
+
+                                    <!-- Overview -->
+                                    <Border
+                                        Grid.Row="2"
                                         Grid.Column="0"
-                                        Grid.ColumnSpan="3"
-                                        Spacing="8"
-                                        Margin="0,16,0,0">
+                                        Grid.ColumnSpan="2"
+                                        Background="#242424"
+                                        Padding="12"
+                                        BorderThickness="1"
+                                        CornerRadius="8">
 
-                                      <Grid ColumnDefinitions="*,Auto">
+                                      <StackPanel Spacing="8">
 
                                         <TextBlock
-                                            Text="Diagnosis"
+                                            Text="Overview"
+                                            FontWeight="SemiBold"/>
+
+                                        <TextBlock Text="{Binding Camera, StringFormat=Camera: {0}}"/>
+                                        <TextBlock Text="{Binding Mount, StringFormat=Mount: {0}}"/>
+                                        <TextBlock Text="{Binding Exposure, StringFormat=Exposure: {0}}"/>
+                                        <TextBlock Text="{Binding FrameCountDisplay, StringFormat=Frames: {0}}"/>
+                                        <TextBlock Text="{Binding SignalToNoiseDisplay, StringFormat=Average SNR: {0}}"/>
+                                        <TextBlock Text="{Binding StarMassDisplay, StringFormat=Average Star Mass: {0}}"/>
+
+                                      </StackPanel>
+                                    </Border>
+
+                                    <!-- RMS -->
+                                    <Border
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        Background="#242424"
+                                        Padding="12"
+                                        BorderThickness="1"
+                                        CornerRadius="8">
+
+                                      <StackPanel Spacing="8">
+
+                                        <TextBlock
+                                            Text="RMS"
+                                            FontWeight="SemiBold"/>
+
+                                        <TextBlock Text="{Binding RaRmsDisplay, StringFormat=RA: {0}}"/>
+                                        <TextBlock Text="{Binding DecRmsDisplay, StringFormat=DEC: {0}}"/>
+                                        <TextBlock Text="{Binding TotalRmsDisplay, StringFormat=Total: {0}}"/>
+                                        <TextBlock Text="{Binding RaToDecRatioDisplay, StringFormat=RA:DEC: {0}}"/>
+                                        <TextBlock Text="{Binding MeanRaDisplay, StringFormat=Mean RA: {0}}"/>
+                                        <TextBlock Text="{Binding MeanDecDisplay, StringFormat=Mean DEC: {0}}"/>
+                                        <TextBlock Text="{Binding MeanRadialOffsetDisplay, StringFormat=Mean radial: {0}}"/>
+
+                                        <Border
+                                            Height="1"
+                                            Margin="0,4,0,4"
+                                            Background="#404040"/>
+
+                                        <TextBlock
+                                            Text="Peak Error"
+                                            FontWeight="SemiBold"/>
+
+                                        <TextBlock
+                                            Text="{Binding PeakRaErrorDisplay, StringFormat=RA: {0}}"/>
+
+                                        <TextBlock
+                                            Text="{Binding PeakDecErrorDisplay, StringFormat=DEC: {0}}"/>
+
+                                        <TextBlock
+                                            Text="{Binding PeakTotalErrorDisplay, StringFormat=Total: {0}}"/>
+
+                                      </StackPanel>
+                                    </Border>
+
+                                    <!-- Setup -->
+                                    <Border
+                                        Grid.Row="2"
+                                        Grid.Column="2"
+                                        Background="#242424"
+                                        Padding="12"
+                                        BorderThickness="1"
+                                        CornerRadius="8">
+
+                                      <StackPanel Spacing="8">
+
+                                        <TextBlock
+                                            Text="Equipment"
+                                            FontWeight="SemiBold"/>
+
+                                        <TextBlock Text="{Binding PixelScale, StringFormat=Pixel scale: {0}}"/>
+                                        <TextBlock Text="{Binding FocalLength, StringFormat=Focal length: {0}}"/>
+                                        <TextBlock Text="{Binding Binning, StringFormat=Binning: {0}}"/>
+
+                                      </StackPanel>
+                                    </Border>
+
+                                    <!-- Guiding Behaviour -->
+                                    <Border
+                                        Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
+                                        Background="#242424"
+                                        Padding="12"
+                                        BorderThickness="1"
+                                        CornerRadius="8">
+
+                                      <StackPanel Spacing="8">
+
+                                        <!-- RA / DEC content -->
+
+                                        <TextBlock
+                                            Text="Guiding Behaviour"
                                             FontSize="18"
                                             FontWeight="SemiBold" />
 
-                                        <StackPanel
+                                        <!-- RA / DEC behaviour -->
+                                        <Grid ColumnDefinitions="*,*,*">
+
+                                          <!-- RA -->
+                                          <Border
+                                              Grid.Column="0"
+                                              Padding="12"
+                                              BorderThickness="1">
+
+                                            <StackPanel Spacing="6">
+
+                                              <TextBlock
+                                                  Text="RA"
+                                                  FontWeight="SemiBold"
+                                                  FontSize="15" />
+
+                                              <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto">
+
+                                                <TextBlock
+                                                    Grid.Row="0"
+                                                    Text="Oscillation rate" />
+
+                                                <TextBlock
+                                                    Grid.Row="0"
+                                                    Grid.Column="1"
+                                                    Text="{Binding RaOscillationRateDisplay}" />
+
+                                                <TextBlock
+                                                    Grid.Row="1"
+                                                    Text="Oscillation amplitude" />
+
+                                                <TextBlock
+                                                    Grid.Row="1"
+                                                    Grid.Column="1"
+                                                    Text="{Binding RaOscillationAmplitudeDisplay}" />
+
+                                                <TextBlock
+                                                    Grid.Row="2"
+                                                    Text="Direction changes" />
+
+                                                <TextBlock
+                                                    Grid.Row="2"
+                                                    Grid.Column="1"
+                                                    Text="{Binding RaDirectionChangesDisplay}" />
+
+                                                <TextBlock
+                                                    Grid.Row="3"
+                                                    Text="Guide reversals" />
+
+                                                <TextBlock
+                                                    Grid.Row="3"
+                                                    Grid.Column="1"
+                                                    Text="{Binding RaGuideReversalRateDisplay}" />
+
+                                              </Grid>
+                                            </StackPanel>
+                                          </Border>
+
+                                          <Border
+  Grid.Column="1"
+  Width="1"
+  Margin="0,4,0,4"
+  Background="#404040"/>
+
+                                          <!-- DEC -->
+                                          <Border
+                                              Grid.Column="2"
+                                              Padding="12"
+                                              BorderThickness="1">
+
+                                            <StackPanel Spacing="6">
+
+                                              <TextBlock
+                                                  Text="DEC"
+                                                  FontWeight="SemiBold"
+                                                  FontSize="15" />
+
+                                              <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto">
+
+                                                <TextBlock
+                                                    Grid.Row="0"
+                                                    Text="Oscillation rate" />
+
+                                                <TextBlock
+                                                    Grid.Row="0"
+                                                    Grid.Column="1"
+                                                    Text="{Binding DecOscillationRateDisplay}" />
+
+                                                <TextBlock
+                                                    Grid.Row="1"
+                                                    Text="Oscillation amplitude" />
+
+                                                <TextBlock
+                                                    Grid.Row="1"
+                                                    Grid.Column="1"
+                                                    Text="{Binding DecOscillationAmplitudeDisplay}" />
+
+                                                <TextBlock
+                                                    Grid.Row="2"
+                                                    Text="Direction changes" />
+
+                                                <TextBlock
+                                                    Grid.Row="2"
+                                                    Grid.Column="1"
+                                                    Text="{Binding DecDirectionChangesDisplay}" />
+
+                                                <TextBlock
+                                                    Grid.Row="3"
+                                                    Text="Guide reversals" />
+
+                                                <TextBlock
+                                                    Grid.Row="3"
+                                                    Grid.Column="1"
+                                                    Text="{Binding DecGuideReversalRateDisplay}" />
+
+                                              </Grid>
+                                            </StackPanel>
+                                          </Border>
+
+                                        </Grid>
+
+                                        <Border
+                                          Height="1"
+                                          Margin="0,4,0,4"
+                                          Background="#404040"/>
+                                        
+                                        <!-- Lost stars / settling -->
+                                        <Grid ColumnDefinitions="*,*,*" Margin="0,4,0,0">
+
+                                          <!-- Lost stars -->
+                                          <Border
+                                              Grid.Column="0"
+                                              Padding="12"
+                                              BorderThickness="1">
+
+                                            <Grid ColumnDefinitions="*,Auto">
+
+                                              <TextBlock
+                                                  Text="Lost Stars"
+                                                  FontWeight="SemiBold" />
+
+                                              <TextBlock
+                                                  Grid.Column="1"
+                                                  Text="{Binding LostStarsDisplay}" />
+
+                                            </Grid>
+                                          </Border>
+
+                                          <Border
                                             Grid.Column="1"
-                                            Orientation="Horizontal"
-                                            Spacing="12">
+                                            Width="1"
+                                            Margin="0,4,0,4"
+                                            Background="#404040"/>
+                                          
+                                          <!-- Settling -->
+                                          <Border
+                                              Grid.Column="2"
+                                              Padding="12"
+                                              BorderThickness="1">
 
-                                          <TextBlock
-                                              Text="{Binding QualityDisplay}"
-                                              FontWeight="SemiBold" />
+                                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
 
-                                          <TextBlock
-                                              Text="{Binding DiagnosisCountDisplay}" />
+                                              <TextBlock
+                                                  Grid.Row="0"
+                                                  Text="Settling"
+                                                  FontWeight="SemiBold" />
 
-                                        </StackPanel>
+                                              <TextBlock
+                                                  Grid.Row="0"
+                                                  Grid.Column="1"
+                                                  Text="{Binding SettlingDisplay}" />
 
-                                      </Grid>
+                                              <TextBlock
+                                                  Grid.Row="1"
+                                                  Text="Average time" />
 
-                                      <ItemsControl ItemsSource="{Binding DiagnosisViewModels}">
+                                              <TextBlock
+                                                  Grid.Row="1"
+                                                  Grid.Column="1"
+                                                  Text="{Binding AverageSettlingTimeDisplay}" />
 
-                                        <ItemsControl.ItemTemplate>
-                                          <DataTemplate>
+                                              <TextBlock
+                                                  Grid.Row="2"
+                                                  Text="Longest time" />
 
-                                            <Border
-                                                Padding="12"
-                                                Margin="0,0,0,6"
-                                                BorderThickness="1">
+                                              <TextBlock
+                                                  Grid.Row="2"
+                                                  Grid.Column="1"
+                                                  Text="{Binding LongestSettlingTimeDisplay}" />
+
+                                            </Grid>
+                                          </Border>
+
+                                        </Grid>
+
+                                      </StackPanel>
+                                    </Border>
+
+                                    <!-- Guide Corrections -->
+                                    <Border
+                                        Grid.Row="4"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="3"
+                                        Background="#242424"
+                                        Padding="12"
+                                        BorderThickness="1"
+                                        CornerRadius="8">
+
+                                      <StackPanel Spacing="8">
+
+                                        <TextBlock
+                                            Text="Guide Corrections"
+                                            FontSize="18"
+                                            FontWeight="SemiBold" />
+
+                                        <Grid ColumnDefinitions="*,*,*">
+
+                                          <!-- RA -->
+                                          <Border
+                                              Grid.Column="0"
+                                              Padding="12"
+                                              BorderThickness="1">
+
+                                            <StackPanel Spacing="6">
+
+                                              <TextBlock
+                                                  Text="RA"
+                                                  FontWeight="SemiBold"
+                                                  FontSize="15" />
 
                                               <Grid
                                                   ColumnDefinitions="*,Auto"
-                                                  RowDefinitions="Auto,Auto">
+                                                  RowDefinitions="Auto,Auto,Auto,Auto,Auto">
 
-                                                <StackPanel
+                                                <TextBlock
                                                     Grid.Row="0"
-                                                    Grid.Column="0"
-                                                    Spacing="3">
+                                                    Text="Corrections" />
 
-                                                  <TextBlock
-                                                      Text="{Binding Title}"
-                                                      FontWeight="SemiBold"
-                                                      FontSize="15" />
-
-                                                  <TextBlock
-                                                      Text="{Binding Description}"
-                                                      TextWrapping="Wrap" />
-
-                                                </StackPanel>
-
-                                                <StackPanel
+                                                <TextBlock
                                                     Grid.Row="0"
                                                     Grid.Column="1"
-                                                    Spacing="2"
-                                                    HorizontalAlignment="Right">
+                                                    Text="{Binding RaCorrectionCountDisplay}" />
 
-                                                  <TextBlock
-                                                      Text="{Binding Severity}"
-                                                      Foreground="{Binding SeverityForeground}"
-                                                      HorizontalAlignment="Right"
-                                                      FontWeight="SemiBold" />
+                                                <TextBlock
+                                                    Grid.Row="1"
+                                                    Text="Average pulse" />
 
-                                                  <TextBlock
-                                                      Text="{Binding Confidence}"
-                                                      Foreground="{Binding ConfidenceForeground}"
-                                                      HorizontalAlignment="Right" />
+                                                <TextBlock
+                                                    Grid.Row="1"
+                                                    Grid.Column="1"
+                                                    Text="{Binding RaAveragePulseDisplay}" />
 
-                                                </StackPanel>
+                                                <TextBlock
+                                                    Grid.Row="2"
+                                                    Text="Maximum pulse" />
+
+                                                <TextBlock
+                                                    Grid.Row="2"
+                                                    Grid.Column="1"
+                                                    Text="{Binding RaMaximumPulseDisplay}" />
+
+                                                <TextBlock
+                                                    Grid.Row="3"
+                                                    Text="Total correction time" />
+
+                                                <TextBlock
+                                                    Grid.Row="3"
+                                                    Grid.Column="1"
+                                                    Text="{Binding RaTotalCorrectionTimeDisplay}" />
+
+                                                <TextBlock
+                                                    Grid.Row="4"
+                                                    Text="Directional imbalance" />
+
+                                                <TextBlock
+                                                    Grid.Row="4"
+                                                    Grid.Column="1"
+                                                    Text="{Binding RaDirectionalImbalanceDisplay}" />
 
                                               </Grid>
+                                            </StackPanel>
+                                          </Border>
 
-                                            </Border>
+                                          <Border
+                                            Grid.Column="1"
+                                            Width="1"
+                                            Margin="0,4,0,4"
+                                            Background="#404040"/>
 
-                                          </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
+                                          <!-- DEC -->
+                                          <Border
+                                              Grid.Column="2"
+                                              Padding="12"
+                                              BorderThickness="1">
 
-                                      </ItemsControl>
+                                            <StackPanel Spacing="6">
 
-                                    </StackPanel>
+                                              <TextBlock
+                                                  Text="DEC"
+                                                  FontWeight="SemiBold"
+                                                  FontSize="15" />
+
+                                              <Grid
+                                                  ColumnDefinitions="*,Auto"
+                                                  RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+
+                                                <TextBlock
+                                                    Grid.Row="0"
+                                                    Text="Corrections" />
+
+                                                <TextBlock
+                                                    Grid.Row="0"
+                                                    Grid.Column="1"
+                                                    Text="{Binding DecCorrectionCountDisplay}" />
+
+                                                <TextBlock
+                                                    Grid.Row="1"
+                                                    Text="Average pulse" />
+
+                                                <TextBlock
+                                                    Grid.Row="1"
+                                                    Grid.Column="1"
+                                                    Text="{Binding DecAveragePulseDisplay}" />
+
+                                                <TextBlock
+                                                    Grid.Row="2"
+                                                    Text="Maximum pulse" />
+
+                                                <TextBlock
+                                                    Grid.Row="2"
+                                                    Grid.Column="1"
+                                                    Text="{Binding DecMaximumPulseDisplay}" />
+
+                                                <TextBlock
+                                                    Grid.Row="3"
+                                                    Text="Total correction time" />
+
+                                                <TextBlock
+                                                    Grid.Row="3"
+                                                    Grid.Column="1"
+                                                    Text="{Binding DecTotalCorrectionTimeDisplay}" />
+
+                                                <TextBlock
+                                                    Grid.Row="4"
+                                                    Text="Directional imbalance" />
+
+                                                <TextBlock
+                                                    Grid.Row="4"
+                                                    Grid.Column="1"
+                                                    Text="{Binding DecDirectionalImbalanceDisplay}" />
+
+                                              </Grid>
+                                            </StackPanel>
+                                          </Border>
+
+                                        </Grid>
+                                      </StackPanel>
+                                    </Border>
+                                    
                                   </Grid>
 
                                 </Border>
