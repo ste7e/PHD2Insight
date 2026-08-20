@@ -220,7 +220,6 @@ public static class ObservationEngine {
             "DEC guide corrections frequently reverse direction after the guide error changes sign.",
             ObservationWeights.DecGuideReversal);
 
-
         return observations;
     }
 

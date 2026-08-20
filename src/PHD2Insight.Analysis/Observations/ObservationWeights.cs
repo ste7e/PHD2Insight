@@ -45,5 +45,7 @@ namespace PHD2Insight.Analysis.Observations {
 
         public const int LargeRaGuidePulses = 1;
         public const int LargeDecGuidePulses = 1;
+
+        public const int PecRecommended = 2;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using PHD2Insight.Analysis.Detection;
+using PHD2Insight.Analysis.Frequency;
 using PHD2Insight.Analysis.Metrics;
 using PHD2Insight.Analysis.Tests.Builders;
 using PHD2Insight.Core.Models;
@@ -212,5 +213,62 @@ public sealed class OscillationMetricsAnalysisTests {
         var peak = Assert.Single(peaks);
 
         Assert.Equal(3, peak.Value);
+    }
+
+    [Fact]
+    public void Calculate_WithTooFewFrames_ReturnsInvalidMechanicalPeriodPower() {
+        var session = new GuidingSessionBuilder()
+            .AddFrame(TimeSpan.FromSeconds(0))
+            .AddFrame(TimeSpan.FromSeconds(2))
+            .AddFrame(TimeSpan.FromSeconds(4))
+            .AddFrame(TimeSpan.FromSeconds(6))
+            .AddFrame(TimeSpan.FromSeconds(8))
+            .AddFrame(TimeSpan.FromSeconds(10))
+            .AddFrame(TimeSpan.FromSeconds(12))
+            .AddFrame(TimeSpan.FromSeconds(14))
+            .AddFrame(TimeSpan.FromSeconds(16))
+            .Build();
+
+        var result = OscillationMetricsAnalysis.Calculate(session);
+
+        Assert.False(result.MechanicalPeriodPower.IsValid);
+    }
+
+    [Fact]
+    public void Calculate_WithSufficientFrames_ReturnsMechanicalPeriodPower() {
+        var session = new GuidingSessionBuilder();
+
+        for (var i = 0; i < 50; i++) {
+            var elapsedTime = TimeSpan.FromSeconds(i * 10);
+
+            session.AddFrame(new GuideFrame {
+                FrameNumber = i + 1,
+                ElapsedTime = elapsedTime,
+                RaGuideDistance = Math.Sin(
+                    2 * Math.PI * elapsedTime.TotalSeconds /
+                    MountPeriodProfiles.Eq6RPro.RaPeriods
+                        .First(p => p.Name == "RA worm fundamental")
+                        .PeriodSeconds),
+                RaErrorArcSeconds = 0,
+                DecErrorArcSeconds = 0,
+                RaPulseMilliseconds = 100,
+                DecPulseMilliseconds = 100
+            });
+        }
+
+        var result =
+            OscillationMetricsAnalysis.Calculate(session.Build());
+
+        Assert.True(result.MechanicalPeriodPower.IsValid);
+
+        Assert.True(
+            double.IsFinite(
+                result.MechanicalPeriodPower.RaWormFundamentalPower));
+
+        Assert.Equal(
+            MountPeriodProfiles.Eq6RPro.RaPeriods
+                .First(p => p.Name == "RA worm fundamental")
+                .PeriodSeconds,
+            result.MechanicalPeriodPower.RaWormPeriodSeconds);
     }
 }

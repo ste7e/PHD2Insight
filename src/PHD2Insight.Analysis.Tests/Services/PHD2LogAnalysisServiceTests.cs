@@ -119,10 +119,8 @@ public sealed class PHD2LogAnalysisServiceTests {
         Assert.NotEmpty(sessionsWithRaOscillation);
 
         foreach (var session in sessionsWithRaOscillation) {
-            var recommendation = Assert.Single(
-                session.Recommendations.Where(
-                    r => r.Code ==
-                        "REVIEW_RA_GUIDING_AGGRESSIVENESS"));
+            var recommendation = Assert.Single(session.Recommendations, r => r.Code ==
+                        "REVIEW_RA_GUIDING_AGGRESSIVENESS");
 
             Assert.Contains(
                 "RA_OSCILLATION",

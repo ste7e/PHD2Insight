@@ -37,4 +37,6 @@
 
     public const double FrequentRaGuideReversalRatePerMinute = 7.5;
     public const double FrequentDecGuideReversalRatePerMinute = 2.5;
+
+    public const double PecRecommendationRaPeriodicErrorArcSeconds = 4.0;
 }

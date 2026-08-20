@@ -55,4 +55,6 @@ internal static class ObservationCodes {
     public const string RaGuideReversal = "RA_GUIDE_REVERSAL";
 
     public const string DecGuideReversal = "DEC_GUIDE_REVERSAL";
+
+    public const string PecRecommended = "PEC_RECOMMENDED";
 }

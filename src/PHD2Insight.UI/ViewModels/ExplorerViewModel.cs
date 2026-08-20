@@ -20,7 +20,7 @@ public partial class ExplorerViewModel : ViewModelBase {
             new AsyncRelayCommand(
                 async () => {
                     var path =
-                        await RequestFolderAsync?.Invoke()
+                        await RequestFolderAsync!.Invoke()
                         ?? null;
 
                     if (!string.IsNullOrWhiteSpace(path))

@@ -1,4 +1,5 @@
-﻿using PHD2Insight.Analysis.Statistics;
+﻿using PHD2Insight.Analysis.Frequency;
+using PHD2Insight.Analysis.Statistics;
 
 namespace PHD2Insight.Analysis.Models;
 
@@ -18,4 +19,6 @@ public sealed record AnalysisResult {
     public OscillationMetricsResult OscillationMetrics { get; init; } = new();
 
     public GuideReversalResult GuideReversals { get; init; } = new();
+
+    public FrequencyAnalysisResult Frequency { get; init; } = new();
 }
