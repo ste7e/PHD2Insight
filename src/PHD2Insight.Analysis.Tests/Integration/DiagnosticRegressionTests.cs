@@ -4,11 +4,8 @@ using PHD2Insight.Analysis.Frequency;
 using PHD2Insight.Analysis.Metrics;
 using PHD2Insight.Analysis.Models;
 using PHD2Insight.Core.Models;
-using PHD2Insight.Parser.Abstractions;
 using PHD2Insight.Parser.Parsers;
-using System.Security.Policy;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace PHD2Insight.Analysis.Tests.Integration;
 
@@ -28,6 +25,8 @@ public sealed class DiagnosticRegressionTests {
     private static readonly Dictionary<string, List<double>> mechanicalPeriodPowers = [];
     private static readonly List<MechanicalPeriodCsvRow> mechanicalPeriodCsvRows = [];
 
+    private static readonly List<double> wormAmplitudes = [];
+    private static readonly List<WormAmplitudeSample> wormSamples = new();
 
 
     public static IEnumerable<string> GetFilenames(string folderPath, string pattern = "*", bool recursive = false) {
@@ -126,7 +125,6 @@ public sealed class DiagnosticRegressionTests {
             $"Mechanical period CSV written to: {path}");
 
 
-        return;
 
         foreach (var sessionList in sessionLists) {
             ReportDirectionalImbalanceBySession(
@@ -213,6 +211,8 @@ public sealed class DiagnosticRegressionTests {
         Console.WriteLine($"{"Sessions with no reversals:",-50} {sum.ReversalStats.NoReversal}");
     }
 
+
+
     private static void AccumulateFrequencyAndPeriodMetrics(
         AnalysisResult analysis,
         GuidingSession session) {
@@ -256,6 +256,17 @@ public sealed class DiagnosticRegressionTests {
 
             powers.Add(result.Power);
         }
+
+        var mechanicalPeriodPower = analysis.OscillationMetrics.MechanicalPeriodPower;
+
+        if (!mechanicalPeriodPower.IsValid ||
+            !double.IsFinite(
+                mechanicalPeriodPower.RaWormFundamentalArcSeconds)) {
+            return;
+        }
+
+        wormAmplitudes.Add(
+            mechanicalPeriodPower.RaWormFundamentalArcSeconds);
     }
 
     private static void AccumulateMechanicalPeriodCsv(
@@ -429,8 +440,11 @@ double.IsFinite(value)
     }
 
     private static double Percentile(
-                                                IReadOnlyList<double> values,
-    double percentile) {
+            IReadOnlyList<double> values,
+            double percentile) {
+        if (percentile>1.0)
+            percentile /= 100.0;
+
         if (values.Count == 0)
             return double.NaN;
 
@@ -706,9 +720,6 @@ double.IsFinite(value)
             summary.MaximumTotalErrorArcSeconds.Values);
 
         ReportMaximumErrorTailAnalysis(summary);
-
-
-        ReportMaximumErrorTailAnalysis(summary);
         ReportExtremeMaximumErrorSessions(summary);
 
     }
@@ -956,7 +967,327 @@ double.IsFinite(value)
         ReportMechanicalPeriodPower(
             "DEC",
             GuideAlgorithmType.Pec);
+
+        var ordered = wormAmplitudes
+    .OrderBy(x => x)
+    .ToArray();
+
+        Console.WriteLine();
+        Console.WriteLine("=================================");
+        Console.WriteLine("RA Worm Fundamental Amplitude");
+        Console.WriteLine("=================================");
+
+        Console.WriteLine(
+            $"Valid sessions: {ordered.Length}");
+
+        if (ordered.Length > 0) {
+            Console.WriteLine(
+                $"Median:          {Percentile(ordered, 50):F2}\"");
+
+            Console.WriteLine(
+                $"P75:             {Percentile(ordered, 75):F2}\"");
+
+            Console.WriteLine(
+                $"P90:             {Percentile(ordered, 90):F2}\"");
+
+            Console.WriteLine(
+                $"P95:             {Percentile(ordered, 95):F2}\"");
+
+            Console.WriteLine(
+                $"P99:             {Percentile(ordered, 99):F2}\"");
+
+            Console.WriteLine(
+                $"Maximum:         {ordered[^1]:F2}\"");
+
+            Console.WriteLine();
+
+            Console.WriteLine(
+                $"> 2\":            {ordered.Count(x => x > 2):N0}");
+
+            Console.WriteLine(
+                $"> 4\":            {ordered.Count(x => x > 4):N0}");
+
+            Console.WriteLine(
+                $"> 6\":            {ordered.Count(x => x > 6):N0}");
+
+            Console.WriteLine(
+                $"> 8\":            {ordered.Count(x => x > 8):N0}");
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("=================================");
+        Console.WriteLine("Behaviour by RA Worm Amplitude");
+        Console.WriteLine("=================================");
+
+        var buckets = new[]
+        {
+    (
+        Name: "< 2\"",
+        Minimum: double.NegativeInfinity,
+        Maximum: 2.0),
+
+    (
+        Name: "2–4\"",
+        Minimum: 2.0,
+        Maximum: 4.0),
+
+    (
+        Name: "4–6\"",
+        Minimum: 4.0,
+        Maximum: 6.0),
+
+    (
+        Name: "6–8\"",
+        Minimum: 6.0,
+        Maximum: 8.0),
+
+    (
+        Name: "> 8\"",
+        Minimum: 8.0,
+        Maximum: double.PositiveInfinity)
+};
+
+        Console.WriteLine(
+            $"{"Range",-10}" +
+            $"{"N",6}" +
+            $"{"RA osc/min",14}" +
+            $"{"RA changes/min",17}" +
+            $"{"RA RMS",12}" +
+            $"{"RA/DEC RMS",14}");
+
+        Console.WriteLine(new string('-', 73));
+
+        foreach (var bucket in buckets) {
+            var samples = wormSamples
+                .Where(x =>
+                    x.AmplitudeArcSeconds >= bucket.Minimum &&
+                    x.AmplitudeArcSeconds < bucket.Maximum)
+                .ToArray();
+
+            if (samples.Length == 0) {
+                Console.WriteLine(
+                    $"{bucket.Name,-10}" +
+                    $"{0,6}");
+
+                continue;
+            }
+
+            Console.WriteLine(
+                $"{bucket.Name,-10}" +
+                $"{samples.Length,6}" +
+                $"{Median(samples.Select(x => x.RaOscillationEventsPerMinute)),14:F2}" +
+                $"{Median(samples.Select(x => x.RaDirectionChangesPerMinute)),17:F2}" +
+                $"{Median(samples.Select(x => x.RaRmsArcSeconds)),12:F2}" +
+                $"{Median(samples.Select(x => x.RaDecRmsRatio)),14:F2}");
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("=================================");
+        Console.WriteLine("Sessions with RA Worm Amplitude > 2\"");
+        Console.WriteLine("=================================");
+
+        Console.WriteLine(
+            $"{"Amplitude",10}" +
+            $"{"Power",10}" +
+            $"{"RA RMS",10}" +
+            $"{"Amp/RMS",10}" +
+            $"{"RA osc/min",12}" +
+            $"{"RA changes",12}" +
+            $"{"Start",18}" +
+            $"  File");
+
+        Console.WriteLine(new string('-', 110));
+
+        var highWormSessions = wormSamples
+            .Where(x =>
+                x.AmplitudeArcSeconds > 2.0)
+            .OrderByDescending(x =>
+                x.AmplitudeArcSeconds)
+            .ToArray();
+
+        foreach (var sample in highWormSessions) {
+            var amplitudeToRms =
+                sample.RaRmsArcSeconds > 0
+                    ? sample.AmplitudeArcSeconds /
+                      sample.RaRmsArcSeconds
+                    : double.NaN;
+
+            Console.WriteLine(
+                $"{sample.AmplitudeArcSeconds,10:F2}" +
+                $"{sample.WormPower,10:F3}" +
+                $"{sample.RaRmsArcSeconds,10:F2}" +
+                $"{amplitudeToRms,10:F2}" +
+                $"{sample.RaOscillationEventsPerMinute,12:F2}" +
+                $"{sample.RaDirectionChangesPerMinute,12:F2}" +
+                $"{sample.StartTime,18:yyyy-MM-dd HH:mm}" +
+                $"  {sample.FileName}");
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("=================================");
+        Console.WriteLine("RA Worm Amplitude — Sensible Sessions");
+        Console.WriteLine("RA RMS < 5\"");
+        Console.WriteLine("=================================");
+
+        var sensibleWormSamples = wormSamples
+            .Where(x =>
+                x.RaRmsArcSeconds < 5.0 &&
+                double.IsFinite(x.AmplitudeArcSeconds) &&
+                double.IsFinite(x.RaRmsArcSeconds))
+            .ToArray();
+
+        Console.WriteLine(
+            $"Valid sessions: {sensibleWormSamples.Length}");
+
+        if (sensibleWormSamples.Length > 0) {
+            var amplitudes = sensibleWormSamples
+                .Select(x => x.AmplitudeArcSeconds)
+                .OrderBy(x => x)
+                .ToArray();
+
+            Console.WriteLine(
+                $"Median:          {Median(amplitudes):F2}\"");
+
+            Console.WriteLine(
+                $"P75:             {Percentile(amplitudes, 75):F2}\"");
+
+            Console.WriteLine(
+                $"P90:             {Percentile(amplitudes, 90):F2}\"");
+
+            Console.WriteLine(
+                $"P95:             {Percentile(amplitudes, 95):F2}\"");
+
+            Console.WriteLine(
+                $"P99:             {Percentile(amplitudes, 99):F2}\"");
+
+            Console.WriteLine(
+                $"Maximum:         {amplitudes[^1]:F2}\"");
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("=================================");
+        Console.WriteLine("RA RMS by Worm Amplitude");
+        Console.WriteLine("RA RMS < 5\"");
+        Console.WriteLine("=================================");
+
+        var amplitudeBuckets = new[]
+        {
+    (
+        Name: "< 1\"",
+        Minimum: double.NegativeInfinity,
+        Maximum: 1.0),
+
+    (
+        Name: "1–2\"",
+        Minimum: 1.0,
+        Maximum: 2.0),
+
+    (
+        Name: "2–3\"",
+        Minimum: 2.0,
+        Maximum: 3.0),
+
+    (
+        Name: "3–4\"",
+        Minimum: 3.0,
+        Maximum: 4.0),
+
+    (
+        Name: "4–6\"",
+        Minimum: 4.0,
+        Maximum: 6.0),
+
+    (
+        Name: "> 6\"",
+        Minimum: 6.0,
+        Maximum: double.PositiveInfinity)
+};
+
+        Console.WriteLine(
+            $"{"Range",-10}" +
+            $"{"N",6}" +
+            $"{"Median RA RMS",16}" +
+            $"{"Median RA osc/min",20}" +
+            $"{"Median RA changes/min",23}");
+
+        Console.WriteLine(new string('-', 78));
+
+        foreach (var bucket in amplitudeBuckets) {
+            var samples = sensibleWormSamples
+                .Where(x =>
+                    x.AmplitudeArcSeconds >= bucket.Minimum &&
+                    x.AmplitudeArcSeconds < bucket.Maximum)
+                .ToArray();
+
+            if (samples.Length == 0) {
+                Console.WriteLine(
+                    $"{bucket.Name,-10}" +
+                    $"{0,6}");
+
+                continue;
+            }
+
+            Console.WriteLine(
+                $"{bucket.Name,-10}" +
+                $"{samples.Length,6}" +
+                $"{Median(samples.Select(x => x.RaRmsArcSeconds)),16:F2}" +
+                $"{Median(samples.Select(x => x.RaOscillationEventsPerMinute)),20:F2}" +
+                $"{Median(samples.Select(x => x.RaDirectionChangesPerMinute)),23:F2}");
+        }
+
+        if (sensibleWormSamples.Length >= 2) {
+            var correlation =
+                PearsonCorrelation(
+                    sensibleWormSamples.Select(x => x.AmplitudeArcSeconds),
+                    sensibleWormSamples.Select(x => x.RaRmsArcSeconds));
+
+            Console.WriteLine();
+            Console.WriteLine(
+                $"Pearson correlation: {correlation:F3}");
+        }
     }
+
+    private static double PearsonCorrelation(
+    IEnumerable<double> first,
+    IEnumerable<double> second) {
+        var x = first.ToArray();
+        var y = second.ToArray();
+
+        if (x.Length != y.Length || x.Length < 2)
+            return double.NaN;
+
+        var meanX = x.Average();
+        var meanY = y.Average();
+
+        double numerator = 0;
+        double sumXSquared = 0;
+        double sumYSquared = 0;
+
+        for (var i = 0; i < x.Length; i++) {
+            var dx = x[i] - meanX;
+            var dy = y[i] - meanY;
+
+            numerator += dx * dy;
+            sumXSquared += dx * dx;
+            sumYSquared += dy * dy;
+        }
+
+        var denominator =
+            Math.Sqrt(sumXSquared * sumYSquared);
+
+        return denominator <= double.Epsilon
+            ? double.NaN
+            : numerator / denominator;
+    }
+    private sealed record WormAmplitudeSample(
+        string FileName,
+        DateTime StartTime,
+        double AmplitudeArcSeconds,
+        double WormPower,
+        double RaOscillationEventsPerMinute,
+        double RaDirectionChangesPerMinute,
+        double RaRmsArcSeconds,
+        double RaDecRmsRatio);
 
     static void ReportMechanicalPeriodPower(
     string axis,
@@ -992,6 +1323,15 @@ double.IsFinite(value)
 
     static double Median(IReadOnlyList<double> values) { 
         if (values.Count == 0) 
+            return double.NaN; 
+        
+        var sorted = values.OrderBy(x => x).ToArray(); 
+        var middle = sorted.Length / 2; 
+        return sorted.Length % 2 == 0 ? (sorted[middle - 1] + sorted[middle]) / 2.0 : sorted[middle]; 
+    }
+
+    static double Median(IEnumerable<double> values) { 
+        if (values.Count() == 0) 
             return double.NaN; 
         
         var sorted = values.OrderBy(x => x).ToArray(); 
@@ -1244,11 +1584,34 @@ double.IsFinite(value)
 
         for (int summaryNo = 0; summaryNo < guideLog.Sessions.Count; summaryNo++) {
             var analysis = MetricsCalculator.Calculate(sessions[summaryNo]);
+            sum.AnalysisResults.Add(analysis);
 
             AccumulateFrequencyAndPeriodMetrics(analysis, sessions[summaryNo]);
-            AccumulateMechanicalPeriodCsv(analysis, sessions[summaryNo]);
+            //            AccumulateMechanicalPeriodCsv(analysis, sessions[summaryNo]);
 
-            continue;
+            // Inside the session loop:
+
+            var mechanicalPeriodPower =
+                analysis.OscillationMetrics.MechanicalPeriodPower;
+
+            if (mechanicalPeriodPower.IsValid &&
+                double.IsFinite(
+                    mechanicalPeriodPower.RaWormFundamentalArcSeconds)) {
+
+                wormSamples.Add(
+                    new WormAmplitudeSample(
+                        fullSamplePath,
+                        sessions[summaryNo].StartTime,
+                        mechanicalPeriodPower.RaWormFundamentalArcSeconds,
+                        mechanicalPeriodPower.RaWormFundamentalPower,
+                        analysis.OscillationMetrics.RaOscillationEventsPerMinute,
+                        analysis.OscillationMetrics.RaDirectionChangesPerMinute,
+                        analysis.OscillationMetrics.StandardDeviationRaErrorArcSeconds,
+                        analysis.OscillationMetrics.StandardDeviationRaErrorArcSeconds /
+                            Math.Max(
+                                analysis.OscillationMetrics.StandardDeviationDecErrorArcSeconds,
+                                0.000001)));
+            }
 
             var reversals = analysis.GuideReversals;
 
@@ -1534,6 +1897,7 @@ double.IsFinite(value)
     }
 
     private class Summary {
+        public IList<AnalysisResult> AnalysisResults { get; private set; } = new List<AnalysisResult>();
         public IDictionary<string, double> AverageDecPulseMilliseconds { get; set; }
             = new Dictionary<string, double>();
 

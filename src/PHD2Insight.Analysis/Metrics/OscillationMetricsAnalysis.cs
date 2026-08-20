@@ -307,11 +307,25 @@ public static class OscillationMetricsAnalysis {
             };
         }
 
+        var amplitude =
+            LombScarglePeriodogram.EvaluateAmplitude(
+                times,
+                values,
+                frequencyHz);
+
+        if (amplitude is null ||
+            !double.IsFinite(amplitude.Value)) {
+            return new MechanicalPeriodPowerResult {
+                IsValid = false
+            };
+        }
         return new MechanicalPeriodPowerResult {
+            RaWormFundamentalArcSeconds = amplitude.Value,
             RaWormFundamentalPower = result.Power,
             RaWormPeriodSeconds = wormPeriod.PeriodSeconds,
             IsValid = true
         };
+
     }
 
     private static double CalculateMedianInterval(

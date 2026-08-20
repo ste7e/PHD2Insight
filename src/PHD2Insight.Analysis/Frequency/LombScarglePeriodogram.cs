@@ -226,4 +226,96 @@ public static class LombScarglePeriodogram {
                     / shiftedSin2Sum
             );
     }
+
+    /// <summary>
+    /// Calculates the sinusoidal amplitude of a time series at one specific
+    /// frequency using a least-squares sinusoidal fit.
+    /// </summary>
+    /// <param name="times">Sample times in seconds.</param>
+    /// <param name="values">Sample values corresponding to <paramref name="times"/>.</param>
+    /// <param name="frequencyHz">Frequency to evaluate in Hz.</param>
+    /// <returns>
+    /// The fitted sinusoidal amplitude in the same units as <paramref name="values"/>,
+    /// or <c>null</c> if there are insufficient or unsuitable samples.
+    /// </returns>
+    public static double? EvaluateAmplitude(
+        IReadOnlyList<double> times,
+        IReadOnlyList<double> values,
+        double frequencyHz) {
+        if (times.Count != values.Count)
+            throw new ArgumentException(
+                "Times and values must contain the same number of samples.");
+
+        if (times.Count < 10)
+            return null;
+
+        if (!double.IsFinite(frequencyHz) || frequencyHz <= 0)
+            throw new ArgumentOutOfRangeException(nameof(frequencyHz));
+
+        var samples = times
+            .Zip(values)
+            .Where(x =>
+                double.IsFinite(x.First) &&
+                double.IsFinite(x.Second))
+            .OrderBy(x => x.First)
+            .ToArray();
+
+        if (samples.Length < 10)
+            return null;
+
+        var t = samples.Select(x => x.First).ToArray();
+        var y = samples.Select(x => x.Second).ToArray();
+
+        var mean = y.Average();
+        var omega = 2.0 * Math.PI * frequencyHz;
+
+        double cos2Sum = 0;
+        double sin2Sum = 0;
+        double sinCosSum = 0;
+
+        double cosValueSum = 0;
+        double sinValueSum = 0;
+
+        for (var i = 0; i < t.Length; i++) {
+            var angle = omega * t[i];
+
+            var cos = Math.Cos(angle);
+            var sin = Math.Sin(angle);
+
+            var value = y[i] - mean;
+
+            cos2Sum += cos * cos;
+            sin2Sum += sin * sin;
+            sinCosSum += sin * cos;
+
+            cosValueSum += value * cos;
+            sinValueSum += value * sin;
+        }
+
+        var determinant =
+            cos2Sum * sin2Sum -
+            sinCosSum * sinCosSum;
+
+        if (Math.Abs(determinant) <= double.Epsilon)
+            return null;
+
+        var cosineCoefficient =
+            (cosValueSum * sin2Sum -
+             sinValueSum * sinCosSum)
+            / determinant;
+
+        var sineCoefficient =
+            (sinValueSum * cos2Sum -
+             cosValueSum * sinCosSum)
+            / determinant;
+
+        var amplitude = Math.Sqrt(
+            cosineCoefficient * cosineCoefficient +
+            sineCoefficient * sineCoefficient);
+
+        return double.IsFinite(amplitude)
+            ? amplitude
+            : null;
+    }
+
 }

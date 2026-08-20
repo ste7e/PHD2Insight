@@ -1,6 +1,8 @@
 ﻿using PHD2Insight.Analysis.Detection;
 using PHD2Insight.Analysis.Frequency;
 using PHD2Insight.Analysis.Metrics;
+using PHD2Insight.Analysis.Models;
+using PHD2Insight.Analysis.Observations;
 using PHD2Insight.Analysis.Tests.Builders;
 using PHD2Insight.Core.Models;
 
@@ -270,5 +272,136 @@ public sealed class OscillationMetricsAnalysisTests {
                 .First(p => p.Name == "RA worm fundamental")
                 .PeriodSeconds,
             result.MechanicalPeriodPower.RaWormPeriodSeconds);
+
+
+        Assert.InRange(
+            result.MechanicalPeriodPower.RaWormFundamentalArcSeconds,
+            0.99,
+            1.01);
+
+    }
+
+    [Fact]
+    public void EvaluateAmplitude_AtKnownFrequency_ReturnsExpectedAmplitude() {
+        const double expectedAmplitude = 3.5;
+
+        var periodSeconds =
+            MountPeriodProfiles.Eq6RPro.RaPeriods
+                .First(p => p.Name == "RA worm fundamental")
+                .PeriodSeconds;
+
+        var frequencyHz = 1.0 / periodSeconds;
+
+        var times = Enumerable
+            .Range(0, 200)
+            .Select(i => i * 5.0)
+            .ToArray();
+
+        var values = times
+            .Select(t =>
+                expectedAmplitude *
+                Math.Sin(2.0 * Math.PI * frequencyHz * t))
+            .ToArray();
+
+        var amplitude =
+            LombScarglePeriodogram.EvaluateAmplitude(
+                times,
+                values,
+                frequencyHz);
+
+        Assert.NotNull(amplitude);
+
+        Assert.InRange(
+            amplitude.Value,
+            expectedAmplitude - 0.01,
+            expectedAmplitude + 0.01);
+    }
+    [Fact]
+    public void PecRecommendation_WhenWormAmplitudeBelowThreshold_IsNotObserved() {
+        var analysis = new AnalysisResult {
+            OscillationMetrics = new OscillationMetricsResult {
+                MechanicalPeriodPower = new MechanicalPeriodPowerResult {
+                    RaWormFundamentalArcSeconds =
+                    DiagnosisThresholds.PecRecommendationRaWormAmplitudeArcSeconds - 0.01,
+                    RaWormFundamentalPower = 3.0,
+                    RaWormPeriodSeconds = 478.0,
+                    IsValid = true
+                }
+            }
+        };
+
+        var observations = ObservationEngine.Observe(analysis);
+
+        Assert.DoesNotContain(
+            observations,
+            o => o.Code == ObservationCodes.PecRecommended);
+    }
+
+    [Fact]
+    public void PecRecommendation_WhenWormAmplitudeExceedsThreshold_IsObserved() {
+        var amplitude =
+            DiagnosisThresholds.PecRecommendationRaWormAmplitudeArcSeconds + 0.01;
+
+        var analysis = new AnalysisResult {
+            OscillationMetrics = new OscillationMetricsResult {
+                MechanicalPeriodPower = new MechanicalPeriodPowerResult {
+                    RaWormFundamentalArcSeconds = amplitude,
+                    RaWormFundamentalPower = 3.0,
+                    RaWormPeriodSeconds = 478.0,
+                    IsValid = true
+                }
+            }
+        };
+
+        var observations = ObservationEngine.Observe(analysis);
+
+        var observation = Assert.Single(observations, o => o.Code == ObservationCodes.PecRecommended);
+
+        Assert.Equal(
+            $"{amplitude:F2}\"",
+            observation.Value);
+    }
+
+    [Fact]
+    public void PecRecommendation_WhenWormAmplitudeEqualsThreshold_IsNotObserved() {
+        var amplitude =
+            DiagnosisThresholds.PecRecommendationRaWormAmplitudeArcSeconds;
+
+        var analysis = new AnalysisResult {
+            OscillationMetrics = new OscillationMetricsResult {
+                MechanicalPeriodPower = new MechanicalPeriodPowerResult {
+                    RaWormFundamentalArcSeconds = amplitude,
+                    RaWormFundamentalPower = 3.0,
+                    RaWormPeriodSeconds = 478.0,
+                    IsValid = true
+                }
+            }
+        };
+
+        var observations = ObservationEngine.Observe(analysis);
+
+        Assert.DoesNotContain(
+            observations,
+            o => o.Code == ObservationCodes.PecRecommended);
+    }
+
+    [Fact]
+    public void PecRecommendation_WhenMechanicalPeriodPowerIsInvalid_IsNotObserved() {
+        var analysis = new AnalysisResult {
+            OscillationMetrics = new OscillationMetricsResult {
+                MechanicalPeriodPower = new MechanicalPeriodPowerResult {
+                    RaWormFundamentalArcSeconds = 10.0,
+                    RaWormFundamentalPower = 10.0,
+                    RaWormPeriodSeconds = 478.0,
+                    IsValid = false
+                }
+            }
+        };
+
+        var observations = ObservationEngine.Observe(analysis);
+
+        Assert.DoesNotContain(
+            observations,
+            o => o.Code == ObservationCodes.PecRecommended);
     }
 }

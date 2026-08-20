@@ -220,6 +220,20 @@ public static class ObservationEngine {
             "DEC guide corrections frequently reverse direction after the guide error changes sign.",
             ObservationWeights.DecGuideReversal);
 
+        AddObservationIf(
+            analysis.OscillationMetrics.MechanicalPeriodPower is {
+                IsValid: true,
+                RaWormFundamentalArcSeconds:
+                    > DiagnosisThresholds.PecRecommendationRaWormAmplitudeArcSeconds
+            },
+            observations,
+            ObservationCodes.PecRecommended,
+            $"RA worm fundamental amplitude",
+            $"{analysis.OscillationMetrics.MechanicalPeriodPower.RaWormFundamentalArcSeconds:F2}\"",
+            $"The RA worm fundamental amplitude exceeds the threshold for recommending PEC.",
+            ObservationWeights.PecRecommended
+        );
+
         return observations;
     }
 
